@@ -82,7 +82,7 @@ slider.oninput = () =>
 function connect()
 {
         // Now we will establish wss connection
-    ws = new WebSocket("ws://192.168.1.142:3000");
+    ws = new WebSocket("localhost:3000");
 
     ws.addEventListener("open", () =>
     {
