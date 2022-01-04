@@ -1,0 +1,35 @@
+:root
+{
+    --cell-size: 50px;
+}
+
+table.noselect
+{
+    user-select: none;
+}
+
+table.no-spacing
+{
+    border-spacing: 0;
+    border-collapse: collapse;
+}
+
+table
+{
+    table-layout: fixed;
+    width: calc(var(--cell-size)*3);
+    height: calc(var(--cell-size)*3);
+}
+
+tr
+{
+    line-height: var(--cell-size);
+}
+
+td {
+    border: 1px solid black;
+    font-size: calc(var(--cell-size) - 10px);
+    text-align: center;
+    width: var(--cell-size); 
+    height: var(--cell-size);
+}
