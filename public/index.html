@@ -3,22 +3,17 @@
 <html>
 
 <head>
+    <script src="javascript/client/board_handler.js" defer></script>
+    <script src="javascript/messages.js"></script>
+    <script src="javascript/utils/utils.js"></script>
     <script src="javascript/game.js" defer></script>
-    <script src="javascript/messages.js" defer></script>
     <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
 <h1> Tic Tac Toe </h1>
 
-<table class = "noselect no-spacing">
-<% for (let row = 0; row < 3; row++) { %> 
-    <tr>
-    <% for (let col = 0; col < 3; col++) {%> 
-        <td id = "s<%= row*3 + col%>">  </td>
-    <% } %> 
-    </tr>
-<% }%>
+<table id = "chessboard" class = "noselect no-spacing">
 </table>
 
 <span> Change size: </span><input type="range" min="50" max="100" value="50" class="slider" id="sizeSlider">

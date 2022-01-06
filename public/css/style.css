@@ -3,6 +3,23 @@
     --cell-size: 50px;
 }
 
+.white
+{
+    background-color: #fffaf5;
+}
+
+.black
+{
+    background-color: #453505;
+}
+
+.piece
+{
+    width: var(--cell-size);
+    height: var(--cell-size);
+    display: block; /* For some reason this prevents the table from expanding */
+}
+
 table.noselect
 {
     user-select: none;

@@ -16,7 +16,7 @@ let numConnectionIDs = 0;
 
 app.get("/", (req, res) => 
 {
-    res.render("index.ejs");
+    res.sendFile("index.html");
 });
 
 let sockets = {};
