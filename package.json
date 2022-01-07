@@ -1,20 +1,17 @@
 {
-  "name": "tic-tac-toe",
-  "version": "1.0.0",
-  "description": "",
-  "main": "server.js",
+  "name": "cse1500-assignments",
+  "version": "0.0.0",
+  "private": true,
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node server.js"
+    "start": "node app.js"
   },
-  "author": "",
-  "license": "ISC",
   "dependencies": {
-    "ejs": "^3.1.6",
-    "express": "^4.17.2",
+    "cookie-parser": "~1.4.4",
+    "debug": "~2.6.9",
+    "ejs": "~2.6.1",
+    "express": "~4.16.1",
+    "http-errors": "~1.6.3",
+    "morgan": "~1.9.1",
     "ws": "^8.4.0"
-  },
-  "devDependencies": {
-    "nodemon": "^2.0.15"
   }
 }
