@@ -1,5 +1,6 @@
 const board = document.getElementById("chessboard");
 const captured = document.getElementById("captured-zone");
+const root = document.querySelector(":root");
 
 const createPieceImg = (piece) => 
 {
@@ -13,32 +14,45 @@ const createPieceImg = (piece) =>
 // Generate table layout for chess board, done once on load
 for (let row = 0; row < 8; row++)
 {
-    let rowt = document.createElement("tr");
     for (let col = 0; col < 8; col++)
     {
-        let square = document.createElement("td");
-        square.className = "chess-cell";
-        // Square number
-        let se = document.createElement("div");
-        se.setAttribute("data-pos", row*8 + col);
-        se.className = (((col + row) % 2 == 0) ? "white": "black") + " grid-cell force-overlap";
-        square.appendChild(se);
+        let square = document.createElement("div");
+        square.setAttribute("data-pos", row*8 + col);
+        square.className = (((col + row) % 2 == 0) ? "white": "black") + " chess-cell force-overlap";
+        square.style["grid-column-start"] = col + 1;
+        square.style["grid-row-start"] = row + 1;
+
+        let textArea;
 
         const addSpan = (text, type) =>
         {
+            if (textArea === undefined)
+            {
+                textArea = document.createElement("span");
+                textArea.className = "positions-area";
+            }
             let span = document.createElement("span");
             span.textContent = text;
             span.className = type + " positions";
-            se.appendChild(span);
+            textArea.appendChild(span);
         }
 
         if (col === 0) addSpan(8 - row, "supersleft");
         if (row === 7) addSpan(["a", "b", "c", "d", "e", "f", "g", "h"][col], "subsright");
 
-        rowt.appendChild(square);
+        if (textArea !== undefined)
+        {
+            square.append(textArea);
+        }
+        board.appendChild(square);
     }
-    board.appendChild(rowt);
 }
+
+window.addEventListener("resize", () =>
+{
+    root.style.setProperty("--board-size", `${board.clientWidth}px`);
+})
+root.style.setProperty("--board-size", `${board.clientWidth}px`);
 
 function createPieces(gameBoard)
 {
@@ -71,8 +85,8 @@ function capturePiece(piece)
     // Needs to be updated if captured pieces size is updated ;;;
     // Bit of redundancy here, but oh well. Since capturedZone is relative, it does not
     // resize due to the absolutely placed pieces inside, so we have to set this ourselves;
-    capturedZone.style.width = `calc(var(--cell-size) * (0.8 * 0.4 * ${capturedOffset[piece.type]} + 0.8 - 0.2))`;
-    piece.style.left = `calc(var(--cell-size) * 0.8 * 0.4 * ${capturedOffset[piece.type]})`; // Absolute position relative to cell
+    capturedZone.style.width = `calc(var(--board-size)/11 * (0.8 * 0.4 * ${capturedOffset[piece.type]} + 0.8))`;
+    piece.style.left = `calc(var(--board-size)/11 * 0.8 * 0.4 * ${capturedOffset[piece.type]})`; // Absolute position relative to cell
     piece.style.top = 0 + "px"; // Sometimes top is random, what the hell?
 
     removeDrag(piece);
