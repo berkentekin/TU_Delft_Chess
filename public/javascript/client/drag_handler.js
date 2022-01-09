@@ -39,7 +39,6 @@ const mouseDownF = (event) =>
         if (square !== undefined)
         {
 	    let pieceTo = decodePos(square.getAttribute("data-pos"));
-	    console.log(pieceTo);
             let cpiece = getPiece(square); // Check if there's a piece there to capture
             if (cpiece !== null && cpiece !== piece) {capturePiece(cpiece);} // Make sure we're not capturing ourselves 
             square.appendChild(piece);
