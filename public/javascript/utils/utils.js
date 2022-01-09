@@ -22,6 +22,12 @@ function decodeFEN(FENStr)
     return board;
 }
 
+function decodePos(datapos)
+{
+    var letter = String.fromCharCode( (((datapos) % 8)) + 97 );
+    return `${letter}${((63 - datapos)/8 | 0) + 1}`;
+}
+
 if (typeof exports !== "undefined")
 {
     exports.isLower = isLower;

@@ -6,6 +6,7 @@ const createPieceImg = (piece) =>
     let img = document.createElement("img");
     img.src = `pieces/${piece}.svg`;
     img.className = "piece";
+    img.alt = piece;
     img.type = piece[1]; // Only need type not colour info
     return img;
 };
