@@ -5,6 +5,7 @@
 const mouseDownF = (event) =>
 {
     const piece = event.target;
+    const pieceFrom = decodePos(piece.parentNode.getAttribute("data-pos"));
 
     // Position needs to be absolute so we can drag it around outside square
     piece.className = "dragging-piece";
@@ -37,6 +38,7 @@ const mouseDownF = (event) =>
         // We've successfully found a new square
         if (square !== undefined)
         {
+	    let pieceTo = decodePos(square.getAttribute("data-pos"));
             let cpiece = getPiece(square); // Check if there's a piece there to capture
             if (cpiece !== null && cpiece !== piece) {capturePiece(cpiece);} // Make sure we're not capturing ourselves 
             square.appendChild(piece);

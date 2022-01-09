@@ -3,6 +3,8 @@ const {send_message, decode_message,
       TMOVE, TRESPONSE, TQUIT, TUPDATE,
       TPLAYERT, TGAMESTART, TTURN, TWON} = require("./public/javascript/messages");
 const Game = require("./public/javascript/game_class");
+const { Chess } = require("chess.js");
+const chess = new Chess();
 const {WebSocketServer} = require("ws");
 const { send } = require("express/lib/response");
 const app = express();
@@ -94,24 +96,24 @@ wss.on("connection", (ws, req) =>
 
 	console.log(`Websocket connection opened for ${numConnectionIDs}`);
 
-	let game = games[games.length -1];
+	//let game = games[games.length -1];
 
-	if (game === undefined || game.is_full())
-	{
-		game = new Game();
-		games.push(game);
-	}
+	//if (game === undefined || game.is_full())
+	//{
+	//	game = new Game();
+//		games.push(game);
+	//}
 
-	ws.game = game;
-	let colour = game.add_player(ws.id);
-	sockets[ws.id] = ws;
-	send_message(TPLAYERT, colour, ws);
-
-	if (game.is_full())
-	{
-		sendMessageToGame(TGAMESTART, null, game);
-		sendMessageToGame(TTURN, game.turn, game);
-	}
+//	ws.game = game;
+	//let colour = game.add_player(ws.id);
+//	sockets[ws.id] = ws;
+//	send_message(TPLAYERT, colour, ws);
+//
+//	if (game.is_full())
+//	{
+//		sendMessageToGame(TGAMESTART, null, game);
+//		sendMessageToGame(TTURN, game.turn, game);
+//	}
 })
 
 process
