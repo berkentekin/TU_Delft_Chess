@@ -2,6 +2,8 @@ let player_type;
 const slider = document.getElementById("sizeSlider");
 const gameStatus = document.getElementById("gameStatus");
 const turnStatus = document.getElementById("turnStatus");
+const prankRules = document.getElementById("prank");
+
 let resetButton;
 let ws;
 
@@ -11,12 +13,12 @@ createPieces(gameBoard);
 
 function openrules()
 {
-    document.getElementById("prank").style.width = "100%";
+    prankRules.style.width = "100%";
 }
 
 function closerules()
 {
-    document.getElementById("prank").style.width = "0";
+    prankRules.style.width = "0";
 }
 
 function reset_game()

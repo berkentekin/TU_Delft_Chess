@@ -1,6 +1,9 @@
 const board = document.getElementById("chessboard");
 const captured = document.getElementById("captured-zone");
 const root = document.querySelector(":root");
+const keyboardInput = document.getElementById("keyboard-input");
+const keyboardInputForm = document.getElementById("keyboard-input-form");
+const chatInput = document.getElementById("chat-input");
 
 const createPieceImg = (piece) => 
 {
@@ -74,6 +77,11 @@ function getPiece(square)
     return square.querySelector("img");
 }
 
+function getSquare(num)
+{
+    return document.querySelector(`div[data-pos="${num}"]`);
+}
+
 let capturedOffset = {"p":0, "r":0, "n":0, "b":0, "q": 0}
 
 function capturePiece(piece)
@@ -94,3 +102,42 @@ function capturePiece(piece)
 
     capturedOffset[piece.type]++;
 }
+
+function movePieceTo(piece, square)
+{
+    let pieceTo = decodePos(square.getAttribute("data-pos"));
+    let cpiece = getPiece(square); // Check if there's a piece there to capture
+    if (cpiece !== null && cpiece !== piece) {capturePiece(cpiece);} // Make sure we're not capturing ourselves 
+        square.appendChild(piece);
+            //sounds[Math.floor(Math.random() * sounds.length)].play();
+}
+
+window.addEventListener("keypress", (event) =>
+{
+    if (event.key === "Enter" && document.activeElement !== chatInput)
+    {
+        keyboardInput.style.display = "block";
+        keyboardInput.focus();
+    }
+});
+
+keyboardInputForm.addEventListener("submit", (event) =>
+{
+    
+    let positions = keyboardInput.value.split('-');
+    let from = getSquare(encodePos(positions[0]));
+    let to = getSquare(encodePos(positions[1]));
+    let piece = getPiece(from);
+
+    if (piece !== null && to !== null)
+    {
+        movePieceTo(piece, to);
+    }
+    // Throw some error otherwise
+
+    // Take away input again
+    keyboardInput.value = "";
+    keyboardInput.style.display = "none"; 
+
+    event.preventDefault(); // Prevent reloading
+});

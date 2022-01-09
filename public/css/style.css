@@ -169,7 +169,19 @@ table.no-spacing
 
 #info-area
 {
+    flex: 1 1 15%;
+}
 
+#keyboard-input
+{
+    width: 100%;
+    display: none;
+}
+
+#keyboard-input:focus, #chat-input:focus
+{
+    outline-style: dashed;
+    outline-color: blue;
 }
 
 #chat-area
@@ -205,8 +217,6 @@ table.no-spacing
     height: 85%;
 }
 
-
-
 .overlay
 {
     height: 100%;
@@ -216,6 +226,7 @@ table.no-spacing
     left: 0;
     top: 0;
     background-color: rgba(126, 229, 255, 0.9);
+    backdrop-filter: blur(0.25em);
     overflow-x: hidden;
     transition: 0.5s;
 }
@@ -223,12 +234,12 @@ table.no-spacing
 .overlay-content
 {
     font-size: 3em;
+    font-weight: 400;
     position: relative;
     top: 30%;
     width: 100%;
     text-align: center;
     margin-top: 30px;
-    white-space: nowrap;
 }
 
 #close-button

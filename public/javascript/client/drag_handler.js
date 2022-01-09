@@ -38,11 +38,7 @@ const mouseDownF = (event) =>
         // We've successfully found a new square
         if (square !== undefined)
         {
-	    let pieceTo = decodePos(square.getAttribute("data-pos"));
-            let cpiece = getPiece(square); // Check if there's a piece there to capture
-            if (cpiece !== null && cpiece !== piece) {capturePiece(cpiece);} // Make sure we're not capturing ourselves 
-            square.appendChild(piece);
-            //sounds[Math.floor(Math.random() * sounds.length)].play();
+	        movePieceTo(piece, square);
         }
         // Position piece relative to square again. Will go back to original if new square wasn't found
         piece.className = "piece"
