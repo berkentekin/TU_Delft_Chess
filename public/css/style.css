@@ -164,12 +164,13 @@ table.no-spacing
 
 #game-area
 {
-    flex: 1 1 45%;
+    flex: 2 0 30%;
+    min-width: 400px;
 }
 
 #info-area
 {
-    flex: 1 1 15%;
+    flex: 1 1 5%;
 }
 
 #keyboard-input
@@ -191,7 +192,6 @@ table.no-spacing
     align-items: top;
     flex-direction: column;
     margin-inline: 1em;
-
 }
 
 #chat-form
