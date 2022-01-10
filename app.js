@@ -13,6 +13,7 @@ const port = 3000;
 app.use(express.static("public"));
 
 let num_players = 0;
+let players = [];
 let numConnectionIDs = 0;
 
 
@@ -71,16 +72,16 @@ wss.on("connection", (ws, req) =>
 			}
 			else
 			{
-				sendMessageToGame(TUPDATE, update_info, ws.game);
+			//	sendMessageToGame(TUPDATE, update_info, ws.game);
 				let won = ws.game.check_won();
 		
 				if (won !== null)
 				{
-					sendMessageToGame(TWON, won, ws.game);
+				//	sendMessageToGame(TWON, won, ws.game);
 				}
 				else
 				{
-					sendMessageToGame(TTURN, ws.game.turn, ws.game);
+				//	sendMessageToGame(TTURN, ws.game.turn, ws.game);
 				}
 				
 			}
@@ -89,7 +90,7 @@ wss.on("connection", (ws, req) =>
 
 	ws.on("close", (event) =>
 		{
-			sendMessageToGame(TQUIT, null, ws.game);    // Make sure all clients close the connection
+		//	sendMessageToGame(TQUIT, null, ws.game);    // Make sure all clients close the connection
 			games = games.filter((x) => x !== ws.game); // Remove game if still present
 		}
 	)

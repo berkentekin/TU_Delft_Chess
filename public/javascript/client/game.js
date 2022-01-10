@@ -1,14 +1,25 @@
 let player_type;
-const root = document.querySelector(":root");
 const slider = document.getElementById("sizeSlider");
 const gameStatus = document.getElementById("gameStatus");
 const turnStatus = document.getElementById("turnStatus");
+const prankRules = document.getElementById("prank");
+
 let resetButton;
 let ws;
 
 let gameBoard = decodeFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
 
 createPieces(gameBoard);
+
+function openrules()
+{
+    prankRules.style.width = "100%";
+}
+
+function closerules()
+{
+    prankRules.style.width = "0";
+}
 
 function reset_game()
 {

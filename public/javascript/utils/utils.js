@@ -28,6 +28,12 @@ function decodePos(datapos)
     return `${letter}${((63 - datapos)/8 | 0) + 1}`;
 }
 
+function encodePos(pos)
+{
+    let col = pos.charCodeAt(0) - 97;
+    return col + (8-pos[1]) * 8;
+}
+
 if (typeof exports !== "undefined")
 {
     exports.isLower = isLower;
