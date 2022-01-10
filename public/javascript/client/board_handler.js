@@ -15,6 +15,8 @@ const createPieceImg = (piece) =>
     return img;
 };
 
+addAnimationAfterEffect(board, (el) => {el.style.setProperty("opacity", 1)});
+
 // Generate table layout for chess board, done once on load
 for (let row = 0; row < 8; row++)
 {
@@ -23,8 +25,11 @@ for (let row = 0; row < 8; row++)
         let square = document.createElement("div");
         square.setAttribute("data-pos", row*8 + col);
         square.className = (((col + row) % 2 == 0) ? "white": "black") + " chess-cell force-overlap";
-        square.style["grid-column-start"] = col + 1;
-        square.style["grid-row-start"] = row + 1;
+        square.style.setProperty("grid-column-start", col + 1);
+        square.style.setProperty("grid-row-start", row + 1);
+        square.style.setProperty("--animation-order", row*8 + col + 1);
+   
+        addAnimationAfterEffect(square, (el) => {el.style.setProperty("opacity", 1)});
 
         let textArea;
 

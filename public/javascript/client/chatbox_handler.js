@@ -1,0 +1,1 @@
+const chatbox = document.getElementById("chat-textbox");

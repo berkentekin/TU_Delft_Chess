@@ -26,7 +26,7 @@ function decodePos(datapos)
 {
     var letter = String.fromCharCode( (((datapos) % 8)) + 97 );
     return `${letter}${((63 - datapos)/8 | 0) + 1}`;
-}
+}   
 
 function encodePos(pos)
 {
@@ -38,5 +38,15 @@ if (typeof exports !== "undefined")
 {
     exports.isLower = isLower;
     exports.decodeFEN = decodeFEN;
+}
+
+function addAnimationAfterEffect(el, effect)
+{
+    const aEndF = () =>
+    {
+        effect(el);
+        el.removeEventListener("animationend", aEndF);
+    }
+    el.addEventListener("animationend", aEndF);
 }
 
