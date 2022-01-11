@@ -38,7 +38,7 @@ const mouseDownF = (event) =>
         // We've successfully found a new square
         if (square !== undefined)
         {
-	        movePieceTo(piece, pieceFrom, square);
+	        movePieceTo(piece, pieceFrom, square, false);
         }
         // Position piece relative to square again. Will go back to original if new square wasn't found
         piece.className = "piece"

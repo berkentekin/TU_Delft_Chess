@@ -1,9 +1,9 @@
 const board = document.getElementById("chessboard");
 const captured = document.getElementById("captured-zone");
-const root = document.querySelector(":root");
 const keyboardInput = document.getElementById("keyboard-input");
 const keyboardInputForm = document.getElementById("keyboard-input-form");
 const chatInput = document.getElementById("chat-input");
+const root = document.querySelector(":root");
 
 const createPieceImg = (piece) => 
 {
@@ -117,6 +117,29 @@ function movePieceTo(piece, pieceFrom, square, animate)
     let cpiece = getPiece(square); // Check if there's a piece there to capture
     send_message("MOVE", {"from": pieceFrom, "to": pieceTo}, ws);
     
+
+    square.appendChild(piece);
+    // Second part of animation, but before capture
+
+    const finishAction = () =>
+    {
+        /* 
+        * This is the general idea: We have to send only the squares we're going
+        * from and to, the "MOVE" is redundant as chess.js can only be sent moves
+        * anyway.
+        * 
+        * "validate" should contain whether the move we've made is actually valid.
+        * 
+        */
+        let validate = send_message("MOVE", {"from": pieceFrom, "to": pieceTo}, ws);
+        if (cpiece !== null && cpiece !== piece)
+        {
+            capturePiece(cpiece);
+        }
+    }
+
+    if (animate) {animateParentChange2(piece, finishAction);}
+    else {finishAction();} 
 }
 
 window.addEventListener("keypress", (event) =>
