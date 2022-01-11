@@ -21,7 +21,7 @@ let fake;
 
 function animateParentChange1(element)
 {
-  //  if (!animationsEnabled) {return;}
+    if (!captureAnimationEnabled) {return false;}
 
     let boundingBox = element.getBoundingClientRect();
     let top = boundingBox.top + window.pageYOffset;
@@ -38,12 +38,12 @@ function animateParentChange1(element)
     fake.className = "";
 
     document.body.appendChild(fake);
+    
+    return true;
 }
 
 function animateParentChange2(element, finish_action)
 {
-    if (!captureAnimationEnabled) {return false;}
-
     let boundingBox = element.getBoundingClientRect();
     let top = boundingBox.top + window.pageYOffset;
     let left = boundingBox.left + window.pageXOffset;
@@ -63,6 +63,4 @@ function animateParentChange2(element, finish_action)
         element.style.display = "block"; 
         finish_action();  
     };
-
-    return true;
 }
