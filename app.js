@@ -51,6 +51,7 @@ function sendMessageToGame(type, data, game)
 	{
 		if (sockets[ID] !== undefined)
 		{
+			console.log(sockets[ID]);
 			send_message(type, data, sockets[ID]);
 		}
 	}
@@ -66,23 +67,28 @@ wss.on("connection", (ws, req) =>
 		let message = decode_message(data);
 		if (message.type === TMOVE)
 		{
-		        
-			let [error, update_info] = ws.game.make_move(message.data, ws.id);
-			if (error !== null)
+		    let accepted_moves = chess.moves();
+			console.log(accepted_moves);
+			let move = chess.move(message.data);
+			console.log(move);
+			if (move !== null && accepted_moves.includes(move.to))
 			{
-				send_message(TRESPONSE, error, ws);
+				send_message(TRESPONSE, true, ws);
 			}
 			else
 			{
 			//	sendMessageToGame(TUPDATE, update_info, ws.game);
-				let won = ws.game.check_won();
+				
 		
-				if (won !== null)
+				if (chess.in_checkmate)
 				{
+					send_message(TRESPONSE, false, ws);
 				//	sendMessageToGame(TWON, won, ws.game);
 				}
 				else
 				{
+					send_message(TRESPONSE, false, ws);
+
 				//	sendMessageToGame(TTURN, ws.game.turn, ws.game);
 				}
 				

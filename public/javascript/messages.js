@@ -1,8 +1,5 @@
 function send_message(type, data, websocket)
 {
-    console.log(data); // data contains from and to squares
-
-    // TODO This gives TypeError: websocket is undefined
     websocket.send(JSON.stringify({"type": type, "data": data}));
 }
 

@@ -124,7 +124,7 @@ function movePieceTo(piece, pieceFrom, square)
     * "validate" should contain whether the move we've made is actually valid.
     * 
     */
-    let validate = send_message("MOVE", {"from": pieceFrom, "to": pieceTo}, ws.id);
+    let validate = send_message("MOVE", {"from": pieceFrom, "to": pieceTo}, ws);
     if (cpiece !== null && cpiece !== piece) {capturePiece(cpiece);} // Make sure we're not capturing ourselves 
         square.appendChild(piece);
             //sounds[Math.floor(Math.random() * sounds.length)].play();
