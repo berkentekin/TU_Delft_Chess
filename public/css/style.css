@@ -38,7 +38,15 @@ footer
                forwards;
 }
 
-
+.no-animation #info-area,
+.no-animation #chessboard,
+.no-animation .chess-cell,
+.no-animation #chat-area,
+.no-animation footer
+{
+    animation: none!important; 
+    opacity: 1!important;
+}
 
 #main-area
 {
@@ -163,13 +171,14 @@ table.no-spacing
     grid-auto-rows: 1fr;
     width: 100%;
     border: 10px solid black;
-    animation: drop-down-animation var(--board-animation-time) ease;
+    --animation-translation: 0%, -100%;
+    animation: drop-in-animation var(--board-animation-time) ease;
 }
 
 .chess-cell {
     position: static;
     padding: 0;
-    --animation-translation: 0%, 50%;
+    --animation-translation: 0%, 20%;
     animation: drop-in-animation var(--squares-animation-time) ease 
                calc(var(--animation-order) * var(--squares-animation-time)/15 + var(--board-animation-time));
     opacity: 0;
@@ -197,7 +206,8 @@ table.no-spacing
 
 #info-area
 {
-    width: 100%;
+    flex: 1 1 90%; /* This seems to work best when adding padding */
+    padding: 1rem;
     opacity: 0;
     --animation-translation: -100%, 0%;
     animation: drop-in-animation var(--board-animation-time) ease 
@@ -225,7 +235,6 @@ table.no-spacing
     flex-direction: column;
     margin-inline: 1em;
     width: 100%;
-
     opacity: 0;
     --animation-translation: 100%, 0%;
     animation: drop-in-animation var(--board-animation-time) ease 
@@ -236,7 +245,7 @@ table.no-spacing
 #chat-form
 {
     display: block;
-    height: 5%;
+    height: 30px;
     margin-bottom: 10%; 
     padding: 0;
     width: 100%;
@@ -253,7 +262,8 @@ table.no-spacing
     border: 2px solid black;
     background-color: white;
     width: 100%;
-    height: 85%;
+        height: var(--board-size);  
+    overflow: scroll;
 }
 
 .overlay

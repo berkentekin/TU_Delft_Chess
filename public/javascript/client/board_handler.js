@@ -1,9 +1,9 @@
 const board = document.getElementById("chessboard");
 const captured = document.getElementById("captured-zone");
-const root = document.querySelector(":root");
 const keyboardInput = document.getElementById("keyboard-input");
 const keyboardInputForm = document.getElementById("keyboard-input-form");
 const chatInput = document.getElementById("chat-input");
+const root = document.querySelector(":root");
 
 const createPieceImg = (piece) => 
 {
@@ -112,9 +112,21 @@ function movePieceTo(piece, square)
 {
     let pieceTo = decodePos(square.getAttribute("data-pos"));
     let cpiece = getPiece(square); // Check if there's a piece there to capture
-    if (cpiece !== null && cpiece !== piece) {capturePiece(cpiece);} // Make sure we're not capturing ourselves 
-        square.appendChild(piece);
-            //sounds[Math.floor(Math.random() * sounds.length)].play();
+
+    square.appendChild(piece);
+    // Second part of animation, but before capture
+
+    const finishAction = () =>
+    {
+        if (cpiece !== null && cpiece !== piece)
+        {
+            capturePiece(cpiece);
+        }
+    }
+
+    let animated = animateParentChange2(piece, finishAction);
+
+    if (!animated) {finishAction();} 
 }
 
 window.addEventListener("keypress", (event) =>
@@ -128,21 +140,25 @@ window.addEventListener("keypress", (event) =>
 
 keyboardInputForm.addEventListener("submit", (event) =>
 {
+    event.preventDefault(); // Prevent reloading
     
-    let positions = keyboardInput.value.split('-');
-    let from = getSquare(encodePos(positions[0]));
-    let to = getSquare(encodePos(positions[1]));
-    let piece = getPiece(from);
-
-    if (piece !== null && to !== null)
-    {
-        movePieceTo(piece, to);
-    }
-    // Throw some error otherwise
+   // try
+    //{
+        let positions = [keyboardInput.value.substring(0, 2), keyboardInput.value.substring(2, 4)];
+        let from = getSquare(encodePos(positions[0]));
+        let to = getSquare(encodePos(positions[1]));
+        let piece = getPiece(from);
+        
+        if (piece !== null && to !== null)
+        {
+            // First part of animation
+            animateParentChange1(piece);
+            movePieceTo(piece, to);
+        }
+   // }
+   // catch {}
 
     // Take away input again
     keyboardInput.value = "";
     keyboardInput.style.display = "none"; 
-
-    event.preventDefault(); // Prevent reloading
 });

@@ -8,10 +8,12 @@
     <script src="javascript/utils/utils.js"></script>
     <script src="javascript/client/game.js" defer></script>
     <script src="javascript/client/drag_handler.js" defer></script>
+    <script src="javascript/client/chatbox_handler.js" defer></script>
+    <script src="javascript/client/animation_handler.js" defer></script>
     <link rel="stylesheet" href="css/style.css">
 </head>
 
-<body>
+<body class = "no-animation">
 
 <div id = "prank" class = "overlay">
     <a href = "javascript:void(0)" onclick = "closerules()" id="close-button">&times</a>
@@ -29,7 +31,8 @@
         <span id="resetArea"> </span>
         <div><button onclick="openrules()">Rules</button></div>
         <p> To use keyboard input, press Enter and then type your command!</p>
-        <p> Use the form (pos)-(pos), such as a1-a3. </p>
+        <p> Use the form (pos)(pos), such as a1a3. </p>
+        <form id = "keyboard-input-form"><input type = "text" id = "keyboard-input"></form>
     </section>
 
     <section id = "game-area">
@@ -41,7 +44,6 @@
             <td><div id = "r-captured" class = "captured-cell"></div></td>
             <td><div id = "q-captured" class = "captured-cell"></div></td>
         </table>
-        <form id = "keyboard-input-form"><input type = "text" id = "keyboard-input"></form>
     </section>
 
     <section id = "chat-area">
