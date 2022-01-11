@@ -51,7 +51,6 @@ function sendMessageToGame(type, data, game)
 	{
 		if (sockets[ID] !== undefined)
 		{
-			console.log(sockets[ID]);
 			send_message(type, data, sockets[ID]);
 		}
 	}
@@ -68,9 +67,7 @@ wss.on("connection", (ws, req) =>
 		if (message.type === TMOVE)
 		{
 		    let accepted_moves = chess.moves();
-			console.log(accepted_moves);
 			let move = chess.move(message.data);
-			console.log(move);
 			if (move !== null && accepted_moves.includes(move.to))
 			{
 				send_message(TRESPONSE, true, ws);
