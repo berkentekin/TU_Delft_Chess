@@ -89,10 +89,6 @@ function getSquare(num)
     return document.querySelector(`div[data-pos="${num}"]`);
 }
 
-function make_move(data) 
-{
-    console.log(data);
-}
 
 let capturedOffset = {"p":0, "r":0, "n":0, "b":0, "q": 0}
 
