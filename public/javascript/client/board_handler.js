@@ -114,6 +114,7 @@ function movePieceTo(piece, square)
 {
     let pieceTo = decodePos(square.getAttribute("data-pos"));
     let cpiece = getPiece(square); // Check if there's a piece there to capture
+    let validate = ws.game.make_move(pieceFrom, pieceTo, ws);
     if (cpiece !== null && cpiece !== piece) {capturePiece(cpiece);} // Make sure we're not capturing ourselves 
         square.appendChild(piece);
             //sounds[Math.floor(Math.random() * sounds.length)].play();

@@ -43,6 +43,7 @@ const server = app.listen(port, () =>
 
 const wss = new WebSocketServer({server});
 
+
 function sendMessageToGame(type, data, game)
 {
 	let wsIDs = Object.keys(game.players);
@@ -65,6 +66,7 @@ wss.on("connection", (ws, req) =>
 		let message = decode_message(data);
 		if (message.type === TMOVE)
 		{
+		        
 			let [error, update_info] = ws.game.make_move(message.data, ws.id);
 			if (error !== null)
 			{
