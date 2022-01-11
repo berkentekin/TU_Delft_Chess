@@ -111,23 +111,12 @@ function capturePiece(piece)
     capturedOffset[piece.type]++;
 }
 
-function movePieceTo(piece, pieceFrom, square)
+function movePieceTo(piece, pieceFrom, square, animate)
 {
     let pieceTo = decodePos(square.getAttribute("data-pos"));
     let cpiece = getPiece(square); // Check if there's a piece there to capture
-
-    /* 
-    * This is the general idea: We have to send only the squares we're going
-    * from and to, the "MOVE" is redundant as chess.js can only be sent moves
-    * anyway.
-    * 
-    * "validate" should contain whether the move we've made is actually valid.
-    * 
-    */
-    let validate = send_message("MOVE", {"from": pieceFrom, "to": pieceTo}, ws);
-    if (cpiece !== null && cpiece !== piece) {capturePiece(cpiece);} // Make sure we're not capturing ourselves 
-        square.appendChild(piece);
-            //sounds[Math.floor(Math.random() * sounds.length)].play();
+    send_message("MOVE", {"from": pieceFrom, "to": pieceTo}, ws);
+    
 }
 
 window.addEventListener("keypress", (event) =>
@@ -141,21 +130,25 @@ window.addEventListener("keypress", (event) =>
 
 keyboardInputForm.addEventListener("submit", (event) =>
 {
+    event.preventDefault(); // Prevent reloading
     
-    let positions = keyboardInput.value.split('-');
-    let from = getSquare(encodePos(positions[0]));
-    let to = getSquare(encodePos(positions[1]));
-    let piece = getPiece(from);
-
-    if (piece !== null && to !== null)
-    {
-        movePieceTo(piece, to);
-    }
-    // Throw some error otherwise
+   // try
+    //{
+        let positions = [keyboardInput.value.substring(0, 2), keyboardInput.value.substring(2, 4)];
+        let from = getSquare(encodePos(positions[0]));
+        let to = getSquare(encodePos(positions[1]));
+        let piece = getPiece(from);
+        
+        if (piece !== null && to !== null)
+        {
+            // First part of animation  
+            let animate = animateParentChange1(piece);
+            movePieceTo(piece, positions[0], to, animate);
+        }
+   // }
+   // catch {}
 
     // Take away input again
     keyboardInput.value = "";
     keyboardInput.style.display = "none"; 
-
-    event.preventDefault(); // Prevent reloading
 });
