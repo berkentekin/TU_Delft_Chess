@@ -13,17 +13,15 @@
 
 <body>
 
-<div id ="main-area">
-
-    <div id = "prank" class = "overlay">
-        <a href = "javascript:void(0)" onclick = "closerules()" id="close-button">&times</a>
-        <div class = "overlay-content">
-            <p> The rules can be found on brightspace 😊</p>
-        </div>
+<div id = "prank" class = "overlay">
+    <a href = "javascript:void(0)" onclick = "closerules()" id="close-button">&times</a>
+    <div class = "overlay-content">
+        <p> The rules can be found on brightspace 🙃</p>
     </div>
+</div>
 
-
-    <div id = "info-area">
+<section id ="main-area">
+    <section id = "info-area">
         <h1> Chess </h1>
         <span> Change size: </span><input type="range" min="50" max="100" value="50" class="slider" id="sizeSlider">
         <p id="gameStatus"> Waiting for another player...</p>
@@ -32,9 +30,9 @@
         <div><button onclick="openrules()">Rules</button></div>
         <p> To use keyboard input, press Enter and then type your command!</p>
         <p> Use the form (pos)-(pos), such as a1-a3. </p>
-    </div>
+    </section>
 
-    <div id = "game-area">
+    <section id = "game-area">
         <table id="chessboard" class = "noselect no-spacing"></table>
         <table id = "captured-zone"> 
             <td><div id = "p-captured" class = "captured-cell"></div></td>
@@ -44,21 +42,23 @@
             <td><div id = "q-captured" class = "captured-cell"></div></td>
         </table>
         <form id = "keyboard-input-form"><input type = "text" id = "keyboard-input"></form>
-    </div>
+    </section>
 
-    <div id = "chat-area">
+    <section id = "chat-area">
         <div id = "chat-textbox"> </div>
         <form id = "chat-form">
             <input type = "text" id = "chat-input" placeholder = "Say something... I'm giving up on you">
         </form>
-    </div>
-</div>
+    </section>
+</section>
 
 <!-- 
     TODO:
     Add animation for keyboard moves and captures (not sure about this)
     Media query change layout
     Add functions to handle chat
+    Animation of other elements into side on startup
+    Add animation disabler
 -->
 
 <footer>

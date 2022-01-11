@@ -9,6 +9,17 @@ body
     margin-bottom: 0;
 }
 
+@keyframes drop-in-animation {
+    from {
+        opacity: 0;
+        transform: translate(var(--animation-translation));
+    }
+    to {
+        opacity: 1;
+        transform: translate(0);
+    }
+}
+
 footer
 {
     display: flex;
@@ -19,7 +30,15 @@ footer
     align-items: center;
     border-top: 2px solid black;
     border-bottom: 2px solid black;
+
+    opacity: 0;
+    --animation-translation: 0, 100%;
+    animation: drop-in-animation var(--board-animation-time) ease 
+               calc(52 * var(--squares-animation-time)/15 + var(--board-animation-time) + 1s) 
+               forwards;
 }
+
+
 
 #main-area
 {
@@ -39,6 +58,8 @@ footer
 :root
 {
     --board-size: 0px; /* Set by javascript :) */
+    --board-animation-time: 1s;
+    --squares-animation-time: 1s;
 }
 
 .white
@@ -99,14 +120,6 @@ footer
     bottom: 0.2em;
 }
 
-.piece
-{
-    width: 100%;
-    height: 100%;
-    position: static;
-    z-index: 1;
-}
-
 .captured-piece
 {
     position: absolute;
@@ -149,11 +162,25 @@ table.no-spacing
     grid-auto-columns: 1fr;
     grid-auto-rows: 1fr;
     width: 100%;
-    border: 2px solid black;
+    border: 10px solid black;
+    animation: drop-down-animation var(--board-animation-time) ease;
 }
 
 .chess-cell {
+    position: static;
     padding: 0;
+    --animation-translation: 0%, 50%;
+    animation: drop-in-animation var(--squares-animation-time) ease 
+               calc(var(--animation-order) * var(--squares-animation-time)/15 + var(--board-animation-time));
+    opacity: 0;
+}
+
+.piece
+{
+    width: 100%;
+    height: 100%;
+    position: static;
+    z-index: 1;
 }
 
 .captured-cell
@@ -164,13 +191,18 @@ table.no-spacing
 
 #game-area
 {
-    flex: 2 0 30%;
     min-width: 400px;
+    width: 205%;
 }
 
 #info-area
 {
-    flex: 1 1 5%;
+    width: 100%;
+    opacity: 0;
+    --animation-translation: -100%, 0%;
+    animation: drop-in-animation var(--board-animation-time) ease 
+               calc(52 * var(--squares-animation-time)/15 + var(--board-animation-time) + 1s) 
+               forwards;
 }
 
 #keyboard-input
@@ -192,6 +224,13 @@ table.no-spacing
     align-items: top;
     flex-direction: column;
     margin-inline: 1em;
+    width: 100%;
+
+    opacity: 0;
+    --animation-translation: 100%, 0%;
+    animation: drop-in-animation var(--board-animation-time) ease 
+               calc(52 * var(--squares-animation-time)/15 + var(--board-animation-time) + 1s) 
+               forwards;
 }
 
 #chat-form
