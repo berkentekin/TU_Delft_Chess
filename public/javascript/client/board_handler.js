@@ -89,6 +89,11 @@ function getSquare(num)
     return document.querySelector(`div[data-pos="${num}"]`);
 }
 
+function make_move(data) 
+{
+    console.log(data);
+}
+
 let capturedOffset = {"p":0, "r":0, "n":0, "b":0, "q": 0}
 
 function capturePiece(piece)
@@ -110,11 +115,20 @@ function capturePiece(piece)
     capturedOffset[piece.type]++;
 }
 
-function movePieceTo(piece, square)
+function movePieceTo(piece, pieceFrom, square)
 {
     let pieceTo = decodePos(square.getAttribute("data-pos"));
     let cpiece = getPiece(square); // Check if there's a piece there to capture
-    let validate = ws.game.make_move(pieceFrom, pieceTo, ws);
+
+    /* 
+    * This is the general idea: We have to send only the squares we're going
+    * from and to, the "MOVE" is redundant as chess.js can only be sent moves
+    * anyway.
+    * 
+    * "validate" should contain whether the move we've made is actually valid.
+    * 
+    */
+    let validate = send_message("MOVE", {"from": pieceFrom, "to": pieceTo}, ws.id);
     if (cpiece !== null && cpiece !== piece) {capturePiece(cpiece);} // Make sure we're not capturing ourselves 
         square.appendChild(piece);
             //sounds[Math.floor(Math.random() * sounds.length)].play();
