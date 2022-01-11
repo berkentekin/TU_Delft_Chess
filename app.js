@@ -68,7 +68,7 @@ wss.on("connection", (ws, req) =>
 		{
 		    let accepted_moves = chess.moves();
 			let move = chess.move(message.data);
-			if (move !== null && accepted_moves.includes(move.to))
+			if (move !== null && accepted_moves.includes(move.san))
 			{
 				send_message(TRESPONSE, true, ws);
 			}
