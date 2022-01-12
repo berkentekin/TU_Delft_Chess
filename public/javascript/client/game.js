@@ -88,6 +88,8 @@ function connect()
             turnStatus.innerHTML = message.data === player_type ? "It's your turn" : "It's not your turn";
             break;
         case TUPDATE:
+            let piece = message.data["piece"];
+            finalizeMove(getPiece(getSquare(message.data["piece"]["pos"])), getSquare(encodePos(message.data["pieceTo"])));
             // Get info here
             // Then call movePieceTo (please keep this in function, it's also used elsewhere mind you)
            // movePieceTo(arg1, arg2, arg3)    

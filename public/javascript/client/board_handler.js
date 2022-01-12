@@ -123,55 +123,55 @@ function capturePiece(piece)
     capturedOffset[piece.type]++;
 }
 
-// var pieceHandler = (function() {
-//     var currentPiece;
-//     var destinationSquare;
-//     return {
-//         assignPiece: function(piece) {
-//             this.currentPiece = piece;
-//         },
-//         assignSquare: function(square) {
-//             this.destinationSquare = square;
-//         },
-//         returnPiece: function() {
-//             return this.currentPiece;
-//         },
-//         returnSquare: function() {
-//             return this.destinationSquare;
-//         },
-//     };
-// })();
+var pieceHandler = (function() {
+    var currentPiece;
+    var destinationSquare;
+    return {
+        assignPiece: function(piece) {
+            this.currentPiece = piece;
+        },
+        assignSquare: function(square) {
+            this.destinationSquare = square;
+        },
+        returnPiece: function() {
+            return this.currentPiece;
+        },
+        returnSquare: function() {
+            return this.destinationSquare;
+        },
+    };
+})();
 
 function movePieceTo(piece, pieceFrom, square)
 {
-    let animate = animateParentChange1(piece);
+
     
     // Since you've made the pieceHandler already you could pass this through the message.
-    
     let pieceTo = decodePos(square.getAttribute("data-pos"));
-    send_message("MOVE", {"piece": piece, "destSquare": square, "from": pieceFrom, "to": pieceTo}, ws);
+    send_message("MOVE", {"piece": piece, "from": pieceFrom, "to": pieceTo}, ws);
 
     // Second part of animation, but before capture
+}
 
+function finalizeMove(piece, square) 
+{
+    console.log(piece, "5");
+    let animate = animateParentChange1(piece);
+    let cpiece = getPiece(square);
     const finishAction = () => {
-        /* 
-        * This is the general idea: We have to send only the squares we're going
-        * from and to, the "MOVE" is redundant as chess.js can only be sent moves
-        * anyway.
-        * 
-        * "validate" should contain whether the move we've made is actually valid.
-        * 
-        */
-        let validate = send_message("MOVE", {"from": pieceFrom, "to": pieceTo}, ws);
+
         if (cpiece !== null && cpiece !== piece)
         {
             capturePiece(cpiece);
         }
         else {playSound("move-self");}
+        piece["pos"] =  square.getAttribute("data-pos");
+        square.appendChild(piece);
     }
 
     if (animate) {animateParentChange2(piece, finishAction);}
     else {finishAction();} 
+    finishAction();
 }
 
 window.addEventListener("keypress", (event) =>

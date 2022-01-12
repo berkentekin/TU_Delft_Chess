@@ -33,6 +33,7 @@ let fake; // You just got faked B-)
 
 function animateParentChange1(element)
 {
+    console.log(element);
     if (!captureAnimationEnabled) {return false;}
 
     let boundingBox = element.getBoundingClientRect();

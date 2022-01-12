@@ -65,11 +65,11 @@ wss.on("connection", (ws, req) =>
 		if (message.type === TMOVE)
 		{
 		    let accepted_moves = game.accepted_moves();
-			let move = game.make_move(message.data);
-
+			let response = game.make_move(message.data);
+			let move = response["moveInfo"];
 			if (move !== null && accepted_moves.includes(move.san))
 			{
-				sendMessageToGame(TUPDATE, move.flags, game);
+				sendMessageToGame(TUPDATE, response, game);
 				sendMessageToGame(TTURN, game.show_turn(), game);
 				if (game.check_game_over()) 
 				{
