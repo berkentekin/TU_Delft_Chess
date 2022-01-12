@@ -51,9 +51,10 @@ class Game
         return this.chess.undo();
     }
 
-    turn()
+    show_turn()
     {
-        return this.chess.turn() === "w" ? "white" : "black";
+        this.turn = this.chess.turn() === "w" ? "white" : "black";
+        return this.turn;
     }
 
     add_player(wsID)

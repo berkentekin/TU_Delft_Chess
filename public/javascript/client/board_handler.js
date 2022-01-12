@@ -113,6 +113,7 @@ function capturePiece(piece)
 
 function movePieceTo(piece, pieceFrom, square, animate)
 {
+    let currentPiece = piece;
     let pieceTo = decodePos(square.getAttribute("data-pos"));
     let cpiece = getPiece(square); // Check if there's a piece there to capture
     send_message("MOVE", {"from": pieceFrom, "to": pieceTo}, ws);

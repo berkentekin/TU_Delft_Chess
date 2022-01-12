@@ -1,3 +1,4 @@
+
 let player_type;
 const slider = document.getElementById("sizeSlider");
 const gameStatus = document.getElementById("gameStatus");
@@ -105,37 +106,34 @@ function connect()
     ws.addEventListener("message", (event) =>
     {
         let message = decode_message(event);
-        if (message.type === TPLAYERT)
+        switch (message.type)
         {
+        case TPLAYERT:
             player_type = message.data;
-        }
-        else if (message.type === TGAMESTART)
-        {
+            break;
+        case TGAMESTART:
             clearInterval(waiting_for_player);
             gameStatus.innerHTML = "Your are player: " + `<span style="color:${player_type};">${player_type}</span>`; 
-        }
-        else if (message.type === TRESPONSE)
-        {
+            break;
+        case TRESPONSE:
             console.log("Server: ", message.data);
-        }
-        else if (message.type === TTURN)
-        {   
+            break;
+        case TTURN:
             turnStatus.innerHTML = message.data === player_type ? "It's your turn" : "It's not your turn";
-        }
-        else if (message.type === TUPDATE)
-        {
-            updateSquare(message.data);
-        }
-        else if (message.type === TWON)
-        {
-            if (message.data === "Draw") {turnStatus.innerHTML = "The game is a draw!";}
+            break;
+        case TUPDATE:
+            if (message.data == 'c') {capturePiece(cpiece);}
+            square.appendChild(currentPiece);
+            break;            
+        case TWON:
+            if (message.data === "draw") {turnStatus.innerHTML = "The game is a draw!";}
             else {turnStatus.innerHTML = message.data === player_type ? "You won!" : "You lost :("};
             game_over("You finished a match...");
-        }
-        else if (message.type === TQUIT)
-        {
+            break;
+        case TQUIT:
             turnStatus.innerHTML = "";
             game_over("The other player quit :(");
+            break;
         }
     })
 }
