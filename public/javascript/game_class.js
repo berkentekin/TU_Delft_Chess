@@ -26,6 +26,15 @@ class Game
         return this.numPlayers === 2;
     }
 
+    in_check()
+    {
+        return this.chess.in_check();
+    }
+
+    check_game_over()
+    {
+        return this.chess.game_over();
+    }
     check_won()
     {
         return this.chess.in_checkmate();

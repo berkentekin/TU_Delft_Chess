@@ -111,19 +111,37 @@ function capturePiece(piece)
     capturedOffset[piece.type]++;
 }
 
+var pieceHandler = (function() {
+    var currentPiece;
+    var destinationSquare;
+    return {
+        assignPiece: function(piece) {
+            this.currentPiece = piece;
+        },
+        assignSquare: function(square) {
+            this.destinationSquare = square;
+        },
+        returnPiece: function() {
+            return this.currentPiece;
+        },
+        returnSquare: function() {
+            return this.destinationSquare;
+        },
+    };
+})();
+
 function movePieceTo(piece, pieceFrom, square, animate)
 {
-    let currentPiece = piece;
+    pieceHandler.assignPiece(piece);
+    pieceHandler.assignSquare(square);
     let pieceTo = decodePos(square.getAttribute("data-pos"));
     let cpiece = getPiece(square); // Check if there's a piece there to capture
     send_message("MOVE", {"from": pieceFrom, "to": pieceTo}, ws);
     
 
-    square.appendChild(piece);
     // Second part of animation, but before capture
 
-    const finishAction = () =>
-    {
+ //   const finishAction = () => {
         /* 
         * This is the general idea: We have to send only the squares we're going
         * from and to, the "MOVE" is redundant as chess.js can only be sent moves
@@ -132,15 +150,14 @@ function movePieceTo(piece, pieceFrom, square, animate)
         * "validate" should contain whether the move we've made is actually valid.
         * 
         */
-        let validate = send_message("MOVE", {"from": pieceFrom, "to": pieceTo}, ws);
-        if (cpiece !== null && cpiece !== piece)
-        {
-            capturePiece(cpiece);
-        }
-    }
+  //      let validate = send_message("MOVE", { "from": pieceFrom, "to": pieceTo }, ws);
+  //      if (cpiece !== null && cpiece !== piece) {
+  //          capturePiece(cpiece);
+ // //      }
+  //  }
 
-    if (animate) {animateParentChange2(piece, finishAction);}
-    else {finishAction();} 
+  //  if (animate) {animateParentChange2(piece, finishAction);}
+  //  else {finishAction();} 
 }
 
 window.addEventListener("keypress", (event) =>

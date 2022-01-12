@@ -71,24 +71,27 @@ wss.on("connection", (ws, req) =>
 			{
 				sendMessageToGame(TUPDATE, move.flags, game);
 				sendMessageToGame(TTURN, game.show_turn(), game);
+				if (game.check_game_over()) 
+				{
+					if (game.in_check() && !game.check_won())
+					{
+						sendMessageToGame(TCHECK, game.show_turn(), game);
+					}
+					else if (game.check_won())
+					{
+						sendMessageToGame(TWON, "win", game);
+					//		sendMessageToGame(TWON, won, ws.game);
+					}
+					else if (game.check_draw())
+					{
+						sendMessageToGame(TWON, "draw", game);
+					//	sendMessageToGame(TTURN, ws.game.turn, ws.game);
+					}
+
+				}
 			}
 			else
-			{
-			    
-				if (game.check_won())
-				{
-					sendMessageToGame(TWON, "win", game);
-				//	sendMessageToGame(TWON, won, ws.game);
-				}
-				else if (game.check_draw())
-				{
-					sendMessageToGame(TWON, "draw", game);
-				//	sendMessageToGame(TTURN, ws.game.turn, ws.game);
-				}
-				else
-				{
-					sendMessageToGame(TTURN, game.show_turn(), game);
-				}
+			{  
 				
 			}
 		}

@@ -22,18 +22,6 @@ function closerules()
     prankRules.style.width = "0";
 }
 
-function reset_game()
-{
-    for (let i = 0; i < 9; i++)
-    {
-        document.getElementById(`s${i}`).innerHTML = "";
-    }
-    resetButton.remove();
-    turnStatus.innerHTML = "Turn undecided...";
-    gameStatus.innerHTML = "Waiting for another player...";
-    waiting_for_player = setInterval(update_waiting(), 500);
-    connect();  
-}
 
 function game_over(message)
 {
@@ -58,28 +46,6 @@ function update_waiting()
 
 let waiting_for_player = setInterval(update_waiting(), 500);
 
-function getSquareFunction(squareNum)
-{
-    return function ()
-    {
-        if (ws.readyState === 1) // Websocket is connected
-        {
-            send_message(TMOVE, squareNum, ws);
-        }
-        else
-        {
-            console.log("Not currently in a game");
-        }
-        
-    } 
-}
-
-function updateSquare(update_info)
-{
-    let square = document.getElementById(`s${update_info.square}`);
-    square.style.color = update_info.colour;
-    square.innerHTML = update_info.colour === "red" ? "X": "O";
-}
 
 for (let i = 0; i < 9; i++)
 {
@@ -122,8 +88,14 @@ function connect()
             turnStatus.innerHTML = message.data === player_type ? "It's your turn" : "It's not your turn";
             break;
         case TUPDATE:
-            if (message.data == 'c') {capturePiece(cpiece);}
-            square.appendChild(currentPiece);
+            let piece = pieceHandler.returnPiece();
+            let square = pieceHandler.returnSquare();
+            let cpiece = getPiece(square);
+            console.log(piece, square);
+            if (cpiece !== null && cpiece !== piece) {
+                capturePiece(cpiece);
+            }
+            square.appendChild(piece);
             break;            
         case TWON:
             if (message.data === "draw") {turnStatus.innerHTML = "The game is a draw!";}
