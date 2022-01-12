@@ -90,8 +90,7 @@ function connect()
         case TUPDATE:
             let piece = pieceHandler.returnPiece();
             let square = pieceHandler.returnSquare();
-            let cpiece = getPiece(square);
-            console.log(piece, square);
+            let cpiece = getPiece(square); // Check if there's a piece there to capture
             if (cpiece !== null && cpiece !== piece) {
                 capturePiece(cpiece);
             }
