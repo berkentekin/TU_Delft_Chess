@@ -132,10 +132,11 @@ var pieceHandler = (function() {
 
 function movePieceTo(piece, pieceFrom, square, animate)
 {
+    console.log("called");
     pieceHandler.assignPiece(piece);
     pieceHandler.assignSquare(square);
     let pieceTo = decodePos(square.getAttribute("data-pos"));
-    send_message("MOVE", {"from": pieceFrom, "to": pieceTo}, ws);
+    send_message("MOVE", {"piece": piece, "destSquare": square, "from": pieceFrom, "to": pieceTo}, ws);
     
 
     // Second part of animation, but before capture

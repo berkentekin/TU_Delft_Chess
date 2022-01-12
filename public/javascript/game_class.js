@@ -17,8 +17,8 @@ class Game
 
     make_move(data)
     {
-        let move = this.chess.move(data);
-        return move;  
+        let move = this.chess.move({"from": data["from"], "to":data["to"]});
+        return {moveInfo: move, "piece": data["piece"], "destSquare": data["destSquare"]};
     }
 
     is_full()
