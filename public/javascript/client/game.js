@@ -55,7 +55,7 @@ function update_waiting()
     }
 }
 
-let waiting_for_player = setInterval(update_waiting(), 500);
+//let waiting_for_player = setInterval(update_waiting(), 500);
 
 function getSquareFunction(squareNum)
 {

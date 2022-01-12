@@ -5,6 +5,16 @@ const keyboardInputForm = document.getElementById("keyboard-input-form");
 const chatInput = document.getElementById("chat-input");
 const root = document.querySelector(":root");
 
+let sounds = {"move-self": new Audio("sounds/move-self.webm"),
+              "capture": new Audio("sounds/capture.webm")};
+
+const playSound = (sound) =>
+{
+    // Reset sound incase it hasn't finished playback yet
+    sounds[sound].currentTime = 0;
+    sounds[sound].play();
+};
+
 const createPieceImg = (piece) => 
 {
     let img = document.createElement("img");
@@ -59,11 +69,12 @@ for (let row = 0; row < 8; row++)
     }
 }
 
+root.style.setProperty("--board-size", `${board.clientWidth}px`);
+
 window.addEventListener("resize", () =>
 {
     root.style.setProperty("--board-size", `${board.clientWidth}px`);
 })
-root.style.setProperty("--board-size", `${board.clientWidth}px`);
 
 function createPieces(gameBoard)
 {
@@ -98,6 +109,7 @@ function capturePiece(piece)
 
     piece.className = "captured-piece";
     capturedZone.appendChild(piece);
+    playSound("capture");
 
     // Needs to be updated if captured pieces size is updated ;;;
     // Bit of redundancy here, but oh well. Since capturedZone is relative, it does not
@@ -134,6 +146,7 @@ function movePieceTo(piece, pieceFrom, square, animate)
         {
             capturePiece(cpiece);
         }
+        else {playSound("move-self");}
     }
 
     if (animate) {animateParentChange2(piece, finishAction);}
@@ -153,8 +166,8 @@ keyboardInputForm.addEventListener("submit", (event) =>
 {
     event.preventDefault(); // Prevent reloading
     
-   // try
-    //{
+    try
+    {
         let positions = [keyboardInput.value.substring(0, 2), keyboardInput.value.substring(2, 4)];
         let from = getSquare(encodePos(positions[0]));
         let to = getSquare(encodePos(positions[1]));
@@ -166,8 +179,8 @@ keyboardInputForm.addEventListener("submit", (event) =>
             let animate = animateParentChange1(piece);
             movePieceTo(piece, positions[0], to, animate);
         }
-   // }
-   // catch {}
+    }
+    catch {}
 
     // Take away input again
     keyboardInput.value = "";
