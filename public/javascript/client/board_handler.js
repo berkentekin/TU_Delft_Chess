@@ -12,7 +12,8 @@ const playSound = (sound) =>
 {
     // Reset sound incase it hasn't finished playback yet
     sounds[sound].currentTime = 0;
-    sounds[sound].play();
+    sounds[sound].muted = false; // Chrome support
+    sounds[sound].play();   
 };
 
 const createPieceImg = (piece) => 
@@ -70,11 +71,10 @@ for (let row = 0; row < 8; row++)
 }
 
 root.style.setProperty("--board-size", `${board.clientWidth}px`);
-
 window.addEventListener("resize", () =>
 {
     root.style.setProperty("--board-size", `${board.clientWidth}px`);
-})
+});
 
 function createPieces(gameBoard)
 {
@@ -109,7 +109,6 @@ function capturePiece(piece)
 
     piece.className = "captured-piece";
     capturedZone.appendChild(piece);
-    playSound("capture");
 
     // Needs to be updated if captured pieces size is updated ;;;
     // Bit of redundancy here, but oh well. Since capturedZone is relative, it does not
@@ -153,25 +152,35 @@ function movePieceTo(piece, pieceFrom, square)
     // Second part of animation, but before capture
 }
 
+let wasMovedManually = false;
+
 function finalizeMove(piece, square) 
 {
     console.log(piece, "5");
-    let animate = animateParentChange1(piece);
+    let animate;
+
+    console.log(wasMovedManually);
+    if (!wasMovedManually) {animate = animateParentChange1(piece);}
+    else                   {animate = false;}
+
+    wasMovedManually = false; // Reset. This whole thing is kinda hacky, but oh well
+
     let cpiece = getPiece(square);
+    square.appendChild(piece);
+    piece["pos"] =  square.getAttribute("data-pos"); 
+    
     const finishAction = () => {
 
         if (cpiece !== null && cpiece !== piece)
         {
+            playSound("capture");
             capturePiece(cpiece);
         }
-        else {playSound("move-self");}
-        piece["pos"] =  square.getAttribute("data-pos");
-        square.appendChild(piece);
+        else {playSound("move-self");}   
     }
 
     if (animate) {animateParentChange2(piece, finishAction);}
     else {finishAction();} 
-    finishAction();
 }
 
 window.addEventListener("keypress", (event) =>
@@ -196,7 +205,6 @@ keyboardInputForm.addEventListener("submit", (event) =>
         
         if (piece !== null && to !== null)
         {
-            // First part of animation  
             movePieceTo(piece, positions[0], to);
         }
     }

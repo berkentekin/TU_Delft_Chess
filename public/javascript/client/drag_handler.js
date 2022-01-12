@@ -39,6 +39,7 @@ const mouseDownF = (event) =>
         if (square !== undefined)
         {
             console.log(piece, "1");
+            wasMovedManually = true;
 	        movePieceTo(piece, pieceFrom, square);
         }
         // Position piece relative to square again. Will go back to original if new square wasn't found

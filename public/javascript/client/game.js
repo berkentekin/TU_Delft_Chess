@@ -39,25 +39,12 @@ function update_waiting()
 
     return () =>
     {
-        gameStatus.innerText = `Waiting for another player${".".repeat(phase)}`;
+        //gameStatus.innerText = `Waiting for another player${".".repeat(phase)}`;
         phase = (phase + 1) % 4;
     }
 }
 
-//let waiting_for_player = setInterval(update_waiting(), 500);
-
-
-for (let i = 0; i < 9; i++)
-{
-   // document.getElementById(`s${i}`).onclick = getSquareFunction(i);
-}
-
-slider.max = Math.min(screen.width, screen.height)/10;
-
-slider.oninput = () =>
-{
-    root.style.setProperty("--cell-size", `${slider.value}px`);
-};
+let waiting_for_player = setInterval(update_waiting(), 500);
 
 function connect()
 {

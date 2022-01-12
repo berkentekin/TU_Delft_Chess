@@ -24,46 +24,60 @@
 
 <section id ="main-area">
     <section id = "info-area">
-        <h1> Chess </h1>
-        <span> Change size: </span><input type="range" min="50" max="100" value="50" class="slider" id="sizeSlider">
-        <p id="gameStatus"> Waiting for another player...</p>
-        <p id="turnStatus"> Turn undecided... </p>
-        <span id="resetArea"> </span>
-        <div><button onclick="openrules()">Rules</button></div>
-        <p> To use keyboard input, press Enter and then type your command!</p>
-        <p> Use the form (pos)(pos), such as a1a3. </p>
-        <form id = "keyboard-input-form"><input type = "text" id = "keyboard-input"></form>
+        <div id="game-title"><h1> <span style ="color: var(--light-theme)">TU Delft: </span>Chess <span style ="color: var(--light-theme)">of technical difficulties </span></h1></div>
+        
+        <div id="game-info">
+            <p id="gameStatus"> Waiting for another player...</p>
+            <p id="turnStatus"> Turn undecided... </p>
+            <span id="resetArea"> </span>
+            <div><button onclick="openrules()">Rules</button></div>
+            <p> To use keyboard input, press Enter and then type your command!</p>
+            <p> Use the form (pos)(pos), such as a1a3. </p>
+            <form id = "keyboard-input-form"><input type = "text" id = "keyboard-input"></form>
+        </div>
+        <div id = "settings-info">
+            <div class="checkbox-divs">
+                <p> Enable startup animation</p>
+                <label>
+                    <input type = "checkbox" class = "hidden-checkbox" num="1" id="enableStartupAnimation">
+                    <svg class="checkbox-svg" viewBox="0 0 210 185" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M135 15H50C30.67 15 15 30.67 15 50V135C15 154.33 30.67 170 50 170H135C154.33 170 170 154.33 170 135V50C170 30.67 154.33 15 135 15ZM50 0C22.3858 0 0 22.3858 0 50V135C0 162.614 22.3858 185 50 185H135C162.614 185 185 162.614 185 135V50C185 22.3858 162.614 0 135 0H50Z" fill="#3C3776" pathLength="10"/>
+                        <path fill="none" d="M41.3984 86.4754C35.8339 82.3894 28.0106 83.588 23.9246 89.1525C19.8386 94.717 21.0371 102.54 26.6016 106.626L41.3984 86.4754ZM204.717 34.9591C209.665 30.1448 209.773 22.231 204.959 17.2831C200.145 12.3351 192.231 12.2267 187.283 17.0409L204.717 34.9591ZM78.1758 128.989L70.7775 139.064L78.1758 128.989ZM26.6016 106.626L70.7775 139.064L85.5742 118.914L41.3984 86.4754L26.6016 106.626ZM99.785 137.055L204.717 34.9591L187.283 17.0409L82.3511 119.137L99.785 137.055ZM70.7775 139.064C79.639 145.571 91.9053 144.722 99.785 137.055L82.3511 119.137C83.2267 118.285 84.5896 118.191 85.5742 118.914L70.7775 139.064Z"/>
+                        <defs>
+                            <linearGradient id="svg-animation-1">
+                                <stop offset="0">
+                                    <animate dur="200ms" attributeName="offset" fill="freeze" from="0" to="1" restart="always"/>
+                                </stop>
+                                <stop offset="0" stop-color="white" stop-opacity="0">
+                                    <animate dur="200ms" attributeName="offset" fill="freeze" from="0" to="1" restart="always"/>
+                                </stop>
+                            </linearGradient>
+                        </defs>
+                    </svg>
+                </label>
+            </div>
 
-        <label>
-            <input type = "checkbox" class = "hidden-checkbox">
-            <svg class="checkbox-svg" viewBox="0 0 210 185" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M135 15H50C30.67 15 15 30.67 15 50V135C15 154.33 30.67 170 50 170H135C154.33 170 170 154.33 170 135V50C170 30.67 154.33 15 135 15ZM50 0C22.3858 0 0 22.3858 0 50V135C0 162.614 22.3858 185 50 185H135C162.614 185 185 162.614 185 135V50C185 22.3858 162.614 0 135 0H50Z" fill="#3C3776" pathLength="10"/>
-                <path fill="none" d="M41.3984 86.4754C35.8339 82.3894 28.0106 83.588 23.9246 89.1525C19.8386 94.717 21.0371 102.54 26.6016 106.626L41.3984 86.4754ZM204.717 34.9591C209.665 30.1448 209.773 22.231 204.959 17.2831C200.145 12.3351 192.231 12.2267 187.283 17.0409L204.717 34.9591ZM78.1758 128.989L70.7775 139.064L78.1758 128.989ZM26.6016 106.626L70.7775 139.064L85.5742 118.914L41.3984 86.4754L26.6016 106.626ZM99.785 137.055L204.717 34.9591L187.283 17.0409L82.3511 119.137L99.785 137.055ZM70.7775 139.064C79.639 145.571 91.9053 144.722 99.785 137.055L82.3511 119.137C83.2267 118.285 84.5896 118.191 85.5742 118.914L70.7775 139.064Z">
-
-                </path>
-                <defs>
-                    <linearGradient id="left-to-right">
-                        <stop offset="0">
-                            <animate dur="400ms" attributeName="offset" fill="freeze" from="0" to="1" restart="always"/>
-                        </stop>
-                        <stop offset="0" stop-color="white" stop-opacity="0">
-                            <animate dur="400ms" attributeName="offset" fill="freeze" from="0" to="1" restart="always"/>
-                        </stop>
-                    </linearGradient>
-                </defs>
-            </svg>
-        </label>
-
-        <label>
-            <input type = "checkbox" class = "hidden-checkbox">
-            <svg class="checkbox-svg" viewBox="0 0 210 185" fill="none" xmlns="http://www.w3.org/2000/svg">
-                <path fill-rule="evenodd" clip-rule="evenodd" d="M135 15H50C30.67 15 15 30.67 15 50V135C15 154.33 30.67 170 50 170H135C154.33 170 170 154.33 170 135V50C170 30.67 154.33 15 135 15ZM50 0C22.3858 0 0 22.3858 0 50V135C0 162.614 22.3858 185 50 185H135C162.614 185 185 162.614 185 135V50C185 22.3858 162.614 0 135 0H50Z" fill="#3C3776" pathLength="10"/>
-                <path fill="none" d="M41.3984 86.4754C35.8339 82.3894 28.0106 83.588 23.9246 89.1525C19.8386 94.717 21.0371 102.54 26.6016 106.626L41.3984 86.4754ZM204.717 34.9591C209.665 30.1448 209.773 22.231 204.959 17.2831C200.145 12.3351 192.231 12.2267 187.283 17.0409L204.717 34.9591ZM78.1758 128.989L70.7775 139.064L78.1758 128.989ZM26.6016 106.626L70.7775 139.064L85.5742 118.914L41.3984 86.4754L26.6016 106.626ZM99.785 137.055L204.717 34.9591L187.283 17.0409L82.3511 119.137L99.785 137.055ZM70.7775 139.064C79.639 145.571 91.9053 144.722 99.785 137.055L82.3511 119.137C83.2267 118.285 84.5896 118.191 85.5742 118.914L70.7775 139.064Z">
-
-                </path>
-            </svg>
-        </label>
-            
+            <div class="checkbox-divs">
+                <p>Enable move animations</p>
+                <label>
+                    <input type = "checkbox" class = "hidden-checkbox" num="2" id="enableMoveAnimation">
+                    <svg class="checkbox-svg" viewBox="0 0 210 185" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path fill-rule="evenodd" clip-rule="evenodd" d="M135 15H50C30.67 15 15 30.67 15 50V135C15 154.33 30.67 170 50 170H135C154.33 170 170 154.33 170 135V50C170 30.67 154.33 15 135 15ZM50 0C22.3858 0 0 22.3858 0 50V135C0 162.614 22.3858 185 50 185H135C162.614 185 185 162.614 185 135V50C185 22.3858 162.614 0 135 0H50Z" fill="#3C3776" pathLength="10"/>
+                        <path fill="none" d="M41.3984 86.4754C35.8339 82.3894 28.0106 83.588 23.9246 89.1525C19.8386 94.717 21.0371 102.54 26.6016 106.626L41.3984 86.4754ZM204.717 34.9591C209.665 30.1448 209.773 22.231 204.959 17.2831C200.145 12.3351 192.231 12.2267 187.283 17.0409L204.717 34.9591ZM78.1758 128.989L70.7775 139.064L78.1758 128.989ZM26.6016 106.626L70.7775 139.064L85.5742 118.914L41.3984 86.4754L26.6016 106.626ZM99.785 137.055L204.717 34.9591L187.283 17.0409L82.3511 119.137L99.785 137.055ZM70.7775 139.064C79.639 145.571 91.9053 144.722 99.785 137.055L82.3511 119.137C83.2267 118.285 84.5896 118.191 85.5742 118.914L70.7775 139.064Z"/>
+                        <defs>
+                            <linearGradient id="svg-animation-2">
+                                <stop offset="0">
+                                    <animate dur="200ms" attributeName="offset" fill="freeze" from="0" to="1" restart="always"/>
+                                </stop>
+                                <stop offset="0" stop-opacity="0">
+                                    <animate dur="200ms" attributeName="offset" fill="freeze" from="0" to="1" restart="always"/>
+                                </stop>
+                            </linearGradient>
+                        </defs> 
+                    </svg>
+                </label>
+            </div>
+        </div>
     </section>
 
     <section id = "game-area">
@@ -87,10 +101,11 @@
 
 <!-- 
     TODO:
-    Add animation for keyboard moves and captures (not sure about this)
+    
     Media query change layout
-    Add functions to handle chat
-    Animation of other elements into side on startup
+    Most of side UI
+    We have to add cancel move message as well
+    
     Add animation disabler
 -->
 

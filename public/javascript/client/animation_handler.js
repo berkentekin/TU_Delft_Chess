@@ -1,19 +1,25 @@
 let animationsEnabled = false;
-let captureAnimationEnabled = true;
+let movePieceAnimationEnabled = true;
 
 if (animationsEnabled)
 {
     document.body.classList.remove("no-animation"); // Add back animation
 }
 
+const checkbox = {};
+
 document.querySelectorAll(".hidden-checkbox").forEach(checkbox =>
 {
+    let checkmark = checkbox.parentElement.querySelector(".checkbox-svg path:nth-child(2)");
+    checkmark.style.fill = `url(#svg-animation-${checkbox.getAttribute("num")})`;
+
     checkbox.addEventListener("change", () =>
     {
-        console.log("here" + checkbox);
+
         checkbox.parentElement.querySelectorAll("animate").forEach(animation =>
         {
-            console.log("here");
+            animation.setAttribute("from", checkbox.checked ? "1": "0");
+            animation.setAttribute("to", checkbox.checked ? "0": "1");
             animation.beginElement();
         });
     });
@@ -33,8 +39,7 @@ let fake; // You just got faked B-)
 
 function animateParentChange1(element)
 {
-    console.log(element);
-    if (!captureAnimationEnabled) {return false;}
+    if (!movePieceAnimationEnabled) {return false;}
 
     let boundingBox = element.getBoundingClientRect();
     let top = boundingBox.top + window.pageYOffset;
