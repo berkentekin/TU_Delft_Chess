@@ -1,10 +1,8 @@
 const express = require("express");
 const {send_message, decode_message,
       TMOVE, TRESPONSE, TQUIT, TUPDATE,
-      TPLAYERT, TGAMESTART, TTURN, TWON} = require("./public/javascript/messages");
+      TPLAYERT, TGAMESTART, TTURN, TWON, TBOARD} = require("./public/javascript/messages");
 const Game = require("./public/javascript/game_class");
-const { Chess } = require("chess.js");
-const chess = new Chess();
 const {WebSocketServer} = require("ws");
 const { send } = require("express/lib/response");
 const app = express();
@@ -66,28 +64,34 @@ wss.on("connection", (ws, req) =>
 		let message = decode_message(data);
 		if (message.type === TMOVE)
 		{
-		    let accepted_moves = chess.moves();
-			let move = chess.move(message.data);
+		    let accepted_moves = game.accepted_moves();
+			let move = game.make_move(message.data);
+
 			if (move !== null && accepted_moves.includes(move.san))
 			{
-				send_message(TRESPONSE, true, ws);
+				sendMessageToGame(TUPDATE, move.flags, game);
+				sendMessageToGame(TTURN, game.show_turn(), game);
+				if (game.check_game_over()) 
+				{
+					if (game.in_check() && !game.check_won())
+					{
+						sendMessageToGame(TCHECK, game.show_turn(), game);
+					}
+					else if (game.check_won())
+					{
+						sendMessageToGame(TWON, "win", game);
+					//		sendMessageToGame(TWON, won, ws.game);
+					}
+					else if (game.check_draw())
+					{
+						sendMessageToGame(TWON, "draw", game);
+					//	sendMessageToGame(TTURN, ws.game.turn, ws.game);
+					}
+
+				}
 			}
 			else
-			{
-			//	sendMessageToGame(TUPDATE, update_info, ws.game);
-				
-		
-				if (chess.in_checkmate)
-				{
-					send_message(TRESPONSE, false, ws);
-				//	sendMessageToGame(TWON, won, ws.game);
-				}
-				else
-				{
-					send_message(TRESPONSE, false, ws);
-
-				//	sendMessageToGame(TTURN, ws.game.turn, ws.game);
-				}
+			{  
 				
 			}
 		}
@@ -102,24 +106,23 @@ wss.on("connection", (ws, req) =>
 
 	console.log(`Websocket connection opened for ${numConnectionIDs}`);
 
-	//let game = games[games.length -1];
+	let game = games[games.length -1];
 
-	//if (game === undefined || game.is_full())
-	//{
-	//	game = new Game();
-//		games.push(game);
-	//}
+	if (game === undefined || game.is_full())
+	{
+		game = new Game();
+		games.push(game);
+	}
 
-//	ws.game = game;
-	//let colour = game.add_player(ws.id);
-//	sockets[ws.id] = ws;
-//	send_message(TPLAYERT, colour, ws);
-//
-//	if (game.is_full())
-//	{
-//		sendMessageToGame(TGAMESTART, null, game);
-//		sendMessageToGame(TTURN, game.turn, game);
-//	}
+    ws.game = game;
+	let color = game.add_player(ws.id);
+    sockets[ws.id] = ws;
+	send_message(TPLAYERT, color, ws);
+
+	if (game.is_full()) {
+		sendMessageToGame(TGAMESTART, null, game);
+		sendMessageToGame(TTURN, game.turn, game);
+	}
 })
 
 process

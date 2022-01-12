@@ -123,16 +123,38 @@ function capturePiece(piece)
     capturedOffset[piece.type]++;
 }
 
-function movePieceTo(piece, pieceFrom, square, animate)
-{
-    let pieceTo = decodePos(square.getAttribute("data-pos"));
-    let cpiece = getPiece(square); // Check if there's a piece there to capture
+var pieceHandler = (function() {
+    var currentPiece;
+    var destinationSquare;
+    return {
+        assignPiece: function(piece) {
+            this.currentPiece = piece;
+        },
+        assignSquare: function(square) {
+            this.destinationSquare = square;
+        },
+        returnPiece: function() {
+            return this.currentPiece;
+        },
+        returnSquare: function() {
+            return this.destinationSquare;
+        },
+    };
+})();
 
-    square.appendChild(piece);
+function movePieceTo(piece, pieceFrom, square)
+{
+    let animate = animateParentChange1(piece);
+    
+    // Since you've made the pieceHandler already you could pass this through the message.
+    pieceHandler.assignPiece(piece);
+    pieceHandler.assignSquare(square);
+    let pieceTo = decodePos(square.getAttribute("data-pos"));
+    send_message("MOVE", {"from": pieceFrom, "to": pieceTo}, ws);
+
     // Second part of animation, but before capture
 
-    const finishAction = () =>
-    {
+    const finishAction = () => {
         /* 
         * This is the general idea: We have to send only the squares we're going
         * from and to, the "MOVE" is redundant as chess.js can only be sent moves
@@ -176,8 +198,7 @@ keyboardInputForm.addEventListener("submit", (event) =>
         if (piece !== null && to !== null)
         {
             // First part of animation  
-            let animate = animateParentChange1(piece);
-            movePieceTo(piece, positions[0], to, animate);
+            movePieceTo(piece, positions[0], to);
         }
     }
     catch {}

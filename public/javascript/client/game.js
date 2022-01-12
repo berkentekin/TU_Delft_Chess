@@ -1,3 +1,4 @@
+
 let player_type;
 const slider = document.getElementById("sizeSlider");
 const gameStatus = document.getElementById("gameStatus");
@@ -21,18 +22,6 @@ function closerules()
     prankRules.style.width = "0";
 }
 
-function reset_game()
-{
-    for (let i = 0; i < 9; i++)
-    {
-        document.getElementById(`s${i}`).innerHTML = "";
-    }
-    resetButton.remove();
-    turnStatus.innerHTML = "Turn undecided...";
-    gameStatus.innerHTML = "Waiting for another player...";
-    waiting_for_player = setInterval(update_waiting(), 500);
-    connect();  
-}
 
 function game_over(message)
 {
@@ -57,28 +46,6 @@ function update_waiting()
 
 //let waiting_for_player = setInterval(update_waiting(), 500);
 
-function getSquareFunction(squareNum)
-{
-    return function ()
-    {
-        if (ws.readyState === 1) // Websocket is connected
-        {
-            send_message(TMOVE, squareNum, ws);
-        }
-        else
-        {
-            console.log("Not currently in a game");
-        }
-        
-    } 
-}
-
-function updateSquare(update_info)
-{
-    let square = document.getElementById(`s${update_info.square}`);
-    square.style.color = update_info.colour;
-    square.innerHTML = update_info.colour === "red" ? "X": "O";
-}
 
 for (let i = 0; i < 9; i++)
 {
@@ -105,37 +72,37 @@ function connect()
     ws.addEventListener("message", (event) =>
     {
         let message = decode_message(event);
-        if (message.type === TPLAYERT)
+        switch (message.type)
         {
+        case TPLAYERT:
             player_type = message.data;
-        }
-        else if (message.type === TGAMESTART)
-        {
+            break;
+        case TGAMESTART:
             clearInterval(waiting_for_player);
             gameStatus.innerHTML = "Your are player: " + `<span style="color:${player_type};">${player_type}</span>`; 
-        }
-        else if (message.type === TRESPONSE)
-        {
+            break;
+        case TRESPONSE:
             console.log("Server: ", message.data);
-        }
-        else if (message.type === TTURN)
-        {   
+            break;
+        case TTURN:
             turnStatus.innerHTML = message.data === player_type ? "It's your turn" : "It's not your turn";
-        }
-        else if (message.type === TUPDATE)
-        {
-            updateSquare(message.data);
-        }
-        else if (message.type === TWON)
-        {
-            if (message.data === "Draw") {turnStatus.innerHTML = "The game is a draw!";}
+            break;
+        case TUPDATE:
+            // Get info here
+            // Then call movePieceTo (please keep this in function, it's also used elsewhere mind you)
+           // movePieceTo(arg1, arg2, arg3)    
+           // Keep last arg to true since we want opponent moves to be animated
+    
+            break;            
+        case TWON:
+            if (message.data === "draw") {turnStatus.innerHTML = "The game is a draw!";}
             else {turnStatus.innerHTML = message.data === player_type ? "You won!" : "You lost :("};
             game_over("You finished a match...");
-        }
-        else if (message.type === TQUIT)
-        {
+            break;
+        case TQUIT:
             turnStatus.innerHTML = "";
             game_over("The other player quit :(");
+            break;
         }
     })
 }
