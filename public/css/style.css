@@ -1,12 +1,22 @@
 html{
     box-sizing: border-box;
-    background-color: #F5F5DD;
+    background-color: white;
 }
 
 body
 {
     margin-inline: 0;
     margin-bottom: 0;
+    overflow: hidden;
+}
+
+:root
+{
+    --board-size: 0px; /* Set by javascript :) */
+    --board-animation-time: 1s;
+    --squares-animation-time: 1s;
+    --dark-theme: #2448a3;
+    --light-theme: #ADD8E6;
 }
 
 @keyframes drop-in-animation {
@@ -22,17 +32,19 @@ body
 
 footer
 {
-    display: flex;
-    background-color: lightblue;
     height: 2em;
     margin: 0;
+
+    display: flex;
+    background-color: var(--light-theme);
     justify-content: center;
     align-items: center;
     border-top: 2px solid black;
     border-bottom: 2px solid black;
-
+ 
     opacity: 0;
     --animation-translation: 0, 100%;
+    will-change: transform;
     animation: drop-in-animation var(--board-animation-time) ease 
                calc(52 * var(--squares-animation-time)/15 + var(--board-animation-time) + 1s) 
                forwards;
@@ -63,13 +75,6 @@ footer
     box-sizing: inherit;
 }
 
-:root
-{
-    --board-size: 0px; /* Set by javascript :) */
-    --board-animation-time: 1s;
-    --squares-animation-time: 1s;
-}
-
 .white
 {
     background-color: #fffaf5;
@@ -78,8 +83,14 @@ footer
 
 .black
 {
-    background-color: #453505;
+    background-color: var(--dark-theme);
     color: white;
+}
+
+.no-pad-mar
+{
+    padding: 0;
+    margin: 0;
 }
 
 .force-overlap
@@ -170,7 +181,7 @@ table.no-spacing
     grid-auto-columns: 1fr;
     grid-auto-rows: 1fr;
     width: 100%;
-    border: 10px solid black;
+    border: 10px solid var(--light-theme);
     --animation-translation: 0%, -100%;
     animation: drop-in-animation var(--board-animation-time) ease;
 }
@@ -208,7 +219,9 @@ table.no-spacing
 {
     flex: 1 1 90%; /* This seems to work best when adding padding */
     padding: 1rem;
+
     opacity: 0;
+    will-change: transform;
     --animation-translation: -100%, 0%;
     animation: drop-in-animation var(--board-animation-time) ease 
                calc(52 * var(--squares-animation-time)/15 + var(--board-animation-time) + 1s) 
@@ -229,13 +242,17 @@ table.no-spacing
 
 #chat-area
 {
+    margin-inline: 1em;
+    width: 100%;
+
     display: flex;
     justify-content: top;
     align-items: top;
-    flex-direction: column;
-    margin-inline: 1em;
-    width: 100%;
+    flex-direction: column;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
+
+
     opacity: 0;
+    will-change: transform;
     --animation-translation: 100%, 0%;
     animation: drop-in-animation var(--board-animation-time) ease 
                calc(52 * var(--squares-animation-time)/15 + var(--board-animation-time) + 1s) 
@@ -259,12 +276,13 @@ table.no-spacing
 
 #chat-textbox
 {
-    border: 2px solid black;
+    border: 4px solid black;
     background-color: white;
     width: 100%;
-        height: var(--board-size);  
-    overflow: scroll;
+    height: var(--board-size);  
+    overflow-y: scroll;
 }
+
 
 .overlay
 {
@@ -274,7 +292,7 @@ table.no-spacing
     z-index: 3;
     left: 0;
     top: 0;
-    background-color: rgba(126, 229, 255, 0.9);
+    background-color: var(--light-theme);
     backdrop-filter: blur(0.25em);
     overflow-x: hidden;
     transition: 0.5s;
@@ -306,3 +324,30 @@ table.no-spacing
 {
     color: rgb(163, 163, 255);
 }
+
+.hidden-checkbox
+{
+    display: none;
+}
+
+.checkbox-svg path:nth-child(1)
+{
+    fill: var(--dark-theme);
+}
+
+.checkbox-svg path:nth-child(2)
+{
+    fill: none;
+}
+
+.checkbox-svg defs linearGradient stop:nth-child(1)
+{
+    stop-color: var(--light-theme);
+}
+
+.hidden-checkbox:checked + .checkbox-svg path:nth-child(2)
+{
+    fill: url(#left-to-right);
+}
+
+

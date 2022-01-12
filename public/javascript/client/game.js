@@ -44,7 +44,7 @@ function update_waiting()
     }
 }
 
-let waiting_for_player = setInterval(update_waiting(), 500);
+//let waiting_for_player = setInterval(update_waiting(), 500);
 
 
 for (let i = 0; i < 9; i++)
@@ -88,13 +88,11 @@ function connect()
             turnStatus.innerHTML = message.data === player_type ? "It's your turn" : "It's not your turn";
             break;
         case TUPDATE:
-            let piece = pieceHandler.returnPiece();
-            let square = pieceHandler.returnSquare();
-            let cpiece = getPiece(square); // Check if there's a piece there to capture
-            if (cpiece !== null && cpiece !== piece) {
-                capturePiece(cpiece);
-            }
-            square.appendChild(piece);
+            // Get info here
+            // Then call movePieceTo (please keep this in function, it's also used elsewhere mind you)
+           // movePieceTo(arg1, arg2, arg3)    
+           // Keep last arg to true since we want opponent moves to be animated
+    
             break;            
         case TWON:
             if (message.data === "draw") {turnStatus.innerHTML = "The game is a draw!";}

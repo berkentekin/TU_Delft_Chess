@@ -6,6 +6,19 @@ if (animationsEnabled)
     document.body.classList.remove("no-animation"); // Add back animation
 }
 
+document.querySelectorAll(".hidden-checkbox").forEach(checkbox =>
+{
+    checkbox.addEventListener("change", () =>
+    {
+        console.log("here" + checkbox);
+        checkbox.parentElement.querySelectorAll("animate").forEach(animation =>
+        {
+            console.log("here");
+            animation.beginElement();
+        });
+    });
+});
+
 function addAnimationAfterEffect(el, effect)
 {
     const addF = () =>
@@ -16,8 +29,7 @@ function addAnimationAfterEffect(el, effect)
     el.addEventListener("animationend", addF);
 }
 
-
-let fake;
+let fake; // You just got faked B-)
 
 function animateParentChange1(element)
 {
@@ -53,7 +65,7 @@ function animateParentChange2(element, finish_action)
     let animation = fake.animate([
         {top: top + "px", left: left + "px"}
     ], {
-        duration: Math.pow((Math.pow(top - parseInt(fake.style.top), 2) + 
+        duration: Math.pow((Math.pow(top - parseInt(fake.style.top), 2) + // Using euclidean distance as duration
                    Math.pow(left - parseInt(fake.style.left), 2)), 0.5)
     });
 

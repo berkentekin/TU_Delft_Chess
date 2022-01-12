@@ -5,6 +5,16 @@ const keyboardInputForm = document.getElementById("keyboard-input-form");
 const chatInput = document.getElementById("chat-input");
 const root = document.querySelector(":root");
 
+let sounds = {"move-self": new Audio("sounds/move-self.webm"),
+              "capture": new Audio("sounds/capture.webm")};
+
+const playSound = (sound) =>
+{
+    // Reset sound incase it hasn't finished playback yet
+    sounds[sound].currentTime = 0;
+    sounds[sound].play();
+};
+
 const createPieceImg = (piece) => 
 {
     let img = document.createElement("img");
@@ -59,11 +69,12 @@ for (let row = 0; row < 8; row++)
     }
 }
 
+root.style.setProperty("--board-size", `${board.clientWidth}px`);
+
 window.addEventListener("resize", () =>
 {
     root.style.setProperty("--board-size", `${board.clientWidth}px`);
 })
-root.style.setProperty("--board-size", `${board.clientWidth}px`);
 
 function createPieces(gameBoard)
 {
@@ -98,6 +109,7 @@ function capturePiece(piece)
 
     piece.className = "captured-piece";
     capturedZone.appendChild(piece);
+    playSound("capture");
 
     // Needs to be updated if captured pieces size is updated ;;;
     // Bit of redundancy here, but oh well. Since capturedZone is relative, it does not
@@ -111,37 +123,37 @@ function capturePiece(piece)
     capturedOffset[piece.type]++;
 }
 
-var pieceHandler = (function() {
-    var currentPiece;
-    var destinationSquare;
-    return {
-        assignPiece: function(piece) {
-            this.currentPiece = piece;
-        },
-        assignSquare: function(square) {
-            this.destinationSquare = square;
-        },
-        returnPiece: function() {
-            return this.currentPiece;
-        },
-        returnSquare: function() {
-            return this.destinationSquare;
-        },
-    };
-})();
+// var pieceHandler = (function() {
+//     var currentPiece;
+//     var destinationSquare;
+//     return {
+//         assignPiece: function(piece) {
+//             this.currentPiece = piece;
+//         },
+//         assignSquare: function(square) {
+//             this.destinationSquare = square;
+//         },
+//         returnPiece: function() {
+//             return this.currentPiece;
+//         },
+//         returnSquare: function() {
+//             return this.destinationSquare;
+//         },
+//     };
+// })();
 
-function movePieceTo(piece, pieceFrom, square, animate)
+function movePieceTo(piece, pieceFrom, square)
 {
-    console.log("called");
-    pieceHandler.assignPiece(piece);
-    pieceHandler.assignSquare(square);
+    let animate = animateParentChange1(piece);
+    
+    // Since you've made the pieceHandler already you could pass this through the message.
+    
     let pieceTo = decodePos(square.getAttribute("data-pos"));
     send_message("MOVE", {"piece": piece, "destSquare": square, "from": pieceFrom, "to": pieceTo}, ws);
-    
 
     // Second part of animation, but before capture
 
- //   const finishAction = () => {
+    const finishAction = () => {
         /* 
         * This is the general idea: We have to send only the squares we're going
         * from and to, the "MOVE" is redundant as chess.js can only be sent moves
@@ -150,14 +162,16 @@ function movePieceTo(piece, pieceFrom, square, animate)
         * "validate" should contain whether the move we've made is actually valid.
         * 
         */
-  //      let validate = send_message("MOVE", { "from": pieceFrom, "to": pieceTo }, ws);
-  //      if (cpiece !== null && cpiece !== piece) {
-  //          capturePiece(cpiece);
- // //      }
-  //  }
+        let validate = send_message("MOVE", {"from": pieceFrom, "to": pieceTo}, ws);
+        if (cpiece !== null && cpiece !== piece)
+        {
+            capturePiece(cpiece);
+        }
+        else {playSound("move-self");}
+    }
 
-  //  if (animate) {animateParentChange2(piece, finishAction);}
-  //  else {finishAction();} 
+    if (animate) {animateParentChange2(piece, finishAction);}
+    else {finishAction();} 
 }
 
 window.addEventListener("keypress", (event) =>
@@ -173,8 +187,8 @@ keyboardInputForm.addEventListener("submit", (event) =>
 {
     event.preventDefault(); // Prevent reloading
     
-   // try
-    //{
+    try
+    {
         let positions = [keyboardInput.value.substring(0, 2), keyboardInput.value.substring(2, 4)];
         let from = getSquare(encodePos(positions[0]));
         let to = getSquare(encodePos(positions[1]));
@@ -183,11 +197,10 @@ keyboardInputForm.addEventListener("submit", (event) =>
         if (piece !== null && to !== null)
         {
             // First part of animation  
-            let animate = animateParentChange1(piece);
-            movePieceTo(piece, positions[0], to, animate);
+            movePieceTo(piece, positions[0], to);
         }
-   // }
-   // catch {}
+    }
+    catch {}
 
     // Take away input again
     keyboardInput.value = "";
