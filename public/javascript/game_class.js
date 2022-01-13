@@ -8,6 +8,8 @@ class Game
         this.players = {};
         this.numPlayers = 0;
         this.turn = "white";
+        this.colors = {};
+        this.activePlayer = 0;
         this.no_turns = 1;
     }
 
@@ -16,8 +18,21 @@ class Game
         return this.chess.moves();
     }
 
-    make_move(data)
+    get_active_turn(wsID)
     {
+        return this.players[wsID];
+    }
+
+    make_move(data, wsID)
+    {
+        let attemptedPiece = this.chess.get(data["from"]);
+        if (attemptedPiece !== null)
+        {
+            let pieceColor = attemptedPiece["color"] === 'w' ? "white" : "black";
+            if (pieceColor !== this.get_active_turn(wsID)) {
+                return { "moveInfo": null };
+            }
+        }
         let move = this.chess.move({ "from": data["from"], "to": data["to"] });
         if (this.chess.turn() === "w")
         {
