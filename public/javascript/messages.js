@@ -17,6 +17,8 @@ const TGAMESTART = "GAMESTART"; // Game has started
 const TTURN = "TURN"; // Player's turn (contains colour of player whose turn it is)
 const TWON = "WON"; // A Player won (contains colour of winning player)
 const TCHECK = "CHECK"; // Sent when a player is in check (contains color of the player in check)
+const TTABLE = "TABLE"; // Sent when a player is in check (contains color of the player in check)
+
 if (typeof exports !== "undefined") {
     exports.send_message = send_message
     exports.decode_message = function(data)
@@ -25,5 +27,5 @@ if (typeof exports !== "undefined") {
     };
     module.exports = Object.assign({}, exports, {TMOVE: TMOVE, TRESPONSE: TRESPONSE, TQUIT: TQUIT,
                                           TUPDATE: TUPDATE, TPLAYERT: TPLAYERT, TGAMESTART: TGAMESTART,
-                                          TTURN: TTURN, TWON: TWON});
+                                          TTURN: TTURN, TWON: TWON, TTABLE: TTABLE});
 };

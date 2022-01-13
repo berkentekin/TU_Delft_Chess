@@ -72,17 +72,15 @@ function connect()
             console.log("Server: ", message.data);
             break;
         case TTURN:
-            turnStatus.innerHTML = message.data === player_type ? "It's your turn" : "It's not your turn";
+            turnStatus.innerHTML = message.data["turn"] === player_type ? "It's your turn" : "It's not your turn";
+            break;
+        case TTABLE:
+            moveBox.writeMove(message.data["turn"], message.data["move"]);
             break;
         case TUPDATE:
             let piece = message.data["piece"];
-            finalizeMove(getPiece(getSquare(message.data["piece"]["pos"])), getSquare(encodePos(message.data["pieceTo"])));
-            // Get info here
-            // Then call movePieceTo (please keep this in function, it's also used elsewhere mind you)
-           // movePieceTo(arg1, arg2, arg3)    
-           // Keep last arg to true since we want opponent moves to be animated
-    
-            break;            
+            finalizeMove(getPiece(getSquare(piece["pos"])), getSquare(encodePos(message.data["pieceTo"])));
+            break;
         case TWON:
             if (message.data === "draw") {turnStatus.innerHTML = "The game is a draw!";}
             else {turnStatus.innerHTML = message.data === player_type ? "You won!" : "You lost :("};

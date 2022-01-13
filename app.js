@@ -1,7 +1,7 @@
 const express = require("express");
 const {send_message, decode_message,
       TMOVE, TRESPONSE, TQUIT, TUPDATE,
-      TPLAYERT, TGAMESTART, TTURN, TWON, TBOARD} = require("./public/javascript/messages");
+      TPLAYERT, TGAMESTART, TTURN, TWON, TBOARD, TTABLE} = require("./public/javascript/messages");
 const Game = require("./public/javascript/game_class");
 const {WebSocketServer} = require("ws");
 const { send } = require("express/lib/response");
@@ -70,7 +70,9 @@ wss.on("connection", (ws, req) =>
 			if (move !== null && accepted_moves.includes(move.san))
 			{
 				sendMessageToGame(TUPDATE, response, game);
-				sendMessageToGame(TTURN, game.show_turn(), game);
+				sendMessageToGame(TTURN, { "move": move.san, "turn": game.show_turn() }, game);
+				sendMessageToGame(TTABLE, { "move": move.san, "turn": game.show_turn() }, game);
+
 				if (game.check_game_over()) 
 				{
 					if (game.in_check() && !game.check_won())
@@ -121,7 +123,7 @@ wss.on("connection", (ws, req) =>
 
 	if (game.is_full()) {
 		sendMessageToGame(TGAMESTART, null, game);
-		sendMessageToGame(TTURN, game.turn, game);
+		sendMessageToGame(TTURN, { "turn": game.turn }, game);
 	}
 })
 

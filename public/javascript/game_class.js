@@ -8,6 +8,7 @@ class Game
         this.players = {};
         this.numPlayers = 0;
         this.turn = "white";
+        this.no_turns = 1;
     }
 
     accepted_moves()
@@ -17,7 +18,11 @@ class Game
 
     make_move(data)
     {
-        let move = this.chess.move({"from": data["from"], "to":data["to"]});
+        let move = this.chess.move({ "from": data["from"], "to": data["to"] });
+        if (this.chess.turn() === "w")
+        {
+            this.no_turns++;
+        }
         return {"moveInfo": move, "piece": data["piece"], "pieceFrom": data["from"], "pieceTo": data["to"]};
     }
 

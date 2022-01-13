@@ -9,6 +9,7 @@
     <script src="javascript/client/game.js" defer></script>
     <script src="javascript/client/drag_handler.js" defer></script>
     <script src="javascript/client/chatbox_handler.js" defer></script>
+    <script src="javascript/client/movebox_handler.js" defer></script>
     <script src="javascript/client/animation_handler.js" defer></script>
     <link rel="stylesheet" href="css/style.css">
 </head>
@@ -96,6 +97,19 @@
         <form id = "chat-form">
             <input type = "text" id = "chat-input" placeholder = "Say something... I'm giving up on you">
         </form>
+    </section>
+    <section id="move-area">
+        <div id="move-div">
+            <table id="move-table">
+                <tbody>
+                    <tr>
+                        <th>Turn</th>
+                        <th>White</th>
+                        <th>Black</th>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
     </section>
 </section>
 
