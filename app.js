@@ -1,7 +1,8 @@
 const express = require("express");
 const {send_message, decode_message,
       TMOVE, TRESPONSE, TQUIT, TUPDATE,
-      TPLAYERT, TGAMESTART, TTURN, TWON, TBOARD, TTABLE} = require("./public/javascript/messages");
+      TPLAYERT, TGAMESTART, TTURN, TWON, 
+	  TBOARD, TTABLE, TINVALID} = require("./public/javascript/messages");
 const Game = require("./public/javascript/game_class");
 const {WebSocketServer} = require("ws");
 const { send } = require("express/lib/response");
@@ -62,40 +63,43 @@ wss.on("connection", (ws, req) =>
 	ws.on("message", (data) =>
 	{
 		let message = decode_message(data);
-		if (message.type === TMOVE)
-		{
-		    let accepted_moves = game.accepted_moves();
+		if (message.type === TMOVE) {
+			let accepted_moves = game.accepted_moves();
 			let response = game.make_move(message.data, ws.id);
 			let move = response["moveInfo"];
-			if (move !== null && accepted_moves.includes(move.san))
-			{
+
+			//if (!accepted_moves.includes(move.san)) { response["moveInfo"] = null };
+
+			
+			
+			if (move !== null && accepted_moves.includes(move.san)) {
 				sendMessageToGame(TUPDATE, response, game);
 				sendMessageToGame(TTURN, { "move": move.san, "turn": game.show_turn() }, game);
 				sendMessageToGame(TTABLE, { "move": move.san, "turn": game.show_turn() }, game);
-
-				if (game.check_game_over()) 
-				{
-					if (game.in_check() && !game.check_won())
-					{
+				
+				if (game.check_game_over()) {
+					if (game.in_check() && !game.check_won()) {
 						sendMessageToGame(TCHECK, game.show_turn(), game);
 					}
-					else if (game.check_won())
-					{
+					else if (game.check_won()) {
 						sendMessageToGame(TWON, "win", game);
-					//		sendMessageToGame(TWON, won, ws.game);
+						//		sendMessageToGame(TWON, won, ws.game);
 					}
-					else if (game.check_draw())
-					{
+					else if (game.check_draw()) {
 						sendMessageToGame(TWON, "draw", game);
-					//	sendMessageToGame(TTURN, ws.game.turn, ws.game);
+						//	sendMessageToGame(TTURN, ws.game.turn, ws.game);
+
 					}
+				}
+				else {
 
 				}
 			}
 			else
-			{  
-				
-			}
+			{
+				send_message(TINVALID, response, ws);
+            }
+		
 		}
 	});
 

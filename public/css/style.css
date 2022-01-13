@@ -22,7 +22,7 @@ body
 {
     --board-size: 0px; /* Set by javascript :) */
     --board-animation-time: 1s;
-    --squares-animation-time: 1s;
+    --squares-animation-time: 400ms;
     --dark-theme: #2448a3;
     --light-theme: #ADD8E6;
 }
@@ -54,7 +54,7 @@ footer
     --animation-translation: 0, 100%;
     will-change: transform;
     animation: drop-in-animation var(--board-animation-time) ease 
-               calc(52 * var(--squares-animation-time)/15 + var(--board-animation-time) + 1s) 
+               calc(67 * var(--squares-animation-time)/15 + var(--board-animation-time)) 
                forwards;
 }
 
@@ -234,7 +234,7 @@ table.no-spacing
     will-change: transform;
     --animation-translation: -100%, 0%;
     animation: drop-in-animation var(--board-animation-time) ease 
-               calc(52 * var(--squares-animation-time)/15 + var(--board-animation-time) + 1s) 
+               calc(67 * var(--squares-animation-time)/15 + var(--board-animation-time)) 
                forwards;
 }
 
@@ -305,9 +305,16 @@ table.no-spacing
     flex-direction: column;
 }
 
+#rules-div
+{
+    height: 30%;
+}
+
 #rules
 {
     background: var(--light-theme);
+    border: none;
+    width: 50%;
 }
 
 .checkbox-divs
@@ -367,7 +374,7 @@ table.no-spacing
     will-change: transform;
     --animation-translation: 100%, 0%;
     animation: drop-in-animation var(--board-animation-time) ease 
-               calc(52 * var(--squares-animation-time)/15 + var(--board-animation-time) + 1s) 
+               calc(67 * var(--squares-animation-time)/15 + var(--board-animation-time)) 
                forwards;
 }
 
@@ -457,7 +464,7 @@ table.no-spacing
     fill: none;
 }
 
-.checkbox-svg defs linearGradient stop:nth-child(1)
+.checkbox-svg defs linearGradient stop:nth-child(2)
 {
     stop-color: var(--dark-theme);
 }

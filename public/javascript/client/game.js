@@ -58,6 +58,7 @@ function connect()
     ws.addEventListener("message", (event) =>
     {
         let message = decode_message(event);
+        let piece;
         switch (message.type)
         {
         case TPLAYERT:
@@ -65,7 +66,8 @@ function connect()
             break;
         case TGAMESTART:
             clearInterval(waiting_for_player);
-            gameStatus.innerHTML = "Your are player: " + `<span style="color:${player_type};">${player_type}</span>`; 
+            let textColour = player_type === "white"? "var(--light-theme)": "black";
+            gameStatus.innerHTML = "Your are player: " + `<span style="color:${textColour};">${player_type}</span>`; 
             break;
         case TRESPONSE:
             console.log("Server: ", message.data);
@@ -76,16 +78,15 @@ function connect()
             moveBox.writeMove(message.data["turn"], message.data["move"]);
             break;
         case TUPDATE:
-            let piece = message.data["piece"];
-            if (message.data["moveInfo"] == null)
-            {
-                invalidMove(getPiece(getSquare(piece["pos"])));
-            }
-            else
-            {
-                finalizeMove(getPiece(getSquare(piece["pos"])), getSquare(encodePos(message.data["pieceTo"])));
-            }
+            piece = message.data["piece"];    
+            finalizeMove(getPiece(getSquare(piece["pos"])), getSquare(encodePos(message.data["pieceTo"])));
             break;
+
+        case TINVALID:  // Player has commited a nono
+            piece = message.data["piece"];
+            invalidMove(getPiece(getSquare(piece["pos"])));
+            break;
+
         case TWON:
             game_over("You finished a match...");
             break;

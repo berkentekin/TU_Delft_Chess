@@ -30,7 +30,7 @@ class Game
         {
             let pieceColor = attemptedPiece["color"] === 'w' ? "white" : "black";
             if (pieceColor !== this.get_active_turn(wsID)) {
-                return { "moveInfo": null };
+                return { "moveInfo": null, "piece": data["piece"]};
             }
         }
         let move = this.chess.move({ "from": data["from"], "to": data["to"] , "promotion": data["promotion"]});
