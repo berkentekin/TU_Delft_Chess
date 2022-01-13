@@ -33,7 +33,7 @@ class Game
                 return { "moveInfo": null };
             }
         }
-        let move = this.chess.move({ "from": data["from"], "to": data["to"] });
+        let move = this.chess.move({ "from": data["from"], "to": data["to"] , "promotion": data["promotion"]});
         if (this.chess.turn() === "w")
         {
             this.no_turns++;
@@ -64,7 +64,7 @@ class Game
     {
         if (!this.chess.in_checkmate())
         {
-            if (this.chess.insufficient_material() || this.chess.in_stalemate())
+            if (this.chess.in_draw())
             {
                 return true;
             }

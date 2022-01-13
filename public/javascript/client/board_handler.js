@@ -144,12 +144,16 @@ var pieceHandler = (function() {
 function movePieceTo(piece, pieceFrom, square)
 {
 
-    
-    // Since you've made the pieceHandler already you could pass this through the message.
     let pieceTo = decodePos(square.getAttribute("data-pos"));
+    if (piece["type"] === 'p') {
+        let row = pieceTo.charAt(1);
+        if (row === '8' || row === '1') {
+            let promote = window.prompt("'q' for Queen, 'n' for Knight, 'r' for Rook, 'b' for Bishop").toLowerCase();
+            send_message("MOVE", { "piece": piece, "from": pieceFrom, "to": pieceTo, "promotion": promote }, ws);
+            return;
+        }
+    }
     send_message("MOVE", {"piece": piece, "from": pieceFrom, "to": pieceTo}, ws);
-
-    // Second part of animation, but before capture
 }
 
 let wasMovedManually = false;
