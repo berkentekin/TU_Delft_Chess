@@ -2,7 +2,6 @@
 let player_type;
 const slider = document.getElementById("sizeSlider");
 const gameStatus = document.getElementById("gameStatus");
-const turnStatus = document.getElementById("turnStatus");
 const prankRules = document.getElementById("prank");
 
 let resetButton;
@@ -72,7 +71,6 @@ function connect()
             console.log("Server: ", message.data);
             break;
         case TTURN:
-            turnStatus.innerHTML = message.data["turn"] === player_type ? "It's your turn" : "It's not your turn";
             break;
         case TTABLE:
             moveBox.writeMove(message.data["turn"], message.data["move"]);
@@ -82,12 +80,9 @@ function connect()
             finalizeMove(getPiece(getSquare(piece["pos"])), getSquare(encodePos(message.data["pieceTo"])));
             break;
         case TWON:
-            if (message.data === "draw") {turnStatus.innerHTML = "The game is a draw!";}
-            else {turnStatus.innerHTML = message.data === player_type ? "You won!" : "You lost :("};
             game_over("You finished a match...");
             break;
         case TQUIT:
-            turnStatus.innerHTML = "";
             game_over("The other player quit :(");
             break;
         }

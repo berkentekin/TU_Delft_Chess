@@ -20,20 +20,24 @@
     <a href = "javascript:void(0)" onclick = "closerules()" id="close-button">&times</a>
     <div class = "overlay-content">
         <p> The rules can be found on brightspace 🙃</p>
+        <p> To use keyboard input, press Enter and then type your command!</p>
+        <p> Use the form (pos)(pos), such as a1a3. </p>
     </div>
 </div>
 
 <section id ="main-area">
     <section id = "info-area">
         <div id="game-title"><h1> <span style ="color: var(--light-theme)">TU Delft: </span>Chess <span style ="color: var(--light-theme)">of technical difficulties </span></h1></div>
-        
-        <div id="game-info">
+        <div id = "game-info">
+            <div id="score">
+                <p class = "no-pad-mar" style="display:inline">0</p><p class = "no-pad-mar" style="display:inline">0</p>
+            </div>
+            <div id="timer-black" class="timer">10:00</div>
+            <div id="timer-white" class="timer">10:00</div>
+        </div>
+        <div id="extra-info">
             <p id="gameStatus"> Waiting for another player...</p>
-            <p id="turnStatus"> Turn undecided... </p>
-            <span id="resetArea"> </span>
-            <div><button onclick="openrules()">Rules</button></div>
-            <p> To use keyboard input, press Enter and then type your command!</p>
-            <p> Use the form (pos)(pos), such as a1a3. </p>
+            <div><button onclick="openrules()" id="rules">Rules</button></div>
             <form id = "keyboard-input-form"><input type = "text" id = "keyboard-input"></form>
         </div>
         <div id = "settings-info">
@@ -97,9 +101,7 @@
         <form id = "chat-form">
             <input type = "text" id = "chat-input" placeholder = "Say something... I'm giving up on you">
         </form>
-    </section>
-    <section id="move-area">
-        <div id="move-div">
+        <div id="move-area">
             <table id="move-table">
                 <tbody>
                     <tr>

@@ -15,7 +15,6 @@ document.querySelectorAll(".hidden-checkbox").forEach(checkbox =>
 
     checkbox.addEventListener("change", () =>
     {
-
         checkbox.parentElement.querySelectorAll("animate").forEach(animation =>
         {
             animation.setAttribute("from", checkbox.checked ? "1": "0");
