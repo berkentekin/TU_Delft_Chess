@@ -6,7 +6,8 @@ const chatInput = document.getElementById("chat-input");
 const root = document.querySelector(":root");
 
 let sounds = {"move-self": new Audio("sounds/move-self.webm"),
-              "capture": new Audio("sounds/capture.webm")};
+              "capture": new Audio("sounds/capture.webm"),
+              "invalid": new Audio("sounds/illegal.webm")};
 
 const playSound = (sound) =>
 {
@@ -158,6 +159,16 @@ function movePieceTo(piece, pieceFrom, square)
 
 let wasMovedManually = false;
 
+function invalidMove(piece)
+{
+    playSound("invalid");
+    wasMovedManually = false;
+    // Position piece relative to square again. Will go back to original if new square wasn't found
+    piece.className = "piece";
+
+
+}
+
 function finalizeMove(piece, square) 
 {
     console.log(piece, "5");
@@ -171,6 +182,7 @@ function finalizeMove(piece, square)
 
     let cpiece = getPiece(square);
     square.appendChild(piece);
+    piece.className = "piece";
     piece["pos"] =  square.getAttribute("data-pos"); 
     
     const finishAction = () => {

@@ -42,8 +42,6 @@ const mouseDownF = (event) =>
             wasMovedManually = true;
 	        movePieceTo(piece, pieceFrom, square);
         }
-        // Position piece relative to square again. Will go back to original if new square wasn't found
-        piece.className = "piece"
     }
     // Add event to process dragging within board
     // Works outside too, don't ask me why

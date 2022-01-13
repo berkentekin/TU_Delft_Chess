@@ -77,7 +77,14 @@ function connect()
             break;
         case TUPDATE:
             let piece = message.data["piece"];
-            finalizeMove(getPiece(getSquare(piece["pos"])), getSquare(encodePos(message.data["pieceTo"])));
+            if (message.data["moveInfo"] == null)
+            {
+                invalidMove(getPiece(getSquare(piece["pos"])));
+            }
+            else
+            {
+                finalizeMove(getPiece(getSquare(piece["pos"])), getSquare(encodePos(message.data["pieceTo"])));
+            }
             break;
         case TWON:
             game_over("You finished a match...");
