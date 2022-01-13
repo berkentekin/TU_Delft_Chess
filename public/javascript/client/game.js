@@ -89,8 +89,8 @@ function connect()
             var remainingSeconds = message.data["time"];
             var minutes = remainingSeconds / 60 | 0; // Get the integer part
             var seconds = remainingSeconds % 60;
+            if (seconds < 10) seconds = `0${seconds}`;
         
-            console.log(message.data["color"]);
             var displayTimer = document.getElementById(`timer-${message.data["color"]}`);
             displayTimer.innerText = `${minutes}:${seconds}`;
             break;
@@ -107,6 +107,7 @@ function connect()
                 var remainingSeconds = message.data["time"];
                 var minutes = remainingSeconds / 60 | 0; // Get the integer part
                 var seconds = remainingSeconds % 60;
+                if (seconds < 10) seconds = `0${seconds}`;
                 var displayTimer = document.getElementById(`timer-${message.data["color"]}`);
                 displayTimer.innerText = `${minutes}:${seconds}`;
             break;
