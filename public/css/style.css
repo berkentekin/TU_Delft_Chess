@@ -406,6 +406,7 @@ table.no-spacing
     width: 100%;
     height: calc(var(--board-size)*0.4);  
     overflow-y: scroll;
+    padding-inline: 0.5rem;
 }
 
 #move-area

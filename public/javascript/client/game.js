@@ -62,58 +62,61 @@ function connect()
         let piece;
         switch (message.type)
         {
-        case TPLAYERT:
-            player_type = message.data;
-            break;
-        case TGAMESTART:
-            if (player_type === "black") {setBlackBoard();}
-            clearInterval(waitingInterval);
-            gameStarted = true;
-            let textColour = player_type === "white" ? "var(--light-theme)": "black";
-            gameStatus.style.color = "black";
-            gameStatus.innerHTML = "Your are player: " + `<span style="color:${textColour};">${player_type}</span>`; 
-            break;
-        case TRESPONSE:
-            console.log("Server: ", message.data);
-            break;
-        case TTURN:
-            // Maybe highlight timer to make it obvious
-            break;
-        case TTABLE:
-            moveBox.writeMove(message.data["turn"], message.data["move"]);
-            break;
-        case TUPDATE:
-            piece = message.data["piece"];    
-            finalizeMove(getPiece(getSquare(piece["pos"])), getSquare(encodePos(message.data["pieceTo"])));
+            case TPLAYERT:
+                player_type = message.data;
+                break;
+            case TGAMESTART:
+                if (player_type === "black") {setBlackBoard();}
+                clearInterval(waitingInterval);
+                gameStarted = true;
+                let textColour = player_type === "white" ? "var(--light-theme)": "black";
+                gameStatus.style.color = "black";
+                gameStatus.innerHTML = "Your are player: " + `<span style="color:${textColour};">${player_type}</span>`; 
+                break;
+            case TRESPONSE:
+                console.log("Server: ", message.data);
+                break;
+            case TTURN:
+                // Maybe highlight timer to make it obvious
+                break;
+            case TTABLE:
+                moveBox.writeMove(message.data["turn"], message.data["move"]);
+                break;
+            case TUPDATE:
+                piece = message.data["piece"];    
+                finalizeMove(getPiece(getSquare(piece["pos"])), getSquare(encodePos(message.data["pieceTo"])));
 
-            var remainingSeconds = message.data["time"];
-            var minutes = remainingSeconds / 60 | 0; // Get the integer part
-            var seconds = remainingSeconds % 60;
-            if (seconds < 10) seconds = `0${seconds}`;
-        
-            var displayTimer = document.getElementById(`timer-${message.data["color"]}`);
-            displayTimer.innerText = `${minutes}:${seconds}`;
-            break;
-
-        case TINVALID:  // Player has commited a nono
-            piece = message.data["piece"];
-            invalidMove(getPiece(getSquare(piece["pos"])));
-            break;
-
-        case TWON:
-            game_over("You finished a match...");
-            break;
-        case TTIME:
                 var remainingSeconds = message.data["time"];
                 var minutes = remainingSeconds / 60 | 0; // Get the integer part
                 var seconds = remainingSeconds % 60;
                 if (seconds < 10) seconds = `0${seconds}`;
+            
                 var displayTimer = document.getElementById(`timer-${message.data["color"]}`);
                 displayTimer.innerText = `${minutes}:${seconds}`;
-            break;
-        case TQUIT:
-            game_over("The other player quit :(");
-            break;
+                break;
+
+            case TINVALID:  // Player has commited a nono
+                piece = message.data["piece"];
+                invalidMove(getPiece(getSquare(piece["pos"])));
+                break;
+
+            case TWON:
+                game_over("You finished a match...");
+                break;
+            case TTIME:
+                    var remainingSeconds = message.data["time"];
+                    var minutes = remainingSeconds / 60 | 0; // Get the integer part
+                    var seconds = remainingSeconds % 60;
+                    if (seconds < 10) seconds = `0${seconds}`;
+                    var displayTimer = document.getElementById(`timer-${message.data["color"]}`);
+                    displayTimer.innerText = `${minutes}:${seconds}`;
+                break;
+            case TCHAT:
+                addEntry(message.data);
+                break;
+            case TQUIT:
+                game_over("The other player quit :(");
+                break;
         }
     })
 }
