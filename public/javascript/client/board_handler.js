@@ -71,13 +71,6 @@ for (let row = 0; row < 8; row++)
     }
 }
 
-function makeDisappear(piece)
-{
-    piece.style.transform = "translateY(-100%)";
-    piece.style.opacity = "0";
-    piece.addEventListener("transitionend", () => {piece.remove()});
-}
-
 function setBlackBoard()
 {
     for (square of board.querySelectorAll("div[data-pos]"))
@@ -85,7 +78,7 @@ function setBlackBoard()
         let pos = square.getAttribute("data-pos");
         let piece = square.querySelector("img");
         
-        if (piece !== null) {makeDisappear(piece)};   
+        if (piece !== null) {piece.remove()};   
 
         square.setAttribute("data-pos", 63 - pos);
     }
@@ -107,10 +100,11 @@ function createPieces(gameBoard)
         let piece = gameBoard[pos];
         if (piece == '') {continue;}
         let img = createPieceImg(piece);
-        img.pos = pos;
+        img.pos = pos; 
 
         square.appendChild(img);
     }
+    addPiecesDrag();
 }
 
 function getPiece(square)

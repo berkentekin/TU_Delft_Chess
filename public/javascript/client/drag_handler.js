@@ -65,4 +65,4 @@ function addDrag(piece)
 
 // Custom drag behvaiour because standard dragging is ugly
 // and makes the piece translucent ?wtf?
-document.querySelectorAll(".piece").forEach((piece) => addDrag(piece));
+const addPiecesDrag = () => document.querySelectorAll(".piece").forEach((piece) => addDrag(piece));
