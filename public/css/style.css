@@ -210,6 +210,7 @@ table.no-spacing
     height: 100%;
     position: static;
     z-index: 1;
+    transition: var(--squares-animation-time) ease;
 }
 
 .captured-cell
@@ -303,6 +304,11 @@ table.no-spacing
     margin-bottom: 0.5rem;
     display: flex;
     flex-direction: column;
+}
+
+#gameStatus
+{
+    transition: 400ms linear;
 }
 
 #rules-div

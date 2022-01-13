@@ -26,7 +26,6 @@ const playCheckboxAnimation = (checkbox) =>
 
 const checkboxFunction = {"enableStartupAnimation": (checked) =>
                           {
-                              console.log("here" + checked);
                               localStorage.setItem("enableStartupAnimation", checked);
                           }, 
                           "enableMoveAnimation": (checked) =>

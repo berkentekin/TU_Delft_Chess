@@ -3,6 +3,7 @@ let player_type;
 const slider = document.getElementById("sizeSlider");
 const gameStatus = document.getElementById("gameStatus");
 const prankRules = document.getElementById("prank");
+let gameStarted = false;
 
 let resetButton;
 let ws;
@@ -21,6 +22,19 @@ function closerules()
     prankRules.style.width = "0";
 }
 
+function handleWaitingTimer()
+{
+    if (self.on === null)
+    {
+        self.on = true;
+    }
+    
+    gameStatus.style.color = self.on ? "black" : "white";
+    self.on = !self.on;
+}
+
+let waitingInterval = setInterval(handleWaitingTimer, 500);
+
 
 function game_over(message)
 {
@@ -31,19 +45,6 @@ function game_over(message)
     resetButton.onclick = reset_game;
     document.getElementById("resetArea").appendChild(resetButton);
 }
-
-function update_waiting()
-{
-    let phase = 0;
-
-    return () =>
-    {
-        //gameStatus.innerText = `Waiting for another player${".".repeat(phase)}`;
-        phase = (phase + 1) % 4;
-    }
-}
-
-let waiting_for_player = setInterval(update_waiting(), 500);
 
 function connect()
 {
@@ -65,14 +66,18 @@ function connect()
             player_type = message.data;
             break;
         case TGAMESTART:
-            clearInterval(waiting_for_player);
-            let textColour = player_type === "white"? "var(--light-theme)": "black";
+            if (player_type === "black") {setBlackBoard();}
+            clearInterval(waitingInterval);
+            gameStarted = true;
+            let textColour = player_type === "white" ? "var(--light-theme)": "black";
+            gameStatus.style.color = "black";
             gameStatus.innerHTML = "Your are player: " + `<span style="color:${textColour};">${player_type}</span>`; 
             break;
         case TRESPONSE:
             console.log("Server: ", message.data);
             break;
         case TTURN:
+            // Maybe highlight timer to make it obvious
             break;
         case TTABLE:
             moveBox.writeMove(message.data["turn"], message.data["move"]);
@@ -80,6 +85,14 @@ function connect()
         case TUPDATE:
             piece = message.data["piece"];    
             finalizeMove(getPiece(getSquare(piece["pos"])), getSquare(encodePos(message.data["pieceTo"])));
+
+            var remainingSeconds = message.data["time"];
+            var minutes = remainingSeconds / 60 | 0; // Get the integer part
+            var seconds = remainingSeconds % 60;
+        
+            console.log(message.data["color"]);
+            var displayTimer = document.getElementById(`timer-${message.data["color"]}`);
+            displayTimer.innerText = `${minutes}:${seconds}`;
             break;
 
         case TINVALID:  // Player has commited a nono
@@ -89,6 +102,13 @@ function connect()
 
         case TWON:
             game_over("You finished a match...");
+            break;
+        case TTIME:
+                var remainingSeconds = message.data["time"];
+                var minutes = remainingSeconds / 60 | 0; // Get the integer part
+                var seconds = remainingSeconds % 60;
+                var displayTimer = document.getElementById(`timer-${message.data["color"]}`);
+                displayTimer.innerText = `${minutes}:${seconds}`;
             break;
         case TQUIT:
             game_over("The other player quit :(");

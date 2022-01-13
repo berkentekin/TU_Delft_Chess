@@ -6,6 +6,7 @@ class Game
     {
         this.chess = new Chess();
         this.players = {};
+        this.times = {}; 
         this.numPlayers = 0;
         this.turn = "white";
         this.colors = {};
@@ -28,6 +29,7 @@ class Game
         let attemptedPiece = this.chess.get(data["from"]);
         if (attemptedPiece !== null)
         {
+            
             let pieceColor = attemptedPiece["color"] === 'w' ? "white" : "black";
             if (pieceColor !== this.get_active_turn(wsID)) {
                 return { "moveInfo": null, "piece": data["piece"]};
@@ -38,7 +40,18 @@ class Game
         {
             this.no_turns++;
         }
-        return {"moveInfo": move, "piece": data["piece"], "pieceFrom": data["from"], "pieceTo": data["to"]};
+        this.times[this.turn] += 5;
+        return {
+            "moveInfo": move, "piece": data["piece"], "pieceFrom": data["from"],
+            "pieceTo": data["to"], "time": this.times[this.turn], "color": this.turn
+        };
+    }
+
+    decrement_time(wsID)
+    {
+        let opponentColor = this.players[wsID] == "white" ? "black" : "white";
+        this.times[opponentColor]--;
+        return { "color": opponentColor, "time": this.times[opponentColor] };
     }
 
     is_full()
@@ -91,6 +104,7 @@ class Game
         if (this.players.length > 2) {throw "Cannot have more than 2 players!";}
         var player_colour = (this.numPlayers++) == 0 ? "white": "black";
         this.players[wsID] = player_colour;
+        this.times[player_colour] = 600;
         return player_colour;
     }
 }

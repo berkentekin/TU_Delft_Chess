@@ -4,6 +4,7 @@
 // Function added to pieces for drag functionality
 const mouseDownF = (event) =>
 {
+    if (!gameStarted) {return;} 
     const piece = event.target;
     const pieceFrom = decodePos(piece.parentNode.getAttribute("data-pos"));
 

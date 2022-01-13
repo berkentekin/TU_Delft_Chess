@@ -71,6 +71,28 @@ for (let row = 0; row < 8; row++)
     }
 }
 
+function makeDisappear(piece)
+{
+    piece.style.transform = "translateY(-100%)";
+    piece.style.opacity = "0";
+    piece.addEventListener("transitionend", () => {piece.remove()});
+}
+
+function setBlackBoard()
+{
+    for (square of board.querySelectorAll("div[data-pos]"))
+    {
+        let pos = square.getAttribute("data-pos");
+        let piece = square.querySelector("img");
+        
+        if (piece !== null) {makeDisappear(piece)};   
+
+        square.setAttribute("data-pos", 63 - pos);
+    }
+    createPieces(decodeFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"));
+}
+
+
 root.style.setProperty("--board-size", `${board.clientWidth}px`);
 window.addEventListener("resize", () =>
 {
@@ -211,7 +233,12 @@ window.addEventListener("keypress", (event) =>
 keyboardInputForm.addEventListener("submit", (event) =>
 {
     event.preventDefault(); // Prevent reloading
-    
+    // Take away input again
+    keyboardInput.value = "";
+    keyboardInput.style.display = "none"; 
+
+    if (!gameStarted) {return;}
+
     try
     {
         let positions = [keyboardInput.value.substring(0, 2), keyboardInput.value.substring(2, 4)];
@@ -225,8 +252,4 @@ keyboardInputForm.addEventListener("submit", (event) =>
         }
     }
     catch {}
-
-    // Take away input again
-    keyboardInput.value = "";
-    keyboardInput.style.display = "none"; 
 });
