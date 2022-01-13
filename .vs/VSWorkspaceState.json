@@ -1,7 +1,13 @@
 {
   "ExpandedNodes": [
-    ""
+    "",
+    "\\public",
+    "\\public\\css",
+    "\\public\\javascript",
+    "\\public\\javascript\\client",
+    "\\public\\stylesheets",
+    "\\routes"
   ],
-  "SelectedNode": "\\C:\\Users\\berke\\Source\\Repos\\CSE1500_Assignments",
+  "SelectedNode": "\\public\\javascript\\client\\board_handler.js",
   "PreviewInSolutionExplorer": false
 }
