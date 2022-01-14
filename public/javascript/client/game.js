@@ -66,7 +66,14 @@ function connect()
             player_type = message.data;
             break;
         case TGAMESTART:
-            if (player_type === "black") {setBlackBoard();}
+                if (player_type === "black") {
+                    var whiteTimer = document.getElementById("timer-white");
+                    var blackTimer = document.getElementById("timer-black");
+                    whiteTimer.id = "timer-black";
+                    blackTimer.id = "timer-white";
+                    setBlackBoard();
+                     
+                }
             clearInterval(waitingInterval);
             gameStarted = true;
             let textColour = player_type === "white" ? "var(--light-theme)": "black";

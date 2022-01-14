@@ -139,36 +139,17 @@ function capturePiece(piece)
     capturedOffset[piece.type]++;
 }
 
-var pieceHandler = (function() {
-    var currentPiece;
-    var destinationSquare;
-    return {
-        assignPiece: function(piece) {
-            this.currentPiece = piece;
-        },
-        assignSquare: function(square) {
-            this.destinationSquare = square;
-        },
-        returnPiece: function() {
-            return this.currentPiece;
-        },
-        returnSquare: function() {
-            return this.destinationSquare;
-        },
-    };
-})();
 
 function movePieceTo(piece, pieceFrom, square)
 {
 
     let pieceTo = decodePos(square.getAttribute("data-pos"));
-    if (piece["type"] === 'p') {
-        let row = pieceTo.charAt(1);
-        if (row === '8' || row === '1') {
+    let pieceData = piece.getAttribute("piece-data");
+    if ((pieceData === "wp" && pieceFrom.charAt(1) === '7' && pieceTo.charAt(1) === '8') || (pieceData === "bp" && pieceFrom.charAt(1) === '2' && pieceTo.charAt(1) === '1')) {
+            
             let promote = window.prompt("'q' for Queen, 'n' for Knight, 'r' for Rook, 'b' for Bishop").toLowerCase();
             send_message("MOVE", { "piece": piece, "from": pieceFrom, "to": pieceTo, "promotion": promote }, ws);
             return;
-        }
     }
     send_message("MOVE", {"piece": piece, "from": pieceFrom, "to": pieceTo}, ws);
 }
