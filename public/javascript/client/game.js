@@ -93,34 +93,37 @@ function connect()
             piece = message.data["piece"];    
             finalizeMove(getPiece(getSquare(piece["pos"])), getSquare(encodePos(message.data["pieceTo"])));
 
-            var remainingSeconds = message.data["time"];
-            var minutes = remainingSeconds / 60 | 0; // Get the integer part
-            var seconds = remainingSeconds % 60;
-            if (seconds < 10) seconds = `0${seconds}`;
-        
-            var displayTimer = document.getElementById(`timer-${message.data["color"]}`);
-            displayTimer.innerText = `${minutes}:${seconds}`;
-            break;
-
-        case TINVALID:  // Player has commited a nono
-            piece = message.data["piece"];
-            invalidMove(getPiece(getSquare(piece["pos"])));
-            break;
-
-        case TWON:
-            game_over("You finished a match...");
-            break;
-        case TTIME:
                 var remainingSeconds = message.data["time"];
                 var minutes = remainingSeconds / 60 | 0; // Get the integer part
                 var seconds = remainingSeconds % 60;
                 if (seconds < 10) seconds = `0${seconds}`;
+            
                 var displayTimer = document.getElementById(`timer-${message.data["color"]}`);
                 displayTimer.innerText = `${minutes}:${seconds}`;
-            break;
-        case TQUIT:
-            game_over("The other player quit :(");
-            break;
+                break;
+
+            case TINVALID:  // Player has commited a nono
+                piece = message.data["piece"];
+                invalidMove(getPiece(getSquare(piece["pos"])));
+                break;
+
+            case TWON:
+                game_over("You finished a match...");
+                break;
+            case TTIME:
+                    var remainingSeconds = message.data["time"];
+                    var minutes = remainingSeconds / 60 | 0; // Get the integer part
+                    var seconds = remainingSeconds % 60;
+                    if (seconds < 10) seconds = `0${seconds}`;
+                    var displayTimer = document.getElementById(`timer-${message.data["color"]}`);
+                    displayTimer.innerText = `${minutes}:${seconds}`;
+                break;
+            case TCHAT:
+                addEntry(message.data);
+                break;
+            case TQUIT:
+                game_over("The other player quit :(");
+                break;
         }
     })
 }

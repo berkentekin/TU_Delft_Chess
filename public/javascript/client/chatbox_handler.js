@@ -12,7 +12,7 @@ function addEntry(entry)
 
 chatForm.addEventListener("submit", (event) =>
 {
-    addEntry(chatInput.value);
+    send_message(TCHAT, chatInput.value, ws);
     chatInput.value = "";
     event.preventDefault();
 });
