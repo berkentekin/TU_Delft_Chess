@@ -82,6 +82,14 @@ function setBlackBoard()
 
         square.setAttribute("data-pos", 63 - pos);
     }
+    for (textArea of document.getElementsByClassName("supersleft positions"))
+    {
+        textArea.innerHTML = 9 - textArea.innerHTML;
+    }
+    for (textArea of document.getElementsByClassName("subsright positions"))
+    {
+        textArea.innerHTML = String.fromCharCode(201 - textArea.innerHTML.charCodeAt(0)); // 'h' - innerHTML + 'a' to reverse the letters
+    }
     createPieces(decodeFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"));
 }
 
