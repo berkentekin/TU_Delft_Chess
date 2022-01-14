@@ -83,11 +83,13 @@ function connect()
                 var blackTimer = document.getElementById("timer-black");
                 if (player_type === "black") {
                     switchBoard("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR");
+                    whiteTimer.id = "timer-black";
+                    blackTimer.id = "timer-white";
                 }
                 else
                 {   
-                    whiteTimer.id = "timer-black";
-                    blackTimer.id = "timer-white";
+                    whiteTimer.id = "timer-white";
+                    blackTimer.id = "timer-black";
                 }
 
                 // Make sure the correct timer have the underline
@@ -112,7 +114,6 @@ function connect()
                 break;
             case TUPDATE:
                 piece = getPiece(getSquare(message.data["piece"]["pos"]));  // HTML element info gets lost in translation so we retrieve it
-                console.log(TUPDATE + ":" + piece);
                 finalizeMove(piece, getSquare(encodePos(message.data["pieceTo"])), player_type);
                 let flag = message.data["moveInfo"]["flags"];
 
@@ -133,10 +134,39 @@ function connect()
             
                 var displayTimer = document.getElementById(`timer-${message.data["color"]}`);
                 displayTimer.innerText = `${minutes}:${seconds}`;
+
+                
+                // Remove highlights once the piece is moved
+                var allMoves = message.data["allMoves"];
+                allMoves.push(message.data["moveInfo"]["from"]);
+                remove_highlight(fetchSquares(allMoves));
                 break;
 
             case TCHECK:
                 playSound("check");    
+                break;
+            case TINFO:
+                break;
+            case THIGHLIGHT:
+                var squares = fetchSquares(message.data);
+                squares.forEach((square) => {
+                    var square_class = square.getAttribute("class").split(" ")[0];
+                    var square_color = square_class.split("-")[0];
+                    if (["white", "black"].includes(square_class)) {
+                        square.setAttribute("class", `${square_color}-highlight chess-cell force-overlap`);
+                        if (square_color === "black")
+                            square.style.backgroundColor = '#ffa07a';
+                        else if (square_color === "white")
+                            square.style.backgroundColor = "#ffc3aa";
+                    }
+                    else if (["white-highlight" ,"black-highlight"].includes(square_class)) {
+                        square.setAttribute("class", `${square_color} chess-cell force-overlap`);
+                        if (square_color === "black")
+                            square.style.backgroundColor = '#2448a3';
+                        else if (square_color === "white")
+                            square.style.backgroundColor = "white";
+                    } 
+                });
                 break;
 
             case TINVALID:  // Player has commited a nono
