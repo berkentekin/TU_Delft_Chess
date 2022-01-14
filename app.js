@@ -2,7 +2,8 @@ const express = require("express");
 const {send_message, decode_message,
       TMOVE, TRESPONSE, TQUIT, TUPDATE,
       TPLAYERT, TGAMESTART, TTURN, TWON, 
-	  TBOARD, TTABLE, TINVALID, TTIME, TCHAT} = require("./public/javascript/messages");
+	  TBOARD, TTABLE, TINVALID, TTIME, TCHAT,
+	  TCHECK, TSABOTAGE} = require("./public/javascript/messages");
 const Game = require("./public/javascript/game_class");
 const {WebSocketServer} = require("ws");
 const { send } = require("express/lib/response");
@@ -56,21 +57,21 @@ function sendMessageToGame(type, data, game)
 }
 
 let games = []
-let timer = null;
 
 wss.on("connection", (ws, req) => 
 { 
 	ws.id = numConnectionIDs++;
+
 	function setCountdown(color) {
-		if (timer !== null)
-			clearInterval(timer);
-		timer = null;
-		timer = setInterval(() => {
+		if (game.timer !== null)
+			clearInterval(game.timer);
+		game.timer = null;
+		game.timer = setInterval(() => {
 			var opponentPlayerTime = game.decrement_time(color);
 			sendMessageToGame(TTIME, opponentPlayerTime, ws.game);
 			if (opponentPlayerTime["time"] === 0) {
-				sendMessageToGame(TWON, "win", game);
-				clearInterval(timer);
+				sendMessageToGame(TWON, {"player": color === "white" ? "black": "white", "type": "timeout"}, game);
+				clearInterval(game.timer);
 				return;
 			}
 		}, 1000);
@@ -80,8 +81,6 @@ wss.on("connection", (ws, req) =>
 
 		let message = decode_message(data);
 		if (message.type === TMOVE) {
-
-		
 			let accepted_moves = game.accepted_moves();
 			let response = game.make_move(message.data, ws.id);
 			let move = response["moveInfo"];
@@ -95,19 +94,19 @@ wss.on("connection", (ws, req) =>
 
 				setCountdown(current_player);
 
+				if (game.in_check() && !game.check_won()) {
+					sendMessageToGame(TCHECK, game.show_turn(), game);
+				}
+
 				if (game.check_game_over()) {
-					if (game.in_check() && !game.check_won()) {
-						sendMessageToGame(TCHECK, game.show_turn(), game);
-					}
-					else if (game.check_won()) {
-						sendMessageToGame(TWON, "win", game);
-						//		sendMessageToGame(TWON, won, ws.game);
+					if (game.check_won()) {
+						sendMessageToGame(TWON, {"player": game.get_active_turn(ws.id), "type": "checkmate"}, game);	
 					}
 					else if (game.check_draw()) {
 						sendMessageToGame(TWON, "draw", game);
-							//	sendMessageToGame(TTURN, ws.game.turn, ws.game);
 	
 					}
+					clearInterval(game.timer);
 				}
 			}	
 			else
@@ -119,6 +118,15 @@ wss.on("connection", (ws, req) =>
 		else if (message.type === TCHAT) {
 			let messageText = message.data;
 			sendMessageToGame(TCHAT, `[${ws.id}]: ${messageText}`, ws.game);
+		}
+		else if (message.type === TSABOTAGE)
+		{
+			if (!ws.game.is_full()) {return;}
+			if (!ws.game.sabotage(ws.id)) {return;}
+			sendMessageToGame(TSABOTAGE, {"layout": ws.game.get_fen()}, ws.game);
+			sendMessageToGame(TCHAT, "<span style='color:red'>[Server]: Someone sabotaged the game, the server is failing! </span>", ws.game);
+			ws.game.switch_player_colours();
+			setCountdown(ws.game.show_turn()); // Make sure we can't drain the opponent's time
 		}
 	});
 

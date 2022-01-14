@@ -7,7 +7,8 @@ const root = document.querySelector(":root");
 
 let sounds = {"move-self": new Audio("sounds/move-self.webm"),
               "capture": new Audio("sounds/capture.webm"),
-              "invalid": new Audio("sounds/illegal.webm")};
+              "invalid": new Audio("sounds/illegal.webm"),
+              "check": new Audio("sounds/move-check.webm")};
 
 const playSound = (sound) =>
 {
@@ -76,18 +77,22 @@ for (let row = 0; row < 8; row++)
     }
 }
 
-
+// This function has unusual behaviour and should be used sparingly
 function makeDisappear(piece)
 {
-    piece.style.transform = "translateY(-100%)";
-    piece.style.opacity = "0";
-    piece.addEventListener("transitionend", () => {
-        piece.remove();
-    });
+    if (enableMoveAnimation)
+    {
+        piece.style.transform = "translateY(-100%)";
+        piece.style.opacity = "0";
+        piece.addEventListener("transitionend", () => {
+            piece.remove();
+        });
+    }   
+    else {piece.remove();}
 }
 
 // Generalize this to both colours incase of restart
-function setBlackBoard()
+function switchBoard(fen)
 {
     for (square of board.querySelectorAll("div[data-pos]"))
     {
@@ -105,7 +110,7 @@ function setBlackBoard()
     {
         textArea.innerHTML = String.fromCharCode(201 - textArea.innerHTML.charCodeAt(0)); // 'h' - innerHTML + 'a' to reverse the letters
     }
-    createPieces(decodeFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"));
+    createPieces(decodeFEN(fen));
 }
 
 
@@ -177,7 +182,7 @@ function promotePawn(pawn, color, to) // Pawn being promoted, color of player, t
     pawn.setAttribute("piece-data", piece);
 }
 
-function enPassant(color, pieceTo)
+function enPassant(color, pieceTo, selfColour)
 {
     var toCapture;
     if (color === 'w') {
@@ -185,7 +190,7 @@ function enPassant(color, pieceTo)
     } else if (color === 'b') {
         toCapture = `${pieceTo.charAt(0)}${parseInt(pieceTo.charAt(1))+1}`
     }
-    capturePiece(getPiece(getSquare(encodePos(toCapture))));
+    capturePiece(getPiece(getSquare(encodePos(toCapture))), selfColour);
     playSound("capture");
 }
 
@@ -277,15 +282,20 @@ keyboardInputForm.addEventListener("submit", (event) =>
 {
     event.preventDefault(); // Prevent reloading
     // Take away input again
-    keyboardInput.value = "";
-    keyboardInput.style.display = "none"; 
 
-    if (!gameStarted) {return;}
+    if (!gameStarted) {
+        keyboardInput.value = "";
+        keyboardInput.style.display = "none"; 
+        return;
+    }
 
     try
     {
         let positions = [keyboardInput.value.substring(0, 2), keyboardInput.value.substring(2, 4)];
         let from = getSquare(encodePos(positions[0]));
+        console.log(positions[0]);
+
+
         let to = getSquare(encodePos(positions[1]));
         let piece = getPiece(from);
         
@@ -295,4 +305,7 @@ keyboardInputForm.addEventListener("submit", (event) =>
         }
     }
     catch {}
+
+    keyboardInput.value = "";
+    keyboardInput.style.display = "none"; 
 });

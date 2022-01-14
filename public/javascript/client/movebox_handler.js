@@ -1,7 +1,7 @@
 var moveBox = (function () {
     const moveTable = document.getElementById("move-table");
     var turn = 1;
-    var latestRow = moveTable.insertRow();
+    var latestRow = null;
     return {
         writeMove: function (color, san) {
             if (color === "black") { // white has played

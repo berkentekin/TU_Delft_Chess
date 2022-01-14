@@ -21,6 +21,7 @@ const TTABLE = "TABLE"; // Sent when a player is in check (contains color of the
 const TINVALID = "INVALID"; // Player attempted an invalid move
 const TTIME = "TIME"; // Updates timer, the data will be player color and remaining time
 const TCHAT = "CHAT"; // For sending chat message (contains html to be displayed)
+const TSABOTAGE = "SABOTAGE"; // For sabotaging the game;
 
 if (typeof exports !== "undefined") {
     exports.send_message = send_message
@@ -31,5 +32,5 @@ if (typeof exports !== "undefined") {
     module.exports = Object.assign({}, exports, {TMOVE: TMOVE, TRESPONSE: TRESPONSE, TQUIT: TQUIT,
                                           TUPDATE: TUPDATE, TPLAYERT: TPLAYERT, TGAMESTART: TGAMESTART,
                                           TTURN: TTURN, TWON: TWON, TTABLE: TTABLE, TINVALID: TINVALID, TTIME: TTIME,
-                                          TCHAT: TCHAT});
+                                          TCHAT: TCHAT, TCHECK: TCHECK, TSABOTAGE:TSABOTAGE});
 };

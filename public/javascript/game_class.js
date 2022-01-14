@@ -7,11 +7,17 @@ class Game
         this.chess = new Chess();
         this.players = {};
         this.times = {}; 
+        this.sabotages = {};
         this.numPlayers = 0;
         this.turn = "white";
-        this.colors = {};
         this.activePlayer = 0;
         this.no_turns = 1;
+        this.timer = null;
+    }
+
+    get_fen()
+    {
+        return this.chess.fen();
     }
 
     accepted_moves()
@@ -30,7 +36,7 @@ class Game
         if (attemptedPiece !== null)
         {
             let pieceColor = attemptedPiece["color"] === 'w' ? "white" : "black";
-            if (pieceColor !== this.get_active_turn(wsID)) {
+            if (pieceColor !== this.get_active_turn(wsID) || !this.is_full()) {
                 return { "moveInfo": null, "piece": data["piece"] };
             }
             else {
@@ -51,7 +57,7 @@ class Game
 
     decrement_time(opponentColor)
     {
-        this.times[opponentColor]--;
+        this.times[opponentColor] -= 1;
         return { "color": opponentColor, "time": this.times[opponentColor] };
     }
 
@@ -105,8 +111,29 @@ class Game
         if (this.players.length > 2) {throw "Cannot have more than 2 players!";}
         var player_colour = (this.numPlayers++) == 0 ? "white": "black";
         this.players[wsID] = player_colour;
+        this.sabotages[wsID] = 2;
         this.times[player_colour] = 600;
         return player_colour;
+    }
+
+    sabotage(wsID)
+    {
+        if (this.sabotages[wsID] > 0)
+        {
+            this.sabotages[wsID]--;
+            return true;
+        }
+        return false;
+    }
+
+    switch_player_colours()
+    {
+        console.log(this.players);
+        for (const [key, value] of Object.entries(this.players))
+        {
+            this.players[key] = value == "white" ? "black" : "white";
+        }
+        console.log(this.players);
     }
 }
 

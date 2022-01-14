@@ -30,14 +30,17 @@
         <div id="game-title"><h1> <span style ="color: var(--light-theme)">TU Delft: </span>Chess <span style ="color: var(--light-theme)">of technical difficulties </span></h1></div>
         <div id = "game-info">
             <div id="score">
-                <p class = "no-pad-mar" style="display:inline">0</p><p class = "no-pad-mar" style="display:inline">0</p>
+                <p id="self-score" class = "no-pad-mar" style="display:inline">0</p><p id="opponent-score" class = "no-pad-mar" style="display:inline">0</p>
             </div>
-            <div id="timer-black" class="timer">10:00</div>
+            <div id="timer-black" class="timer displayed-timer">10:00</div>
             <div id="timer-white" class="timer">10:00</div>
         </div>
         <div id="extra-info">
             <p id="gameStatus"> Waiting for another player...</p>
-            <div id="rules-div"><button onclick="openrules()" id="rules">Rules</button></div>
+            <div id = "game-buttons-div">
+                <button onclick="openrules()" id="rules">Rules</button>
+                <button onclick="sabotage()" id="sabotage">Sabotage</button>
+            </div>
             <form id = "keyboard-input-form"><input type = "text" id = "keyboard-input"></form>
         </div>
         <div id = "settings-info">

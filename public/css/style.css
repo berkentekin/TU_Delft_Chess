@@ -85,7 +85,7 @@ footer
 
 .white
 {
-    background-color: #fffaf5;
+    background-color: white;
     color: black;
 }
 
@@ -286,18 +286,8 @@ table.no-spacing
     position: relative;
 }
 
-#timer-black::after
+.displayed-timer::after
 {
-    content: "";
-    position: absolute;
-    width: 50%;
-    left: 25%;
-    bottom: -2%;
-    border-bottom: 2px solid white;
-    border-radius: 1rem;
-}
-
-#timer-white::after {
     content: "";
     position: absolute;
     width: 50%;
@@ -314,6 +304,7 @@ table.no-spacing
     margin-bottom: 0.5rem;
     display: flex;
     flex-direction: column;
+    align-items: center;
 }
 
 #gameStatus
@@ -321,17 +312,36 @@ table.no-spacing
     transition: 400ms linear;
 }
 
-#rules-div
+#game-buttons-div
 {
     height: 30%;
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+
+#game-buttons-div > *
+{
+    margin-inline: 0.5rem;
 }
 
 #rules
 {
     background: var(--light-theme);
     border: none;
-    width: 50%;
+    width: 45%;
 }
+
+#sabotage
+{
+    background: lightsalmon;
+    color: white;
+    border: none;
+    width: 45%;
+}
+
+
 
 .checkbox-divs
 {
@@ -373,6 +383,11 @@ table.no-spacing
 {
     outline-style: dashed;
     outline-color: blue;
+}
+
+#keyboard-input-form
+{
+    margin-top: 0.5rem;
 }
 
 #chat-area
@@ -421,8 +436,26 @@ table.no-spacing
 
 #move-area
 {
+    font-family: "ocr-aregular";
     width: 100%;
     height: calc(var(--board-size)*0.6);
+    overflow-y: scroll;
+}
+
+#move-table
+{
+    width: 100%;
+}
+
+#move-table th
+{
+    color: var(--light-theme);
+    font-size: 2vw;
+}
+
+#move-table td
+{
+    text-align: center;
 }
 
 .overlay

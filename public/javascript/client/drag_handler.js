@@ -42,6 +42,11 @@ const mouseDownF = (event) =>
             wasMovedManually = true;
 	        movePieceTo(piece, pieceFrom, square);
         }
+        else
+        {
+            piece.className = "piece";
+            playSound("invalid");
+        }
     }
     // Add event to process dragging within board
     // Works outside too, don't ask me why
