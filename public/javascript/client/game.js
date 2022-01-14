@@ -72,6 +72,15 @@ function connect()
             gameStatus.style.color = "black";
             gameStatus.innerHTML = "Your are player: " + `<span style="color:${textColour};">${player_type}</span>`;
         }
+
+        const removeHighlight = (message) =>
+        {
+            // Remove highlights once the piece is moved
+            var allMoves = message.data["allMoves"];
+            allMoves.push(message.data["pieceFrom"]);
+            console.log(allMoves);
+            remove_highlight(fetchSquares(allMoves));
+        }
     
         switch (message.type)
         {
@@ -137,9 +146,7 @@ function connect()
 
                 
                 // Remove highlights once the piece is moved
-                var allMoves = message.data["allMoves"];
-                allMoves.push(message.data["moveInfo"]["from"]);
-                remove_highlight(fetchSquares(allMoves));
+                removeHighlight(message);
                 break;
 
             case TCHECK:
@@ -172,6 +179,7 @@ function connect()
             case TINVALID:  // Player has commited a nono
                 piece = message.data["piece"];
                 invalidMove(getPiece(getSquare(piece["pos"])));
+                removeHighlight(message);
                 break;
             case TWON:
                 gameStarted = false;
@@ -191,6 +199,7 @@ function connect()
                 }
                 game_over(winType);
                 break;
+
             case TTIME:
                 var remainingSeconds = message.data["time"];
                 var minutes = remainingSeconds / 60 | 0; // Get the integer part

@@ -38,11 +38,11 @@ class Game
         if (attemptedPiece !== null)
         {
             let pieceColor = attemptedPiece["color"] === 'w' ? "white" : "black";
+            let allMoves = this.chess.moves({"square": data["from"]});
             if (pieceColor !== this.get_active_turn(wsID) || !this.is_full()) {
-                return { "moveInfo": null, "piece": data["piece"] };
+                return { "moveInfo": null, "piece": data["piece"], "allMoves": allMoves, "pieceFrom": data["from"]};
             }
             else {
-                let allMoves = this.chess.moves({"square": data["from"]});
                 let move = this.chess.move({ "from": data["from"], "to": data["to"], "promotion": data["promotion"] });
                 if (this.chess.turn() === "w") {
                     this.no_turns++;

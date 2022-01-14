@@ -8,6 +8,7 @@ const mouseDownF = (event) =>
     if (!gameStarted) {return;} 
     const piece = event.target;
     const pieceFrom = decodePos(piece.parentNode.getAttribute("data-pos"));
+    
     send_message(THIGHLIGHT, {"from": pieceFrom}, ws); // TODO add options to explicitly enable/disable highlight
 
     // Position needs to be absolute so we can drag it around outside square
@@ -68,6 +69,8 @@ const touchDownF = (event) =>
     if (!gameStarted) {return;} 
     const piece = event.target;
     const pieceFrom = decodePos(piece.parentNode.getAttribute("data-pos"));
+
+    send_message(THIGHLIGHT, {"from": pieceFrom}, ws); // TODO add options to explicitly enable/disable highlight
 
     // Position needs to be absolute so we can drag it around outside square
     piece.className = "dragging-piece";

@@ -332,6 +332,7 @@ table.no-spacing
     background: var(--light-theme);
     border: none;
     width: 45%;
+    border-radius: 0.2rem;
 }
 
 #rules:focus
@@ -346,6 +347,7 @@ table.no-spacing
     color: white;
     border: none;
     width: 45%;
+    border-radius: 0.2rem;
 }
 
 #sabotage:focus
