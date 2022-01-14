@@ -139,6 +139,29 @@ function capturePiece(piece)
     capturedOffset[piece.type]++;
 }
 
+function castle(flag, color)
+{
+    if (flag === 'k') {
+        if (color === 'w') {
+            var rook = getPiece(getSquare(encodePos("h1")));
+            finalizeMove(rook, getSquare(encodePos("f1")));
+        } else {
+            var rook = getPiece(getSquare(encodePos("h8")));
+            finalizeMove(rook, getSquare(encodePos("f8")));
+        }
+
+    } else if (flag === 'q') {
+        if (color === 'w') {
+            var rook = getPiece(getSquare(encodePos("a1")));
+            finalizeMove(rook, getSquare(encodePos("d1")));
+        } else {
+            var rook = getPiece(getSquare(encodePos("a8")));
+            finalizeMove(rook, getSquare(encodePos("d8")));
+        }
+    }
+
+    
+}
 
 function movePieceTo(piece, pieceFrom, square)
 {
@@ -168,7 +191,6 @@ function invalidMove(piece)
 
 function finalizeMove(piece, square) 
 {
-    console.log(piece, "5");
     let animate;
 
     console.log(wasMovedManually);

@@ -91,8 +91,11 @@ function connect()
             break;
         case TUPDATE:
             piece = message.data["piece"];    
-            finalizeMove(getPiece(getSquare(piece["pos"])), getSquare(encodePos(message.data["pieceTo"])));
-
+                finalizeMove(getPiece(getSquare(piece["pos"])), getSquare(encodePos(message.data["pieceTo"])));
+                let flag = message.data["moveInfo"]["flags"];
+                if (flag === 'k' || flag === 'q') {
+                    castle(flag, message.data["moveInfo"]["color"]);
+                }
                 var remainingSeconds = message.data["time"];
                 var minutes = remainingSeconds / 60 | 0; // Get the integer part
                 var seconds = remainingSeconds % 60;
