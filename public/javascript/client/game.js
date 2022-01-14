@@ -96,6 +96,9 @@ function connect()
                 if (flag === 'k' || flag === 'q') {
                     castle(flag, message.data["moveInfo"]["color"]);
                 }
+                else if (flag === 'e') {
+                    enPassant(flag, message.data["moveInfo"]["color"], message.data["pieceTo"]);
+                }
                 var remainingSeconds = message.data["time"];
                 var minutes = remainingSeconds / 60 | 0; // Get the integer part
                 var seconds = remainingSeconds % 60;

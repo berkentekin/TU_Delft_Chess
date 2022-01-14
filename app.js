@@ -101,7 +101,7 @@ wss.on("connection", (ws, req) =>
 						//		sendMessageToGame(TWON, won, ws.game);
 					}
 					else if (game.check_draw()) {
-							sendMessageToGame(TWON, "draw", game);
+						sendMessageToGame(TWON, "draw", game);
 							//	sendMessageToGame(TTURN, ws.game.turn, ws.game);
 	
 					}

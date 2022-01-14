@@ -139,6 +139,17 @@ function capturePiece(piece)
     capturedOffset[piece.type]++;
 }
 
+function enPassant(flag, color, pieceTo)
+{
+    var toCapture;
+    if (color === 'w') {
+        toCapture = `${pieceTo.charAt(0)}${parseInt(pieceTo.charAt(1))-1}`
+    } else if (color === 'b') {
+        toCapture = `${pieceTo.charAt(0)}${parseInt(pieceTo.charAt(1))+1}`
+    }
+    capturePiece(getPiece(getSquare(encodePos(toCapture))));
+}
+
 function castle(flag, color)
 {
     if (flag === 'k') {
@@ -158,9 +169,7 @@ function castle(flag, color)
             var rook = getPiece(getSquare(encodePos("a8")));
             finalizeMove(rook, getSquare(encodePos("d8")));
         }
-    }
-
-    
+    } 
 }
 
 function movePieceTo(piece, pieceFrom, square)
