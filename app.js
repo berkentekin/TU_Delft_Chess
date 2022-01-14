@@ -73,7 +73,7 @@ wss.on("connection", (ws, req) =>
 				clearInterval(timer);
 				return;
 			}
-		}, 10);
+		}, 1000);
 	};
 	ws.on("message", (data) =>
 	{
