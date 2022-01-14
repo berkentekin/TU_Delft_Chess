@@ -147,7 +147,7 @@ function capturePiece(piece)
     capturedOffset[piece.type]++;
 }
 
-function enPassant(flag, color, pieceTo)
+function enPassant(color, pieceTo)
 {
     var toCapture;
     if (color === 'w') {
