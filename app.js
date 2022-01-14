@@ -85,11 +85,9 @@ wss.on("connection", (ws, req) =>
 			let accepted_moves = game.accepted_moves();
 			let response = game.make_move(message.data, ws.id);
 			let move = response["moveInfo"];
-			let current_player = game.show_turn();
+			let current_player = game.show_turn(); // Note: this is the opposite to the player who sent the message
 				//if (!accepted_moves.includes(move.san)) { response["moveInfo"] = null };
 
-			
-			
 			if (move !== null && accepted_moves.includes(move.san)) {
 				sendMessageToGame(TUPDATE, response, game);
 				sendMessageToGame(TTURN, { "move": move.san, "turn": game.show_turn() }, game);
@@ -110,10 +108,6 @@ wss.on("connection", (ws, req) =>
 							//	sendMessageToGame(TTURN, ws.game.turn, ws.game);
 	
 					}
-				}
-				else
-				{
-
 				}
 			}	
 			else

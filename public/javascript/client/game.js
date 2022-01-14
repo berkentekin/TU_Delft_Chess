@@ -90,9 +90,15 @@ function connect()
                 moveBox.writeMove(message.data["turn"], message.data["move"]);
                 break;
             case TUPDATE:
-                piece = message.data["piece"];    
-                finalizeMove(getPiece(getSquare(piece["pos"])), getSquare(encodePos(message.data["pieceTo"])));
+                piece = getPiece(getSquare(message.data["piece"]["pos"]));  // HTML element info gets lost in translation so we retrieve it
+                console.log(TUPDATE + ":" + piece);
+                finalizeMove(piece, getSquare(encodePos(message.data["pieceTo"])), player_type);
                 let flag = message.data["moveInfo"]["flags"];
+
+                if (flag.includes('p'))
+                {
+                    promotePawn(piece, message.data["moveInfo"]["color"], message.data["moveInfo"]["promotion"]);
+                }
                 if (flag === 'k' || flag === 'q') {
                     castle(flag, message.data["moveInfo"]["color"]);
                 }

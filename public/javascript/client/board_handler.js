@@ -81,7 +81,9 @@ function makeDisappear(piece)
 {
     piece.style.transform = "translateY(-100%)";
     piece.style.opacity = "0";
-    piece.addEventListener("transitionend", () => piece.remove());
+    piece.addEventListener("transitionend", () => {
+        piece.remove();
+    });
 }
 
 // Generalize this to both colours incase of restart
@@ -91,7 +93,6 @@ function setBlackBoard()
     {
         let pos = square.getAttribute("data-pos");
         let piece = square.querySelector("img");
-        
         if (piece !== null) {makeDisappear(piece)};   
 
         square.setAttribute("data-pos", 63 - pos);
@@ -142,23 +143,38 @@ function getSquare(num)
 
 let capturedOffset = {"p":0, "r":0, "n":0, "b":0, "q": 0}
 
-function capturePiece(piece)
+function capturePiece(piece, color)
 {
-    let capturedZone = captured.querySelector(`#${piece.type}-captured`);
+    if (piece.getAttribute("piece-data").charAt(0) !== color.charAt(0))
+    {
+        let capturedZone = captured.querySelector(`#${piece.type}-captured`);
+        piece.className = "captured-piece";
+        capturedZone.appendChild(piece);
 
-    piece.className = "captured-piece";
-    capturedZone.appendChild(piece);
+        // Needs to be updated if captured pieces size is updated ;;;
+        // Bit of redundancy here, but oh well. Since capturedZone is relative, it does not
+        // resize due to the absolutely placed pieces inside, so we have to set this ourselves;
+        capturedZone.style.width = `calc(var(--board-size)/11 * (0.8 * 0.4 * ${capturedOffset[piece.type]} + 0.8))`;
+        piece.style.left = `calc(var(--board-size)/11 * 0.8 * 0.4 * ${capturedOffset[piece.type]})`; // Absolute position relative to cell
+        piece.style.top = 0 + "px"; // Sometimes top is random, what the hell?
+        capturedOffset[piece.type]++;
 
-    // Needs to be updated if captured pieces size is updated ;;;
-    // Bit of redundancy here, but oh well. Since capturedZone is relative, it does not
-    // resize due to the absolutely placed pieces inside, so we have to set this ourselves;
-    capturedZone.style.width = `calc(var(--board-size)/11 * (0.8 * 0.4 * ${capturedOffset[piece.type]} + 0.8))`;
-    piece.style.left = `calc(var(--board-size)/11 * 0.8 * 0.4 * ${capturedOffset[piece.type]})`; // Absolute position relative to cell
-    piece.style.top = 0 + "px"; // Sometimes top is random, what the hell?
+        removeDrag(piece);
+    }
+    else
+    {
+        makeDisappear(piece);
+    }   
+}
 
-    removeDrag(piece);
+function promotePawn(pawn, color, to) // Pawn being promoted, color of player, to type of
+{
+    // Get relevant info then discard old piece
+    let piece = color.charAt(0) + to;
 
-    capturedOffset[piece.type]++;
+    pawn.src = `pieces/${piece}.svg`;
+    pawn.type = to;
+    pawn.setAttribute("piece-data", piece);
 }
 
 function enPassant(color, pieceTo)
@@ -170,6 +186,7 @@ function enPassant(color, pieceTo)
         toCapture = `${pieceTo.charAt(0)}${parseInt(pieceTo.charAt(1))+1}`
     }
     capturePiece(getPiece(getSquare(encodePos(toCapture))));
+    playSound("capture");
 }
 
 function castle(flag, color)
@@ -177,19 +194,19 @@ function castle(flag, color)
     if (flag === 'k') {
         if (color === 'w') {
             var rook = getPiece(getSquare(encodePos("h1")));
-            finalizeMove(rook, getSquare(encodePos("f1")));
+            finalizeMove(rook, getSquare(encodePos("f1")), color);
         } else {
             var rook = getPiece(getSquare(encodePos("h8")));
-            finalizeMove(rook, getSquare(encodePos("f8")));
+            finalizeMove(rook, getSquare(encodePos("f8")), color);
         }
 
     } else if (flag === 'q') {
         if (color === 'w') {
             var rook = getPiece(getSquare(encodePos("a1")));
-            finalizeMove(rook, getSquare(encodePos("d1")));
+            finalizeMove(rook, getSquare(encodePos("d1")), color);
         } else {
             var rook = getPiece(getSquare(encodePos("a8")));
-            finalizeMove(rook, getSquare(encodePos("d8")));
+            finalizeMove(rook, getSquare(encodePos("d8")), color);
         }
     } 
 }
@@ -202,10 +219,11 @@ function movePieceTo(piece, pieceFrom, square)
     if ((pieceData === "wp" && pieceFrom.charAt(1) === '7' && pieceTo.charAt(1) === '8') || (pieceData === "bp" && pieceFrom.charAt(1) === '2' && pieceTo.charAt(1) === '1')) {
             
             let promote = window.prompt("'q' for Queen, 'n' for Knight, 'r' for Rook, 'b' for Bishop").toLowerCase();
-            send_message("MOVE", { "piece": piece, "from": pieceFrom, "to": pieceTo, "promotion": promote }, ws);
+            send_message(TMOVE, { "piece": piece, "from": pieceFrom, "to": pieceTo, "promotion": promote }, ws);
+            
             return;
     }
-    send_message("MOVE", {"piece": piece, "from": pieceFrom, "to": pieceTo}, ws);
+    send_message(TMOVE, {"piece": piece, "from": pieceFrom, "to": pieceTo}, ws);
 }
 
 let wasMovedManually = false;
@@ -216,15 +234,12 @@ function invalidMove(piece)
     wasMovedManually = false;
     // Position piece relative to square again. Will go back to original if new square wasn't found
     piece.className = "piece";
-
-
 }
 
-function finalizeMove(piece, square) 
+function finalizeMove(piece, square, color) 
 {
     let animate;
 
-    console.log(wasMovedManually);
     if (!wasMovedManually) {animate = animateParentChange1(piece);}
     else                   {animate = false;}
 
@@ -233,14 +248,14 @@ function finalizeMove(piece, square)
     let cpiece = getPiece(square);
     square.appendChild(piece);
     piece.className = "piece";
-    piece["pos"] =  square.getAttribute("data-pos"); 
+    piece.pos = square.getAttribute("data-pos"); 
     
     const finishAction = () => {
 
         if (cpiece !== null && cpiece !== piece)
         {
             playSound("capture");
-            capturePiece(cpiece);
+            capturePiece(cpiece, color);
         }
         else {playSound("move-self");}   
     }
