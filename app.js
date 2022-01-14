@@ -68,7 +68,12 @@ wss.on("connection", (ws, req) =>
 		timer = setInterval(() => {
 			var opponentPlayerTime = game.decrement_time(color);
 			sendMessageToGame(TTIME, opponentPlayerTime, ws.game);
-		}, 1000);
+			if (opponentPlayerTime["time"] === 0) {
+				sendMessageToGame(TWON, "win", game);
+				clearInterval(timer);
+				return;
+			}
+		}, 10);
 	};
 	ws.on("message", (data) =>
 	{
