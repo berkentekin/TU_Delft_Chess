@@ -56,32 +56,47 @@ function sendMessageToGame(type, data, game)
 }
 
 let games = []
+let timer = null;
 
 wss.on("connection", (ws, req) => 
 { 
 	ws.id = numConnectionIDs++;
+	function setCountdown(color) {
+		if (timer !== null)
+			clearInterval(timer);
+		timer = null;
+		timer = setInterval(() => {
+			var opponentPlayerTime = game.decrement_time(color);
+			sendMessageToGame(TTIME, opponentPlayerTime, ws.game);
+			if (opponentPlayerTime["time"] === 0) {
+				sendMessageToGame(TWON, "win", game);
+				clearInterval(timer);
+				return;
+			}
+		}, 1000);
+	};
 	ws.on("message", (data) =>
 	{
+
 		let message = decode_message(data);
 		if (message.type === TMOVE) {
-			setInterval(function () {
-				playerTime = game.decrement_time(ws.id);
-				sendMessageToGame(TTIME, playerTime, ws.game);
-			}, 1000);
+
 		
 			let accepted_moves = game.accepted_moves();
 			let response = game.make_move(message.data, ws.id);
 			let move = response["moveInfo"];
-
+			let current_player = game.show_turn();
 				//if (!accepted_moves.includes(move.san)) { response["moveInfo"] = null };
 
-				
-				
+			
+			
 			if (move !== null && accepted_moves.includes(move.san)) {
 				sendMessageToGame(TUPDATE, response, game);
 				sendMessageToGame(TTURN, { "move": move.san, "turn": game.show_turn() }, game);
 				sendMessageToGame(TTABLE, { "move": move.san, "turn": game.show_turn() }, game);
-					
+
+				setCountdown(current_player);
+
 				if (game.check_game_over()) {
 					if (game.in_check() && !game.check_won()) {
 						sendMessageToGame(TCHECK, game.show_turn(), game);
@@ -92,18 +107,22 @@ wss.on("connection", (ws, req) =>
 					}
 					else if (game.check_draw()) {
 						sendMessageToGame(TWON, "draw", game);
-						//	sendMessageToGame(TTURN, ws.game.turn, ws.game);
-
+							//	sendMessageToGame(TTURN, ws.game.turn, ws.game);
+	
 					}
 				}
-			}
+				else
+				{
+
+				}
+			}	
 			else
 			{
 				send_message(TINVALID, response, ws);
 			}
+		
 		}
-		else if (message.type === TCHAT)
-		{
+		else if (message.type === TCHAT) {
 			let messageText = message.data;
 			sendMessageToGame(TCHAT, `[${ws.id}]: ${messageText}`, ws.game);
 		}

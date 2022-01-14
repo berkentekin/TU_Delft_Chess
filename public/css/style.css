@@ -297,6 +297,16 @@ table.no-spacing
     border-radius: 1rem;
 }
 
+#timer-white::after {
+    content: "";
+    position: absolute;
+    width: 50%;
+    left: 25%;
+    bottom: -2%;
+    border-bottom: 2px solid white;
+    border-radius: 1rem;
+}
+
 #extra-info
 {
     border: 2px solid black;

@@ -96,6 +96,14 @@ function setBlackBoard()
 
         square.setAttribute("data-pos", 63 - pos);
     }
+    for (textArea of document.getElementsByClassName("supersleft positions"))
+    {
+        textArea.innerHTML = 9 - textArea.innerHTML;
+    }
+    for (textArea of document.getElementsByClassName("subsright positions"))
+    {
+        textArea.innerHTML = String.fromCharCode(201 - textArea.innerHTML.charCodeAt(0)); // 'h' - innerHTML + 'a' to reverse the letters
+    }
     createPieces(decodeFEN("rnbqkbnr/pppppppp/8/8/8/8/PPPPPPPP/RNBQKBNR"));
 }
 
@@ -153,36 +161,49 @@ function capturePiece(piece)
     capturedOffset[piece.type]++;
 }
 
-var pieceHandler = (function() {
-    var currentPiece;
-    var destinationSquare;
-    return {
-        assignPiece: function(piece) {
-            this.currentPiece = piece;
-        },
-        assignSquare: function(square) {
-            this.destinationSquare = square;
-        },
-        returnPiece: function() {
-            return this.currentPiece;
-        },
-        returnSquare: function() {
-            return this.destinationSquare;
-        },
-    };
-})();
+function enPassant(color, pieceTo)
+{
+    var toCapture;
+    if (color === 'w') {
+        toCapture = `${pieceTo.charAt(0)}${parseInt(pieceTo.charAt(1))-1}`
+    } else if (color === 'b') {
+        toCapture = `${pieceTo.charAt(0)}${parseInt(pieceTo.charAt(1))+1}`
+    }
+    capturePiece(getPiece(getSquare(encodePos(toCapture))));
+}
+
+function castle(flag, color)
+{
+    if (flag === 'k') {
+        if (color === 'w') {
+            var rook = getPiece(getSquare(encodePos("h1")));
+            finalizeMove(rook, getSquare(encodePos("f1")));
+        } else {
+            var rook = getPiece(getSquare(encodePos("h8")));
+            finalizeMove(rook, getSquare(encodePos("f8")));
+        }
+
+    } else if (flag === 'q') {
+        if (color === 'w') {
+            var rook = getPiece(getSquare(encodePos("a1")));
+            finalizeMove(rook, getSquare(encodePos("d1")));
+        } else {
+            var rook = getPiece(getSquare(encodePos("a8")));
+            finalizeMove(rook, getSquare(encodePos("d8")));
+        }
+    } 
+}
 
 function movePieceTo(piece, pieceFrom, square)
 {
 
     let pieceTo = decodePos(square.getAttribute("data-pos"));
-    if (piece["type"] === 'p') {
-        let row = pieceTo.charAt(1);
-        if (row === '8' || row === '1') {
+    let pieceData = piece.getAttribute("piece-data");
+    if ((pieceData === "wp" && pieceFrom.charAt(1) === '7' && pieceTo.charAt(1) === '8') || (pieceData === "bp" && pieceFrom.charAt(1) === '2' && pieceTo.charAt(1) === '1')) {
+            
             let promote = window.prompt("'q' for Queen, 'n' for Knight, 'r' for Rook, 'b' for Bishop").toLowerCase();
             send_message("MOVE", { "piece": piece, "from": pieceFrom, "to": pieceTo, "promotion": promote }, ws);
             return;
-        }
     }
     send_message("MOVE", {"piece": piece, "from": pieceFrom, "to": pieceTo}, ws);
 }
@@ -201,7 +222,6 @@ function invalidMove(piece)
 
 function finalizeMove(piece, square) 
 {
-    console.log(piece, "5");
     let animate;
 
     console.log(wasMovedManually);

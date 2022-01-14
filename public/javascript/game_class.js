@@ -29,27 +29,28 @@ class Game
         let attemptedPiece = this.chess.get(data["from"]);
         if (attemptedPiece !== null)
         {
-            
             let pieceColor = attemptedPiece["color"] === 'w' ? "white" : "black";
             if (pieceColor !== this.get_active_turn(wsID)) {
-                return { "moveInfo": null, "piece": data["piece"]};
+                return { "moveInfo": null, "piece": data["piece"] };
+            }
+            else {
+                let move = this.chess.move({ "from": data["from"], "to": data["to"], "promotion": data["promotion"] });
+                if (this.chess.turn() === "w") {
+                    this.no_turns++;
+                }
+                if (move !== null)
+                    this.times[this.turn] += 5;
+                return {
+                    "moveInfo": move, "piece": data["piece"], "pieceFrom": data["from"],
+                    "pieceTo": data["to"], "time": this.times[this.turn], "color": this.turn
+                };
             }
         }
-        let move = this.chess.move({ "from": data["from"], "to": data["to"] , "promotion": data["promotion"]});
-        if (this.chess.turn() === "w")
-        {
-            this.no_turns++;
-        }
-        this.times[this.turn] += 5;
-        return {
-            "moveInfo": move, "piece": data["piece"], "pieceFrom": data["from"],
-            "pieceTo": data["to"], "time": this.times[this.turn], "color": this.turn
-        };
+        
     }
 
-    decrement_time(wsID)
+    decrement_time(opponentColor)
     {
-        let opponentColor = this.players[wsID] == "white" ? "black" : "white";
         this.times[opponentColor]--;
         return { "color": opponentColor, "time": this.times[opponentColor] };
     }
