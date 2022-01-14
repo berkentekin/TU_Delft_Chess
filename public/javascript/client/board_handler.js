@@ -30,6 +30,14 @@ const createPieceImg = (piece) =>
     return img;
 };
 
+function fetchSquares(decodedPositions) {
+    let square_array = [];
+    decodedPositions.forEach((pos) => {
+        square_array.push(getSquare(encodePos(pos)));
+    });
+    return square_array;
+}
+
 addAnimationAfterEffect(board, (el) => {el.style.setProperty("opacity", 1)});
 
 ///
@@ -222,11 +230,16 @@ function movePieceTo(piece, pieceFrom, square)
     let pieceTo = decodePos(square.getAttribute("data-pos"));
     let pieceData = piece.getAttribute("piece-data");
     if ((pieceData === "wp" && pieceFrom.charAt(1) === '7' && pieceTo.charAt(1) === '8') || (pieceData === "bp" && pieceFrom.charAt(1) === '2' && pieceTo.charAt(1) === '1')) {
-            
-            let promote = window.prompt("'q' for Queen, 'n' for Knight, 'r' for Rook, 'b' for Bishop").toLowerCase();
+        if (pieceFrom.charAt(0) === pieceTo.charAt(0)) { // TODO fetch all available squares for the pawn
+            var promote = window.prompt("'q' for Queen, 'n' for Knight, 'r' for Rook, 'b' for Bishop").toLowerCase();
+            if (promote === null || promote === "") {
+                piece.className = "piece";
+                playSound("invalid");
+                return;
+            }
             send_message(TMOVE, { "piece": piece, "from": pieceFrom, "to": pieceTo, "promotion": promote }, ws);
-            
             return;
+        }       
     }
     send_message(TMOVE, {"piece": piece, "from": pieceFrom, "to": pieceTo}, ws);
 }

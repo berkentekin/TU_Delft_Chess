@@ -1,12 +1,14 @@
 
 //const sounds = [new Audio("sounds/sound1.wav"), new Audio("sounds/sound2.mp3"), new Audio("sounds/sound3.mp3")]
 
+
 // Function added to pieces for drag functionality
 const mouseDownF = (event) =>
 {
     if (!gameStarted) {return;} 
     const piece = event.target;
     const pieceFrom = decodePos(piece.parentNode.getAttribute("data-pos"));
+    send_message(THIGHLIGHT, {"from": pieceFrom}, ws); // TODO add options to explicitly enable/disable highlight
 
     // Position needs to be absolute so we can drag it around outside square
     piece.className = "dragging-piece";
@@ -28,6 +30,7 @@ const mouseDownF = (event) =>
         // First remove all document related event listeners to stop draggin
         document.removeEventListener("mousemove", mouseMoveF);
         document.removeEventListener("mouseup", mouseUpF);
+
 
         // Banking on proper ordering of elemetents here :/
         // Also prevents placing on another piece since that shifts the td element one down the list

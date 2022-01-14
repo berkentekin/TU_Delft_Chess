@@ -20,9 +20,11 @@ class Game
         return this.chess.fen();
     }
 
-    accepted_moves()
+    accepted_moves(square) // square is an optional parameter
     {
-        return this.chess.moves();
+        if (typeof square === "undefined")
+            return this.chess.moves();
+        return this.chess.moves({ "square": square });
     }
 
     get_active_turn(wsID)
@@ -40,6 +42,7 @@ class Game
                 return { "moveInfo": null, "piece": data["piece"] };
             }
             else {
+                let allMoves = this.chess.moves({"square": data["from"]});
                 let move = this.chess.move({ "from": data["from"], "to": data["to"], "promotion": data["promotion"] });
                 if (this.chess.turn() === "w") {
                     this.no_turns++;
@@ -47,7 +50,7 @@ class Game
                 if (move !== null)
                     this.times[this.turn] += 5;
                 return {
-                    "moveInfo": move, "piece": data["piece"], "pieceFrom": data["from"],
+                    "moveInfo": move, "allMoves": allMoves, "piece": data["piece"], "pieceFrom": data["from"],
                     "pieceTo": data["to"], "time": this.times[this.turn], "color": this.turn
                 };
             }

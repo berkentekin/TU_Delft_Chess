@@ -1,7 +1,21 @@
+
 function isLower(c)
 {
     return c === c.toLowerCase();
 }
+
+function remove_highlight(squares) { // state is "enabled" or "disabled"
+    squares.forEach((square) => {
+        var square_class = square.getAttribute("class").split(" ")[0];
+        var square_color = square_class.split("-")[0];
+        square.setAttribute("class", `${square_color} chess-cell force-overlap`);
+        if (square_color === "black")
+            square.style.backgroundColor = '#2448a3';
+        else if (square_color === "white")
+            square.style.backgroundColor = "white";
+        
+    });
+} 
 
 function decodeFEN(FENStr)
 {

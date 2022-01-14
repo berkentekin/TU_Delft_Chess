@@ -3,7 +3,7 @@ const {send_message, decode_message,
       TMOVE, TRESPONSE, TQUIT, TUPDATE,
       TPLAYERT, TGAMESTART, TTURN, TWON, 
 	  TBOARD, TTABLE, TINVALID, TTIME, TCHAT,
-	  TCHECK, TSABOTAGE} = require("./public/javascript/messages");
+	  TCHECK, TSABOTAGE, TINFO, THIGHLIGHT} = require("./public/javascript/messages");
 const Game = require("./public/javascript/game_class");
 const {WebSocketServer} = require("ws");
 const { send } = require("express/lib/response");
@@ -80,7 +80,12 @@ wss.on("connection", (ws, req) =>
 	{
 
 		let message = decode_message(data);
-		if (message.type === TMOVE) {
+		if (message.type === THIGHLIGHT || message.type === TINFO) {
+			let available_moves = game.accepted_moves(message.data["from"]);
+			available_moves.push(message.data["from"]);
+			send_message(message.type, available_moves, ws);
+		}
+		else if (message.type === TMOVE) {
 			let accepted_moves = game.accepted_moves();
 			let response = game.make_move(message.data, ws.id);
 			let move = response["moveInfo"];
