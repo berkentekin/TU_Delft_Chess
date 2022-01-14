@@ -77,10 +77,10 @@ wss.on("connection", (ws, req) =>
 		if (message.type === TMOVE) {
 
 		
-		let accepted_moves = game.accepted_moves();
-		let response = game.make_move(message.data, ws.id);
-		let move = response["moveInfo"];
-
+			let accepted_moves = game.accepted_moves();
+			let response = game.make_move(message.data, ws.id);
+			let move = response["moveInfo"];
+			let current_player = game.show_turn();
 				//if (!accepted_moves.includes(move.san)) { response["moveInfo"] = null };
 
 			
