@@ -117,6 +117,10 @@ wss.on("connection", (ws, req) =>
 			}
 		
 		}
+		else if (message.type === TCHAT) {
+			let messageText = message.data;
+			sendMessageToGame(TCHAT, `[${ws.id}]: ${messageText}`, ws.game);
+		}
 	});
 
 	ws.on("close", (event) =>
