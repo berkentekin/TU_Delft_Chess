@@ -31,6 +31,11 @@ const createPieceImg = (piece) =>
 
 addAnimationAfterEffect(board, (el) => {el.style.setProperty("opacity", 1)});
 
+///
+///    Note to self, just build based on board colour, since that is given straight away
+///
+///
+
 // Generate table layout for chess board, done once on load
 for (let row = 0; row < 8; row++)
 {
@@ -71,6 +76,15 @@ for (let row = 0; row < 8; row++)
     }
 }
 
+
+function makeDisappear(piece)
+{
+    piece.style.transform = "translateY(-100%)";
+    piece.style.opacity = "0";
+    piece.addEventListener("transitionend", () => piece.remove());
+}
+
+// Generalize this to both colours incase of restart
 function setBlackBoard()
 {
     for (square of board.querySelectorAll("div[data-pos]"))
@@ -78,7 +92,7 @@ function setBlackBoard()
         let pos = square.getAttribute("data-pos");
         let piece = square.querySelector("img");
         
-        if (piece !== null) {piece.remove()};   
+        if (piece !== null) {makeDisappear(piece)};   
 
         square.setAttribute("data-pos", 63 - pos);
     }

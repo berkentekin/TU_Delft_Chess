@@ -466,12 +466,9 @@ table.no-spacing
     fill: var(--light-theme);
 }
 
-.checkbox-svg path:nth-child(2)
-{
-    fill: none;
-}
 
-.checkbox-svg defs linearGradient stop:nth-child(2)
+
+.checkbox-svg defs linearGradient stop:nth-child(1)
 {
     stop-color: var(--dark-theme);
 }
