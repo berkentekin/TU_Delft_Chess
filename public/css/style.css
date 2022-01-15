@@ -211,7 +211,7 @@ table.no-spacing
     height: 100%;
     position: static;
     z-index: 1;
-    /*transition: var(--squares-animation-time) ease;*/
+    transition: var(--squares-animation-time) ease;
 }
 
 .captured-cell

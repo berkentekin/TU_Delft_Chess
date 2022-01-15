@@ -165,26 +165,21 @@ let capturedOffset = {"p":0, "r":0, "n":0, "b":0, "q": 0}
 
 function capturePiece(piece, color)
 {
-    if (piece.getAttribute("piece-data").charAt(0) !== color.charAt(0))
-    {
-        let capturedZone = captured.querySelector(`#${piece.type}-captured`);
-        piece.className = "captured-piece";
-        capturedZone.appendChild(piece);
 
-        // Needs to be updated if captured pieces size is updated ;;;
-        // Bit of redundancy here, but oh well. Since capturedZone is relative, it does not
-        // resize due to the absolutely placed pieces inside, so we have to set this ourselves;
-        capturedZone.style.width = `calc(var(--board-size)/11 * (0.8 * 0.4 * ${capturedOffset[piece.type]} + 0.8))`;
-        piece.style.left = `calc(var(--board-size)/11 * 0.8 * 0.4 * ${capturedOffset[piece.type]})`; // Absolute position relative to cell
-        piece.style.top = 0 + "px"; // Sometimes top is random, what the hell?
-        capturedOffset[piece.type]++;
+    let capturedZone = captured.querySelector(`#${piece.type}-captured`);
+    piece.className = "captured-piece";
+    capturedZone.appendChild(piece);
 
-        removeDrag(piece);
-    }
-    else
-    {
-        makeDisappear(piece);
-    }   
+    // Needs to be updated if captured pieces size is updated ;;;
+    // Bit of redundancy here, but oh well. Since capturedZone is relative, it does not
+    // resize due to the absolutely placed pieces inside, so we have to set this ourselves;
+    capturedZone.style.width = `calc(var(--board-size)/11 * (0.8 * 0.4 * ${capturedOffset[piece.type]} + 0.8))`;
+    piece.style.left = `calc(var(--board-size)/11 * 0.8 * 0.4 * ${capturedOffset[piece.type]})`; // Absolute position relative to cell
+    piece.style.top = 0 + "px"; // Sometimes top is random, what the hell?
+    capturedOffset[piece.type]++;
+
+    removeDrag(piece);
+ 
 }
 
 
