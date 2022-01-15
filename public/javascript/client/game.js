@@ -77,7 +77,12 @@ function connect()
         {
             // Remove highlights once the piece is moved
             var allMoves = message.data["allMoves"];
-            allMoves.push(message.data["pieceFrom"]);
+
+            try {
+                allMoves.push(message.data["pieceFrom"]);
+            } catch {
+                return;
+            }
             remove_highlight(fetchSquares(allMoves));
         }
     
@@ -181,8 +186,12 @@ function connect()
                 break;
 
             case TINVALID:  // Player has commited a nono
-                piece = message.data["piece"];
-                invalidMove(getPiece(getSquare(piece["pos"])));
+                piece = message.data["response"]["piece"];
+                console.log(message.data["sameSquare"]);
+                if (!message.data["sameSquare"])
+                    invalidMove(getPiece(getSquare(piece["pos"])));
+                else
+                    sameSquareMove(getPiece(getSquare(piece["pos"])));
                 removeHighlight(message);
                 break;
             case TWON:

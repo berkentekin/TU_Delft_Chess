@@ -265,6 +265,11 @@ function movePieceTo(piece, pieceFrom, square)
 
 let wasMovedManually = false;
 
+function sameSquareMove(piece) {
+    wasMovedManually = false;
+    piece.className = "piece";
+}
+
 function invalidMove(piece)
 {
     playSound("invalid");

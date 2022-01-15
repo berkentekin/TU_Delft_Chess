@@ -78,7 +78,6 @@ wss.on("connection", (ws, req) =>
 	};
 	ws.on("message", (data) =>
 	{
-
 		let message = decode_message(data);
 		if (message.type === THIGHLIGHT) {
 			let available_moves = game.accepted_moves(message.data["from"], ws.id);
@@ -86,7 +85,6 @@ wss.on("connection", (ws, req) =>
 				available_moves.push(message.data["from"]);
 				send_message(THIGHLIGHT, available_moves, ws);
 			}
-
 		}
 		else if (message.type === TINFO) {
 			let available_moves = game.accepted_moves(message.data["from"]);
@@ -124,7 +122,10 @@ wss.on("connection", (ws, req) =>
 			}	
 			else
 			{
-				send_message(TINVALID, response, ws);
+				if (message.data["from"] === message.data["to"])
+					send_message(TINVALID, {"response" : response, "sameSquare": true}, ws);
+				else
+					send_message(TINVALID, {"response" : response, "sameSquare": false}, ws);
 			}
 		
 		}
