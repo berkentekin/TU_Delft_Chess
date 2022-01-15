@@ -10,7 +10,7 @@ function remove_highlight(squares) {
         var square_color = square_class.split("-")[0];
         square.setAttribute("class", `${square_color} chess-cell force-overlap`);
         if (square_color === "black")
-            square.style.backgroundColor = '#2448a3';
+            square.style.backgroundColor = 'var(--dark-theme)';
         else if (square_color === "white")
             square.style.backgroundColor = "white";
         

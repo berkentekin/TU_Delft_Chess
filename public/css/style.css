@@ -9,6 +9,7 @@
 html{
     box-sizing: border-box;
     background-color: white;
+    overflow: auto;
 }
 
 body
@@ -331,6 +332,13 @@ table.no-spacing
     background: var(--light-theme);
     border: none;
     width: 45%;
+    border-radius: 0.2rem;
+}
+
+#rules:focus
+{
+    background: var(--dark-theme);
+    color: white;
 }
 
 #sabotage
@@ -339,9 +347,13 @@ table.no-spacing
     color: white;
     border: none;
     width: 45%;
+    border-radius: 0.2rem;
 }
 
-
+#sabotage:focus
+{
+    background: red;
+}
 
 .checkbox-divs
 {
@@ -392,14 +404,11 @@ table.no-spacing
 
 #chat-area
 {
-    margin-inline: 1em;
+    margin-inline: 0.5rem;
     width: 100%;
 
     display: flex;
-    justify-content: top;
-    align-items: top;
     flex-direction: column;                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
-
 
     opacity: 0;
     will-change: transform;
@@ -514,4 +523,132 @@ table.no-spacing
 .checkbox-svg defs linearGradient stop:nth-child(1)
 {
     stop-color: var(--dark-theme);
+}
+
+@media only screen and (orientation: portrait)
+{
+    #main-area
+    {
+        flex-direction: column;
+    }
+
+    #game-area
+    {
+        width: 100%;   
+    }
+
+    #chat-area
+    {
+        flex-direction: row;
+        justify-content: space-between;
+        margin: 0.5rem;
+        height: fit-content;
+    }    
+
+    #chat-area > *
+    {
+        flex: 1 1 auto;
+    }
+
+    #chat-form
+    {
+        height: 60px;
+    }
+
+    #chat-input
+    {
+        font-size: 2rem;
+        border: 2px solid black;
+    }
+
+    #chat-textbox
+    {
+        font-size: 2rem;
+        height: calc(var(--board-size)*0.6);
+    }
+    
+    #move-area
+    {
+        width: 50%;
+    }
+
+    #move-table th
+    {
+        font-size: 3vw;
+    }
+
+    footer
+    {
+        height: 5em;
+        font-size: 2rem;    
+        border: 4px solid black;    
+    }
+
+    #game-title
+    {
+        font-size: 50px;
+    }
+
+    #score
+    {
+        justify-content: space-around;
+        grid-row: 1 / span 1;
+    }
+
+    #game-info
+    {
+        height: 40%;
+    }
+
+    #game-info
+    {
+        grid-template-columns: 1fr 1fr 1fr;
+        grid-template-rows: 1fr;
+    }
+
+    .timer
+    {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 4vw;
+    }
+
+    #game-buttons-div > button
+    {
+        font-size: 3vw;
+    }
+
+    #rules
+    {
+        height: 3vh;
+        border-radius: 0.5vh;
+    }
+
+    #sabotage
+    {
+        border-radius: 0.5vh;
+    }
+
+    #gameStatus
+    {
+        font-size: 3vw;
+    }
+
+    .positions
+    {
+        font-size: 2vw;
+    }
+
+    .checkbox-divs p
+    {
+        font-size: 3vw;
+    }
+
+    .checkbox-divs label
+    {
+        display: flex;
+        align-items: center;
+        width: 8%;
+    }
 }
