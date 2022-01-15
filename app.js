@@ -99,7 +99,7 @@ wss.on("connection", (ws, req) =>
 				//if (!accepted_moves.includes(move.san)) { response["moveInfo"] = null };
 
 			if (move !== null && accepted_moves.includes(move.san)) {
-				sendMessageToGame(TUPDATE, response, game);
+				sendMessageToGame(TUPDATE, {"response": response}, game);
 				sendMessageToGame(TTURN, { "move": move.san, "turn": game.show_turn() }, game);
 				sendMessageToGame(TTABLE, { "move": move.san, "turn": game.show_turn() }, game);
 

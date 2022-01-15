@@ -76,10 +76,10 @@ function connect()
         const removeHighlight = (message) =>
         {
             // Remove highlights once the piece is moved
-            var allMoves = message.data["allMoves"];
+            var allMoves = message.data["response"]["allMoves"];
 
             try {
-                allMoves.push(message.data["pieceFrom"]);
+                allMoves.push(message.data["response"]["pieceFrom"]);
             } catch {
                 return;
             }
@@ -126,26 +126,26 @@ function connect()
                 moveBox.writeMove(message.data["turn"], message.data["move"]);
                 break;
             case TUPDATE:
-                piece = getPiece(getSquare(message.data["piece"]["pos"]));  // HTML element info gets lost in translation so we retrieve it
-                finalizeMove(piece, getSquare(encodePos(message.data["pieceTo"])), player_type);
-                let flag = message.data["moveInfo"]["flags"];
+                piece = getPiece(getSquare(message.data["response"]["piece"]["pos"]));  // HTML element info gets lost in translation so we retrieve it
+                finalizeMove(piece, getSquare(encodePos(message.data["response"]["pieceTo"])), player_type);
+                let flag = message.data["response"]["moveInfo"]["flags"];
 
                 if (flag.includes('p'))
                 {
-                    promotePawn(piece, message.data["moveInfo"]["color"], message.data["moveInfo"]["promotion"]);
+                    promotePawn(piece, message.data["response"]["moveInfo"]["color"], message.data["response"]["moveInfo"]["promotion"]);
                 }
                 if (flag === 'k' || flag === 'q') {
-                    castle(flag, message.data["moveInfo"]["color"]);
+                    castle(flag, message.data["response"]["moveInfo"]["color"]);
                 }
                 else if (flag === 'e') {
-                    enPassant(message.data["moveInfo"]["color"], message.data["pieceTo"], player_type);
+                    enPassant(message.data["response"]["moveInfo"]["color"], message.data["response"]["pieceTo"], player_type);
                 }
-                var remainingSeconds = message.data["time"];
+                var remainingSeconds = message.data["response"]["time"];
                 var minutes = remainingSeconds / 60 | 0; // Get the integer part
                 var seconds = remainingSeconds % 60;
                 if (seconds < 10) seconds = `0${seconds}`;
             
-                var displayTimer = document.getElementById(`timer-${message.data["color"]}`);
+                var displayTimer = document.getElementById(`timer-${message.data["response"]["color"]}`);
                 displayTimer.innerText = `${minutes}:${seconds}`;
 
                 
