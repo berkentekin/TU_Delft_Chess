@@ -4,7 +4,7 @@ function isLower(c)
     return c === c.toLowerCase();
 }
 
-function remove_highlight(squares) { // state is "enabled" or "disabled"
+function remove_highlight(squares) {
     squares.forEach((square) => {
         var square_class = square.getAttribute("class").split(" ")[0];
         var square_color = square_class.split("-")[0];
