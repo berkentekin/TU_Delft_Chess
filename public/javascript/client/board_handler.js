@@ -259,7 +259,6 @@ function movePieceTo(piece, pieceFrom, square)
         send_message(TINFO, {"piece": piece, "from": pieceFrom, "to": pieceTo}, ws);
         return;
     }
-    console.log(piece, pieceFrom, pieceTo);
     send_message(TMOVE, {"piece": piece, "from": pieceFrom, "to": pieceTo}, ws);
 }
 

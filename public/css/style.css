@@ -157,7 +157,7 @@ footer
 .dragging-piece
 {
     position: absolute;
-    width: calc(var(--board-size)/7);
+    width: calc(var(--board-size)/8);
     z-index: 2;
 }
 
@@ -211,7 +211,7 @@ table.no-spacing
     height: 100%;
     position: static;
     z-index: 1;
-    transition: var(--squares-animation-time) ease;
+    /*transition: var(--squares-animation-time) ease;*/
 }
 
 .captured-cell
