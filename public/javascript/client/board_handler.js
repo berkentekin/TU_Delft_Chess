@@ -31,11 +31,18 @@ const createPieceImg = (piece) =>
 };
 
 function fetchSquares(decodedPositions) {
-    let square_array = [];
+    let square_set = new Set();
     decodedPositions.forEach((pos) => {
-        square_array.push(getSquare(encodePos(pos.slice(-2))));
+        pos = pos.replace(/[+#]+/g, ''); // Removes all check/checkmate signs from positions
+        if (pos.indexOf("=") === -1) {
+            square_set.add(getSquare(encodePos(pos.slice(-2))));
+            
+        } else {
+            square_set.add(getSquare(encodePos(pos.slice(0, pos.indexOf("=")).slice(-2))));
+        }
+
     });
-    return square_array;
+    return square_set;
 }
 
 addAnimationAfterEffect(board, (el) => {el.style.setProperty("opacity", 1)});
@@ -180,6 +187,8 @@ function capturePiece(piece, color)
     }   
 }
 
+
+
 function promotePawn(pawn, color, to) // Pawn being promoted, color of player, to type of
 {
     // Get relevant info then discard old piece
@@ -224,23 +233,33 @@ function castle(flag, color)
     } 
 }
 
+function promote_prompt(moves, piece, pieceFrom, pieceTo) {
+    console.log(moves, pieceTo)
+    if (moves.includes(pieceTo)) {
+        try {
+            var promote = window.prompt("'q' for Queen, 'n' for Knight, 'r' for Rook, 'b' for Bishop").toLowerCase();
+        }
+        catch {
+            console.log("TODO: return piece back to its square if no promotion has been made");
+            playSound("invalid");
+        }
+        finally {
+        send_message(TMOVE, { "piece": piece, "from": pieceFrom, "to": pieceTo, "promotion": promote }, ws);
+        }
+        return;
+    }       
+}
+
 function movePieceTo(piece, pieceFrom, square)
 {
 
     let pieceTo = decodePos(square.getAttribute("data-pos"));
     let pieceData = piece.getAttribute("piece-data");
     if ((pieceData === "wp" && pieceFrom.charAt(1) === '7' && pieceTo.charAt(1) === '8') || (pieceData === "bp" && pieceFrom.charAt(1) === '2' && pieceTo.charAt(1) === '1')) {
-        if (pieceFrom.charAt(0) === pieceTo.charAt(0)) { // TODO fetch all available squares for the pawn
-            var promote = window.prompt("'q' for Queen, 'n' for Knight, 'r' for Rook, 'b' for Bishop").toLowerCase();
-            if (promote === null || promote === "") {
-                piece.className = "piece";
-                playSound("invalid");
-                return;
-            }
-            send_message(TMOVE, { "piece": piece, "from": pieceFrom, "to": pieceTo, "promotion": promote }, ws);
-            return;
-        }       
+        send_message(TINFO, {"piece": piece, "from": pieceFrom, "to": pieceTo}, ws);
+        return;
     }
+    console.log(piece, pieceFrom, pieceTo);
     send_message(TMOVE, {"piece": piece, "from": pieceFrom, "to": pieceTo}, ws);
 }
 

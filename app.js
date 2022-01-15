@@ -80,10 +80,15 @@ wss.on("connection", (ws, req) =>
 	{
 
 		let message = decode_message(data);
-		if (message.type === THIGHLIGHT || message.type === TINFO) {
+		if (message.type === THIGHLIGHT) {
 			let available_moves = game.accepted_moves(message.data["from"]);
 			available_moves.push(message.data["from"]);
-			send_message(message.type, available_moves, ws);
+			send_message(THIGHLIGHT, available_moves, ws);
+		}
+		else if (message.type === TINFO) {
+			let available_moves = game.accepted_moves(message.data["from"]);
+			send_message(TINFO, {"available_moves": available_moves, "piece": message.data["piece"], 
+								"pieceFrom": message.data["from"], "pieceTo": message.data["to"]}, ws);
 		}
 		else if (message.type === TMOVE) {
 			let accepted_moves = game.accepted_moves();

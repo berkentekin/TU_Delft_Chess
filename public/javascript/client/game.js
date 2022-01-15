@@ -78,7 +78,6 @@ function connect()
             // Remove highlights once the piece is moved
             var allMoves = message.data["allMoves"];
             allMoves.push(message.data["pieceFrom"]);
-            console.log(allMoves);
             remove_highlight(fetchSquares(allMoves));
         }
     
@@ -153,6 +152,11 @@ function connect()
                 playSound("check");    
                 break;
             case TINFO:
+                let moves = message.data["available_moves"];
+                promote_prompt(moves
+                    .map((x) => x.replace(/[+#]+/g, '')
+                    .slice(0, x.indexOf("=")).slice(-2)), 
+                    message.data["piece"], message.data["pieceFrom"], message.data["pieceTo"]);
                 break;
             case THIGHLIGHT:
                 var squares = fetchSquares(message.data);
