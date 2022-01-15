@@ -133,6 +133,10 @@ wss.on("connection", (ws, req) =>
 			let messageText = message.data;
 			sendMessageToGame(TCHAT, `[${ws.id}]: ${messageText}`, ws.game);
 		}
+		else if (message.type === TWON) { // Only sent to server when a player resigns
+			sendMessageToGame(TWON, {"player": color === "white" ? "black": "white", "type": "resign"}, game);
+			clearInterval(game.timer);
+		}
 		else if (message.type === TSABOTAGE)
 		{
 			if (!ws.game.is_full()) {return;}

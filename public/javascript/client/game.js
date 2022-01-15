@@ -1,3 +1,4 @@
+
 let player_type;
 const slider = document.getElementById("sizeSlider");
 const gameStatus = document.getElementById("gameStatus");
@@ -17,6 +18,14 @@ function openrules()
 function closerules()
 {
     prankRules.style.width = "0";
+}
+
+function resign() 
+{
+    if (gameStarted)
+    {
+        send_message(TWON, null, ws);
+    }
 }
 
 function sabotage()
@@ -201,6 +210,14 @@ function connect()
                 if (message.data === "draw")
                 {
                     winType = "It's a stalemate!";
+                }
+                else if (message.data["type"] === "resign")
+                {
+                    let won = message.data["player"] == player_type;
+                    winType = won ? `Your opponent resigned!`:
+                                                                      `You resigned :/`;
+                    let score = document.getElementById(`${won ? "self": "opponent"}-score`);
+                    score.innerText = (+score.innerText) + 1;
                 }
                 else
                 {
