@@ -33,7 +33,7 @@ const createPieceImg = (piece) =>
 function fetchSquares(decodedPositions) {
     let square_array = [];
     decodedPositions.forEach((pos) => {
-        square_array.push(getSquare(encodePos(pos)));
+        square_array.push(getSquare(encodePos(pos.slice(-2))));
     });
     return square_array;
 }
