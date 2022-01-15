@@ -78,12 +78,18 @@ wss.on("connection", (ws, req) =>
 	};
 	ws.on("message", (data) =>
 	{
-
 		let message = decode_message(data);
-		if (message.type === THIGHLIGHT || message.type === TINFO) {
+		if (message.type === THIGHLIGHT) {
+			let available_moves = game.accepted_moves(message.data["from"], ws.id);
+			if (typeof available_moves !== "undefined") {
+				available_moves.push(message.data["from"]);
+				send_message(THIGHLIGHT, available_moves, ws);
+			}
+		}
+		else if (message.type === TINFO) {
 			let available_moves = game.accepted_moves(message.data["from"]);
-			available_moves.push(message.data["from"]);
-			send_message(message.type, available_moves, ws);
+			send_message(TINFO, {"available_moves": available_moves, "piece": message.data["piece"], 
+								"pieceFrom": message.data["from"], "pieceTo": message.data["to"]}, ws);
 		}
 		else if (message.type === TMOVE) {
 			let accepted_moves = game.accepted_moves();
@@ -93,7 +99,7 @@ wss.on("connection", (ws, req) =>
 				//if (!accepted_moves.includes(move.san)) { response["moveInfo"] = null };
 
 			if (move !== null && accepted_moves.includes(move.san)) {
-				sendMessageToGame(TUPDATE, response, game);
+				sendMessageToGame(TUPDATE, {"response": response}, game);
 				sendMessageToGame(TTURN, { "move": move.san, "turn": game.show_turn() }, game);
 				sendMessageToGame(TTABLE, { "move": move.san, "turn": game.show_turn() }, game);
 
@@ -116,13 +122,20 @@ wss.on("connection", (ws, req) =>
 			}	
 			else
 			{
-				send_message(TINVALID, response, ws);
+				if (message.data["from"] === message.data["to"])
+					send_message(TINVALID, {"response" : response, "sameSquare": true}, ws);
+				else
+					send_message(TINVALID, {"response" : response, "sameSquare": false}, ws);
 			}
 		
 		}
 		else if (message.type === TCHAT) {
 			let messageText = message.data;
 			sendMessageToGame(TCHAT, `[${ws.id}]: ${messageText}`, ws.game);
+		}
+		else if (message.type === TWON) { // Only sent to server when a player resigns
+			sendMessageToGame(TWON, {"player": color === "white" ? "black": "white", "type": "resign"}, game);
+			clearInterval(game.timer);
 		}
 		else if (message.type === TSABOTAGE)
 		{

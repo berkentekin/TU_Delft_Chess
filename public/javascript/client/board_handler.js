@@ -31,11 +31,18 @@ const createPieceImg = (piece) =>
 };
 
 function fetchSquares(decodedPositions) {
-    let square_array = [];
+    let square_set = new Set();
     decodedPositions.forEach((pos) => {
-        square_array.push(getSquare(encodePos(pos)));
+        pos = pos.replace(/[+#]+/g, ''); // Removes all check/checkmate signs from positions
+        if (pos.indexOf("=") === -1) {
+            square_set.add(getSquare(encodePos(pos.slice(-2))));
+            
+        } else {
+            square_set.add(getSquare(encodePos(pos.slice(0, pos.indexOf("=")).slice(-2))));
+        }
+
     });
-    return square_array;
+    return square_set;
 }
 
 addAnimationAfterEffect(board, (el) => {el.style.setProperty("opacity", 1)});
@@ -158,27 +165,24 @@ let capturedOffset = {"p":0, "r":0, "n":0, "b":0, "q": 0}
 
 function capturePiece(piece, color)
 {
-    if (piece.getAttribute("piece-data").charAt(0) !== color.charAt(0))
-    {
-        let capturedZone = captured.querySelector(`#${piece.type}-captured`);
-        piece.className = "captured-piece";
-        capturedZone.appendChild(piece);
 
-        // Needs to be updated if captured pieces size is updated ;;;
-        // Bit of redundancy here, but oh well. Since capturedZone is relative, it does not
-        // resize due to the absolutely placed pieces inside, so we have to set this ourselves;
-        capturedZone.style.width = `calc(var(--board-size)/11 * (0.8 * 0.4 * ${capturedOffset[piece.type]} + 0.8))`;
-        piece.style.left = `calc(var(--board-size)/11 * 0.8 * 0.4 * ${capturedOffset[piece.type]})`; // Absolute position relative to cell
-        piece.style.top = 0 + "px"; // Sometimes top is random, what the hell?
-        capturedOffset[piece.type]++;
+    let capturedZone = captured.querySelector(`#${piece.type}-captured`);
+    piece.className = "captured-piece";
+    capturedZone.appendChild(piece);
 
-        removeDrag(piece);
-    }
-    else
-    {
-        makeDisappear(piece);
-    }   
+    // Needs to be updated if captured pieces size is updated ;;;
+    // Bit of redundancy here, but oh well. Since capturedZone is relative, it does not
+    // resize due to the absolutely placed pieces inside, so we have to set this ourselves;
+    capturedZone.style.width = `calc(var(--board-size)/11 * (0.8 * 0.4 * ${capturedOffset[piece.type]} + 0.8))`;
+    piece.style.left = `calc(var(--board-size)/11 * 0.8 * 0.4 * ${capturedOffset[piece.type]})`; // Absolute position relative to cell
+    piece.style.top = 0 + "px"; // Sometimes top is random, what the hell?
+    capturedOffset[piece.type]++;
+
+    removeDrag(piece);
+ 
 }
+
+
 
 function promotePawn(pawn, color, to) // Pawn being promoted, color of player, to type of
 {
@@ -224,27 +228,41 @@ function castle(flag, color)
     } 
 }
 
+function promote_prompt(moves, piece, pieceFrom, pieceTo) {
+    console.log(moves, pieceTo)
+    if (moves.includes(pieceTo)) {
+        try {
+            var promote = window.prompt("'q' for Queen, 'n' for Knight, 'r' for Rook, 'b' for Bishop").toLowerCase();
+        }
+        catch {
+            console.log("TODO: return piece back to its square if no promotion has been made");
+            playSound("invalid");
+        }
+        finally {
+        send_message(TMOVE, { "piece": piece, "from": pieceFrom, "to": pieceTo, "promotion": promote }, ws);
+        }
+        return;
+    }       
+}
+
 function movePieceTo(piece, pieceFrom, square)
 {
 
     let pieceTo = decodePos(square.getAttribute("data-pos"));
     let pieceData = piece.getAttribute("piece-data");
     if ((pieceData === "wp" && pieceFrom.charAt(1) === '7' && pieceTo.charAt(1) === '8') || (pieceData === "bp" && pieceFrom.charAt(1) === '2' && pieceTo.charAt(1) === '1')) {
-        if (pieceFrom.charAt(0) === pieceTo.charAt(0)) { // TODO fetch all available squares for the pawn
-            var promote = window.prompt("'q' for Queen, 'n' for Knight, 'r' for Rook, 'b' for Bishop").toLowerCase();
-            if (promote === null || promote === "") {
-                piece.className = "piece";
-                playSound("invalid");
-                return;
-            }
-            send_message(TMOVE, { "piece": piece, "from": pieceFrom, "to": pieceTo, "promotion": promote }, ws);
-            return;
-        }       
+        send_message(TINFO, {"piece": piece, "from": pieceFrom, "to": pieceTo}, ws);
+        return;
     }
     send_message(TMOVE, {"piece": piece, "from": pieceFrom, "to": pieceTo}, ws);
 }
 
 let wasMovedManually = false;
+
+function sameSquareMove(piece) {
+    wasMovedManually = false;
+    piece.className = "piece";
+}
 
 function invalidMove(piece)
 {

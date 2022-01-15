@@ -1,3 +1,4 @@
+
 let player_type;
 const slider = document.getElementById("sizeSlider");
 const gameStatus = document.getElementById("gameStatus");
@@ -17,6 +18,14 @@ function openrules()
 function closerules()
 {
     prankRules.style.width = "0";
+}
+
+function resign() 
+{
+    if (gameStarted)
+    {
+        send_message(TWON, null, ws);
+    }
 }
 
 function sabotage()
@@ -76,9 +85,13 @@ function connect()
         const removeHighlight = (message) =>
         {
             // Remove highlights once the piece is moved
-            var allMoves = message.data["allMoves"];
-            allMoves.push(message.data["pieceFrom"]);
-            console.log(allMoves);
+            var allMoves = message.data["response"]["allMoves"];
+
+            try {
+                allMoves.push(message.data["response"]["pieceFrom"]);
+            } catch {
+                return;
+            }
             remove_highlight(fetchSquares(allMoves));
         }
     
@@ -122,26 +135,26 @@ function connect()
                 moveBox.writeMove(message.data["turn"], message.data["move"]);
                 break;
             case TUPDATE:
-                piece = getPiece(getSquare(message.data["piece"]["pos"]));  // HTML element info gets lost in translation so we retrieve it
-                finalizeMove(piece, getSquare(encodePos(message.data["pieceTo"])), player_type);
-                let flag = message.data["moveInfo"]["flags"];
+                piece = getPiece(getSquare(message.data["response"]["piece"]["pos"]));  // HTML element info gets lost in translation so we retrieve it
+                finalizeMove(piece, getSquare(encodePos(message.data["response"]["pieceTo"])), player_type);
+                let flag = message.data["response"]["moveInfo"]["flags"];
 
                 if (flag.includes('p'))
                 {
-                    promotePawn(piece, message.data["moveInfo"]["color"], message.data["moveInfo"]["promotion"]);
+                    promotePawn(piece, message.data["response"]["moveInfo"]["color"], message.data["response"]["moveInfo"]["promotion"]);
                 }
                 if (flag === 'k' || flag === 'q') {
-                    castle(flag, message.data["moveInfo"]["color"]);
+                    castle(flag, message.data["response"]["moveInfo"]["color"]);
                 }
                 else if (flag === 'e') {
-                    enPassant(message.data["moveInfo"]["color"], message.data["pieceTo"], player_type);
+                    enPassant(message.data["response"]["moveInfo"]["color"], message.data["response"]["pieceTo"], player_type);
                 }
-                var remainingSeconds = message.data["time"];
+                var remainingSeconds = message.data["response"]["time"];
                 var minutes = remainingSeconds / 60 | 0; // Get the integer part
                 var seconds = remainingSeconds % 60;
                 if (seconds < 10) seconds = `0${seconds}`;
             
-                var displayTimer = document.getElementById(`timer-${message.data["color"]}`);
+                var displayTimer = document.getElementById(`timer-${message.data["response"]["color"]}`);
                 displayTimer.innerText = `${minutes}:${seconds}`;
 
                 
@@ -153,6 +166,11 @@ function connect()
                 playSound("check");    
                 break;
             case TINFO:
+                let moves = message.data["available_moves"];
+                promote_prompt(moves
+                    .map((x) => x.replace(/[+#]+/g, '')
+                    .slice(0, x.indexOf("=")).slice(-2)), 
+                    message.data["piece"], message.data["pieceFrom"], message.data["pieceTo"]);
                 break;
             case THIGHLIGHT:
                 var squares = fetchSquares(message.data);
@@ -177,8 +195,12 @@ function connect()
                 break;
 
             case TINVALID:  // Player has commited a nono
-                piece = message.data["piece"];
-                invalidMove(getPiece(getSquare(piece["pos"])));
+                piece = message.data["response"]["piece"];
+                console.log(message.data["sameSquare"]);
+                if (!message.data["sameSquare"])
+                    invalidMove(getPiece(getSquare(piece["pos"])));
+                else
+                    sameSquareMove(getPiece(getSquare(piece["pos"])));
                 removeHighlight(message);
                 break;
             case TWON:
@@ -188,6 +210,14 @@ function connect()
                 if (message.data === "draw")
                 {
                     winType = "It's a stalemate!";
+                }
+                else if (message.data["type"] === "resign")
+                {
+                    let won = message.data["player"] == player_type;
+                    winType = won ? `Your opponent resigned!`:
+                                                                      `You resigned :/`;
+                    let score = document.getElementById(`${won ? "self": "opponent"}-score`);
+                    score.innerText = (+score.innerText) + 1;
                 }
                 else
                 {

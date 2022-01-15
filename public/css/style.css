@@ -157,7 +157,7 @@ footer
 .dragging-piece
 {
     position: absolute;
-    width: calc(var(--board-size)/7);
+    width: calc(var(--board-size)/8);
     z-index: 2;
 }
 
@@ -383,6 +383,20 @@ table.no-spacing
 #sabotage:focus
 {
     background: red;
+}
+
+#resign
+{
+    background: rgb(0, 180, 180);
+    color: white;
+    border: none;
+    width: 45%;
+    border-radius: 0.2rem;
+}
+
+#resign:focus
+{
+    background: rgb(0, 102, 102);
 }
 
 .checkbox-divs
@@ -665,11 +679,15 @@ table.no-spacing
 
     #rules
     {
-        height: 3vh;
         border-radius: 0.5vh;
     }
 
     #sabotage
+    {
+        border-radius: 0.5vh;
+    }
+
+    #resign
     {
         border-radius: 0.5vh;
     }
