@@ -59,7 +59,7 @@ footer
                forwards;
 }
 
-.no-animation #info-area,
+.no-animation .info-area,
 .no-animation #chessboard,
 .no-animation .chess-cell,
 .no-animation #chat-area,
@@ -223,10 +223,36 @@ table.no-spacing
 #game-area
 {
     min-width: 400px;
-    width: 205%;
+    grid-column: 2 / span 1;
+    grid-row: 1 / span 2;
 }
 
-#info-area
+#info-and-game-area
+{
+    height: fit-content;
+    width: 300%;
+    display: grid;
+    grid-template-columns: 1fr 2fr;
+    grid-template-rows: 1fr 1fr;
+}
+
+#info-area-1
+{
+    grid-column: 1 / span 1;
+    grid-row: 1 / span 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-around;
+}
+
+#info-area-2
+{
+    grid-column: 1 / span 1;
+    grid-row: 2 / span 1;
+    padding-block: 0;
+}
+
+.info-area
 {
     font-family: "ocr-aregular";
     flex: 1 1 90%; /* This seems to work best when adding padding */
@@ -248,7 +274,7 @@ table.no-spacing
 
 #game-info
 {
-    height: 10%;
+    height: 25%;
     margin-bottom: 0.5rem;
     display: grid;
     grid-template-columns: 1fr 1fr;
@@ -263,6 +289,7 @@ table.no-spacing
     grid-row: 1 / span 2;
     font-size: max(4vw, 3rem);
     padding: 0.5rem;
+    padding-right: 0;
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -275,7 +302,7 @@ table.no-spacing
     position: absolute;
     height: 60%;
     top: 20%;
-    left: 47%;
+    left: 50%;
     border-right: 3px solid white;
     border-radius: 1rem;
 }
@@ -285,6 +312,9 @@ table.no-spacing
     font-size: max(1.8vw, 1.2rem);
     text-align: center;
     position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
 }
 
 .displayed-timer::after
@@ -534,7 +564,20 @@ table.no-spacing
 
     #game-area
     {
-        width: 100%;   
+        width: 100%;
+        grid-row: 2 / span 1;
+        grid-column: 1 / span 1;
+    }
+
+    #info-area-2
+    {
+        grid-row: 3 / span 1;
+        margin-bottom: 1rem;
+    }
+
+    #info-area-1
+    {
+        grid-row: 1 / span 1;
     }
 
     #chat-area
@@ -543,6 +586,7 @@ table.no-spacing
         justify-content: space-between;
         margin: 0.5rem;
         height: fit-content;
+        order: 2;
     }    
 
     #chat-area > *
@@ -650,5 +694,12 @@ table.no-spacing
         display: flex;
         align-items: center;
         width: 8%;
+    }
+
+    #info-and-game-area
+    {
+        width: 100%;
+        grid-template-rows: 1fr 2fr fit-content(100%);
+        grid-template-columns: 1fr;
     }
 }
