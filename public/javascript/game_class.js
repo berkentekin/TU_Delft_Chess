@@ -20,11 +20,13 @@ class Game
         return this.chess.fen();
     }
 
-    accepted_moves(square) // square is an optional parameter
+    accepted_moves(square, wsID) // square and wsID are optional parameters
     {
         if (typeof square === "undefined")
             return this.chess.moves();
-        return this.chess.moves({ "square": square });
+        var color = this.players[wsID] === "white" ? 'w' : 'b';
+        if (color === this.chess.get(square)["color"])
+            return this.chess.moves({ "square": square });
     }
 
     get_active_turn(wsID)
