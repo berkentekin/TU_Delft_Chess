@@ -94,13 +94,18 @@ wss.on("connection", (ws, req) =>
 								"pieceFrom": message.data["from"], "pieceTo": message.data["to"]}, ws);
 		}
 		else if (message.type === TDRAW) {
-			if (!game.addDrawOffer(message.data))
-				sendMessageToGame(TCHAT, `<span style='color:red'>[Server]: A draw offer has been made by the ${message.data} player! </span>`, game);
-			else {
-				sendMessageToGame(TCHAT, `<span style='color:red'>[Server]: Both players have agreed on a draw! </span>`, game);
-				sendMessageToGame(TWON, "draw", game);
+			switch (game.addDrawOffer(message.data)) {
+				case 0:
+					sendMessageToGame(TCHAT, `<span style='color:red'>[Server]: The draw offer has been cancelled! </span>`, game);
+					break;
+				case 1:
+					sendMessageToGame(TCHAT, `<span style='color:red'>[Server]: A draw offer has been made by the ${message.data} player! </span>`, game);
+					break;
+				case 2:
+					sendMessageToGame(TCHAT, `<span style='color:red'>[Server]: Both players have agreed on a draw! </span>`, game);
+					sendMessageToGame(TWON, "draw", game);
+					break;
             }
-
         }
 		else if (message.type === TMOVE) {
 			let accepted_moves = game.accepted_moves();
@@ -110,6 +115,9 @@ wss.on("connection", (ws, req) =>
 				//if (!accepted_moves.includes(move.san)) { response["moveInfo"] = null };
 
 			if (move !== null && accepted_moves.includes(move.san)) {
+				if (message.data["response"]["drawCancelled"]) {
+					sendMessageToGame(TCHAT, `<span style='color:red'>[Server]: The draw offer has been cancelled! </span>`, game);
+				}
 				sendMessageToGame(TUPDATE, {"response": response}, game);
 				sendMessageToGame(TTURN, { "move": move.san, "turn": game.show_turn() }, game);
 				sendMessageToGame(TTABLE, { "move": move.san, "turn": game.show_turn() }, game);

@@ -28,10 +28,11 @@ class Game
             this.wantsDraw[color] = true;
             this.wantsDraw.length++;
         }
-        if (this.wantsDraw.length === 2) {
-            return true;
+        else {
+            this.wantsDraw = {};
+            this.wantsDraw.length = 0;
         }
-        return false;
+        return this.wantsDraw.length;
     }
 
     accepted_moves(square, wsID) // square and wsID are optional parameters

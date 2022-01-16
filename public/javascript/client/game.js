@@ -1,4 +1,3 @@
-
 let player_type;
 const slider = document.getElementById("sizeSlider");
 const gameStatus = document.getElementById("gameStatus");
