@@ -207,7 +207,6 @@ function connect()
             case TWON:
                 gameStarted = false;
                 let winType
-                console.log(message.data);
                 if (message.data === "draw")
                 {
                     winType = "It's a draw!";
