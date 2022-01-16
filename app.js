@@ -126,6 +126,7 @@ wss.on("connection", (ws, req) =>
 
 				if (game.in_check() && !game.check_won()) {
 					sendMessageToGame(TCHECK, game.show_turn(), game);
+					sendMessageToGame(TCHAT, `<span style='color:red'>[Server]: The ${game.show_turn()} king is checked!`, game);
 				}
 
 				if (game.check_game_over()) {

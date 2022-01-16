@@ -164,7 +164,7 @@ function connect()
                 break;
 
             case TCHECK:
-                playSound("check");    
+                playSound("check");
                 break;
             case TINFO:
                 let moves = message.data["available_moves"];
