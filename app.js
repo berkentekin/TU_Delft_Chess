@@ -10,6 +10,7 @@ const { send } = require("express/lib/response");
 const app = express();
 const port = 3000;
 const indexRouter = require("./routes/index");
+let stats = require("./statTracker");
 
 app.use(express.static("public"));
 
@@ -61,6 +62,7 @@ let games = []
 wss.on("connection", (ws, req) => 
 { 
 	ws.id = numConnectionIDs++;
+	stats.numOfPlayers += 1;
 
 	function setCountdown(color) {
 		if (game.timer !== null)
@@ -112,6 +114,14 @@ wss.on("connection", (ws, req) =>
 				if (game.check_game_over()) {
 					if (game.check_won()) {
 						sendMessageToGame(TWON, {"player": game.get_active_turn(ws.id), "type": "checkmate"}, game);	
+						if (game.get_active_turn(ws.id) === "white")
+						{
+							stats.whiteWins += 1;
+						}
+						else
+						{
+							stats.blackWins += 1;
+						}
 					}
 					else if (game.check_draw()) {
 						sendMessageToGame(TWON, "draw", game);
@@ -151,8 +161,12 @@ wss.on("connection", (ws, req) =>
 
 	ws.on("close", (event) =>
 		{
-			if (ws.game.check_game_over()) {return;}
+			stats.numOfPlayers -= 1;
+		
+			if (ws.game.check_game_over() || ws.game.no_turns == -1) {return;}
 			
+			stats.ongoingGames -= 1;
+			ws.game.no_turns = -1;
 			sendMessageToGame(TWON, {"player": color === "white" ? "black": "white", "type": "resign"}, game);
 			clearInterval(game.timer);
 			games = games.filter((x) => x !== ws.game); // Remove game if still present
@@ -175,6 +189,7 @@ wss.on("connection", (ws, req) =>
 	send_message(TPLAYERT, color, ws);
 
 	if (game.is_full()) {
+		stats.ongoingGames += 1;
 		sendMessageToGame(TGAMESTART, null, game);
 		sendMessageToGame(TTURN, { "turn": game.turn }, game);
 	}

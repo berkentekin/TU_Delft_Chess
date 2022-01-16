@@ -16,7 +16,56 @@ h1
     color: white;
     width: 75%;
     font-size: 5vw;
-    margin: 2vw;
+    margin: 2vw;  
+    filter: drop-shadow(4px 4px red);  
+}
+
+button
+{
+    border: none;
+    background-color: orange;
+    color: white;
+    font-size: 4vw;
+    font-family: "ocr-aregular";
+    transition: 200ms ease-in;
+    filter: drop-shadow(10px 10px);
+    padding: 5px;
+}
+
+button:hover
+{
+    transform: translateY(-10px);
+}
+
+button:active
+{
+    transform: translateY(10px);
+}
+
+#images
+{
+    display: flex;
+    flex-direction: column;
+    justify-content: right;
+    align-items: center;
+    position: relative;
+}
+
+#info
+{
+    width: 200%;
+    margin: 4vw;
+}
+
+main
+{
+    display: flex;
+    flex-direction: row;
+}
+
+main > *
+{
+    flex: 1 1 auto;
 }
 
 html
@@ -30,9 +79,71 @@ html
     box-sizing: inherit;
 }
 
-img
+#logo
 {
-    height: 10%;
-    width: 10%;
+    position: absolute;
+    width: 50%;
+    transform: rotate(45deg);
+    margin-top: 2vw;
+    top: -70%;
+    right: 20%;
+}
+
+#preview
+{
+    position: relative;
+    top: 15%;
+    right: 40%;
+
+    aspect-ratio: 1;
+    width: 100%;
     border: 2px solid black;
+    filter: drop-shadow(5px 5px orange);  
+}
+
+p
+{
+    font-size: 3vw;
+}
+
+svg
+{
+    width: 50%;
+}
+
+@media only screen and (orientation: portrait)
+{
+    main
+    {
+        flex-direction: column;
+    }
+
+    h1
+    {
+        width: 100%;
+        font-size: 7vw;
+    }
+
+    #preview
+    {
+        top: 0;
+        right: 0;
+        filter: drop-shadow(10px 10px orange);  
+    }
+
+    #info
+    {
+        width: 100%;
+    }
+    
+    #logo
+    {
+        width: 25%;
+        transform: rotate(45deg);
+        margin-top: 2vw;
+        top: -55%;
+        right: 12%;
+    }
+
+
 }
