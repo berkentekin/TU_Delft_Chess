@@ -115,7 +115,7 @@ wss.on("connection", (ws, req) =>
 				//if (!accepted_moves.includes(move.san)) { response["moveInfo"] = null };
 
 			if (move !== null && accepted_moves.includes(move.san)) {
-				if (message.data["response"]["drawCancelled"]) {
+				if (response["drawCancelled"] === true) {
 					sendMessageToGame(TCHAT, `<span style='color:red'>[Server]: The draw offer has been cancelled! </span>`, game);
 				}
 				sendMessageToGame(TUPDATE, {"response": response}, game);

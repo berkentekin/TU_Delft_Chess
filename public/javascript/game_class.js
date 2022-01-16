@@ -62,7 +62,7 @@ class Game
             }
             else {
                 let move = this.chess.move({ "from": data["from"], "to": data["to"], "promotion": data["promotion"] });
-                if (this.wantsDraw.length > 0 && !(wsID in this.wantsDraw)) { // Draw offer is cancelled when an opponent makes a move
+                if (this.wantsDraw.length === 1 && !(this.get_active_turn(wsID) in this.wantsDraw)) { // Draw offer is cancelled when an opponent makes a move
                     this.wantsDraw = {};
                     this.wantsDraw.length = 0;
                     drawCancelled = true;
