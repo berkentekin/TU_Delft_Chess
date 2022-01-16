@@ -163,7 +163,7 @@ wss.on("connection", (ws, req) =>
 		{
 			stats.numOfPlayers -= 1;
 		
-			if (ws.game.check_game_over() || ws.game.no_turns == -1) {return;}
+			if (ws.game.check_game_over() || ws.game.no_turns == -1 || !ws.game.is_full()) {return;}
 			
 			stats.ongoingGames -= 1;
 			ws.game.no_turns = -1;
