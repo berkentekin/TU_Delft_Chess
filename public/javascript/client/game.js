@@ -59,11 +59,6 @@ let waitingInterval = setInterval(handleWaitingTimer, 500);
 function game_over(message)
 {
     gameStatus.innerHTML = message;
-
-    resetButton = document.createElement("button");
-    resetButton.innerHTML = "Find new game";
-    resetButton.onclick = reset_game;
-    document.getElementById("resetArea").appendChild(resetButton);
 }
 
 function connect()
