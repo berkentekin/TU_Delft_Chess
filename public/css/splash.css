@@ -49,6 +49,7 @@ button:active
     justify-content: right;
     align-items: center;
     position: relative;
+    width: 100%;
 }
 
 #info
@@ -73,6 +74,7 @@ html
     box-sizing: border-box;
     background-color: var(--light-theme);
     font-family: "ocr-aregular";
+    overflow: hidden;
 }
 
 *, *::before, *::after{
