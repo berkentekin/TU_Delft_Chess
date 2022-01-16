@@ -19,6 +19,6 @@
   - I have implemented the engine, worked on move validations, tile highlighting, piece promotions, the move table and the game timer. I have also helped my friend with UI at times.
 * Install and run
   1. Clone this repository
-  2. ~npm install~
-  3. ~npm start~
-  4. Visit =localhost:3000=
+  2. `npm install`
+  3. `npm start`
+  4. Visit localhost:3000
