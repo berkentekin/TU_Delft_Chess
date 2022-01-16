@@ -124,9 +124,6 @@ function connect()
                 clearInterval(waitingInterval);
                 gameStarted = true; 
                 break;
-            case TRESPONSE:
-                console.log("Server: ", message.data);
-                break;
             case TTURN:
                 // Maybe highlight timer to make it obvious
                 document.querySelectorAll(".timer").forEach(timer => timer.style.setProperty("font-weight", "normal"));
@@ -175,24 +172,7 @@ function connect()
                 break;
             case THIGHLIGHT:
                 var squares = fetchSquares(message.data);
-                squares.forEach((square) => {
-                    var square_class = square.getAttribute("class").split(" ")[0];
-                    var square_color = square_class.split("-")[0];
-                    if (["white", "black"].includes(square_class)) {
-                        square.setAttribute("class", `${square_color}-highlight chess-cell force-overlap`);
-                        if (square_color === "black")
-                            square.style.backgroundColor = '#ffa07a';
-                        else if (square_color === "white")
-                            square.style.backgroundColor = "#ffc3aa";
-                    }
-                    else if (["white-highlight" ,"black-highlight"].includes(square_class)) {
-                        square.setAttribute("class", `${square_color} chess-cell force-overlap`);
-                        if (square_color === "black")
-                            square.style.backgroundColor = '#2448a3';
-                        else if (square_color === "white")
-                            square.style.backgroundColor = "white";
-                    } 
-                });
+                toggle_highlight(squares, '#ffa07a', '#ffc3aa');
                 break;
 
             case TINVALID:  // Player has commited a nono
@@ -261,9 +241,6 @@ function connect()
                 whiteTimer.innerText = blackTimer.innerText;
                 blackTimer.id = tempID;
                 blackTimer.innerText = tempText;
-                break;
-            case TQUIT:
-                game_over("The other player quit :(");
                 break;
         }
     })

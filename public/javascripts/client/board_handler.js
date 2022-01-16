@@ -30,21 +30,6 @@ const createPieceImg = (piece) =>
     return img;
 };
 
-function fetchSquares(decodedPositions) {
-    let square_set = new Set();
-    decodedPositions.forEach((pos) => {
-        pos = pos.replace(/[+#]+/g, ''); // Removes all check/checkmate signs from positions
-        if (pos.indexOf("=") === -1) {
-            square_set.add(getSquare(encodePos(pos.slice(-2))));
-            
-        } else {
-            square_set.add(getSquare(encodePos(pos.slice(0, pos.indexOf("=")).slice(-2))));
-        }
-
-    });
-    return square_set;
-}
-
 addAnimationAfterEffect(board, (el) => {el.style.setProperty("opacity", 1)});
 
 ///
@@ -229,13 +214,11 @@ function castle(flag, color)
 }
 
 function promote_prompt(moves, piece, pieceFrom, pieceTo) {
-    console.log(moves, pieceTo)
     if (moves.includes(pieceTo)) {
         try {
             var promote = window.prompt("'q' for Queen, 'n' for Knight, 'r' for Rook, 'b' for Bishop").toLowerCase();
         }
         catch {
-            console.log("TODO: return piece back to its square if no promotion has been made");
             playSound("invalid");
         }
         finally {
@@ -247,10 +230,11 @@ function promote_prompt(moves, piece, pieceFrom, pieceTo) {
 
 function movePieceTo(piece, pieceFrom, square)
 {
-
     let pieceTo = decodePos(square.getAttribute("data-pos"));
     let pieceData = piece.getAttribute("piece-data");
+    console.log(piece, pieceTo);
     if ((pieceData === "wp" && pieceFrom.charAt(1) === '7' && pieceTo.charAt(1) === '8') || (pieceData === "bp" && pieceFrom.charAt(1) === '2' && pieceTo.charAt(1) === '1')) {
+        console.log(pieceTo);
         send_message(TINFO, {"piece": piece, "from": pieceFrom, "to": pieceTo}, ws);
         return;
     }

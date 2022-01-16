@@ -9,8 +9,6 @@ function decode_message(event)
 }
 
 const TMOVE = "MOVE";      // Player has moved (contains square played on)
-const TRESPONSE = "RESPONSE" // Some server response (e.g. illegal move)
-const TQUIT = "QUIT";      // Player has quit
 const TUPDATE = "UPDATE";  // Board updated (contains updated squares)
 const TPLAYERT = "TPLAYERT"; // Player type assigned (contains white/black)
 const TGAMESTART = "GAMESTART"; // Game has started
@@ -32,8 +30,7 @@ if (typeof exports !== "undefined") {
     {
         return JSON.parse(data);
     };
-    module.exports = Object.assign({}, exports, {TMOVE: TMOVE, TRESPONSE: TRESPONSE, TQUIT: TQUIT,
-                                          TUPDATE: TUPDATE, TPLAYERT: TPLAYERT, TGAMESTART: TGAMESTART,
+    module.exports = Object.assign({}, exports, {TMOVE: TMOVE, TUPDATE: TUPDATE, TPLAYERT: TPLAYERT, TGAMESTART: TGAMESTART,
                                           TTURN: TTURN, TWON: TWON, TTABLE: TTABLE, TINVALID: TINVALID, TTIME: TTIME,
                                           TCHAT: TCHAT, TCHECK: TCHECK, TSABOTAGE:TSABOTAGE, TINFO: TINFO, THIGHLIGHT: THIGHLIGHT, TDRAW: TDRAW});
 };

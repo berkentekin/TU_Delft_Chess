@@ -4,6 +4,42 @@ function isLower(c)
     return c === c.toLowerCase();
 }
 
+function fetchSquares(decodedPositions) {
+    let square_set = new Set();
+    decodedPositions.forEach((pos) => {
+        pos = pos.replace(/[+#]+/g, ''); // Removes all check/checkmate signs from positions
+        if (pos.indexOf("=") === -1) {
+            square_set.add(getSquare(encodePos(pos.slice(-2))));        
+        } else {
+            square_set.add(getSquare(encodePos(pos.slice(0, pos.indexOf("=")).slice(-2))));
+        }
+
+    });
+    return square_set;
+}
+
+
+function toggle_highlight(squares, darkcolor, lightcolor) {
+    squares.forEach((square) => {
+        var square_class = square.getAttribute("class").split(" ")[0];
+        var square_color = square_class.split("-")[0];
+        if (["white", "black"].includes(square_class)) {
+            square.setAttribute("class", `${square_color}-highlight chess-cell force-overlap`);
+            if (square_color === "black")
+                square.style.backgroundColor = darkcolor; // default: #ffa07a
+            else if (square_color === "white")
+                square.style.backgroundColor = lightcolor; // default: #ffc3aa
+        }
+        else if (["white-highlight" ,"black-highlight"].includes(square_class)) {
+            square.setAttribute("class", `${square_color} chess-cell force-overlap`);
+            if (square_color === "black")
+                square.style.backgroundColor = '#2448a3';
+            else if (square_color === "white")
+                square.style.backgroundColor = "white";
+        } 
+    });
+}
+
 function remove_highlight(squares) {
     squares.forEach((square) => {
         var square_class = square.getAttribute("class").split(" ")[0];

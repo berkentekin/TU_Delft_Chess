@@ -1,10 +1,10 @@
 const express = require("express");
 const {send_message, decode_message,
-      TMOVE, TRESPONSE, TQUIT, TUPDATE,
+      TMOVE, TUPDATE,
       TPLAYERT, TGAMESTART, TTURN, TWON, 
-	  TBOARD, TTABLE, TINVALID, TTIME, TCHAT,
-	  TCHECK, TSABOTAGE, TINFO, THIGHLIGHT, TDRAW} = require("./public/javascript/messages");
-const Game = require("./public/javascript/game_class");
+	  TTABLE, TINVALID, TTIME, TCHAT,
+	  TCHECK, TSABOTAGE, TINFO, THIGHLIGHT, TDRAW} = require("./public/javascripts/messages");
+const Game = require("./public/javascripts/game_class");
 const {WebSocketServer} = require("ws");
 const { send } = require("express/lib/response");
 const app = express();
@@ -89,7 +89,7 @@ wss.on("connection", (ws, req) =>
 			}
 		}
 		else if (message.type === TINFO) {
-			let available_moves = game.accepted_moves(message.data["from"]);
+			let available_moves = game.accepted_moves(message.data["from"], ws.id);
 			send_message(TINFO, {"available_moves": available_moves, "piece": message.data["piece"], 
 								"pieceFrom": message.data["from"], "pieceTo": message.data["to"]}, ws);
 		}

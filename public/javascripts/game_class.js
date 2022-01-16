@@ -39,7 +39,7 @@ class Game
     {
         if (typeof square === "undefined")
             return this.chess.moves();
-        var color = this.players[wsID] === "white" ? 'w' : 'b';
+        let color = this.players[wsID] === "white" ? 'w' : 'b';
         if (color === this.chess.get(square)["color"])
             return this.chess.moves({ "square": square });
     }
