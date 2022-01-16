@@ -670,6 +670,11 @@ table.no-spacing
         grid-template-rows: 1fr;
     }
 
+    #game-title
+    {
+        font-size: 5vw;
+    }
+
     .timer
     {
         display: flex;
