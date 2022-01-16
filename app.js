@@ -9,6 +9,7 @@ const {WebSocketServer} = require("ws");
 const { send } = require("express/lib/response");
 const app = express();
 const port = 3000;
+const indexRouter = require("./routes/index");
 
 app.use(express.static("public"));
 
@@ -17,10 +18,9 @@ let players = [];
 let numConnectionIDs = 0;
 
 
-app.get("/", (req, res) => 
-{
-    res.sendFile("index.html");
-});
+app.set("view engine", "ejs");
+app.get("/", indexRouter);
+app.get("/play", indexRouter);
 
 let sockets = {};
 
@@ -136,6 +136,7 @@ wss.on("connection", (ws, req) =>
 		else if (message.type === TWON) { // Only sent to server when a player resigns
 			sendMessageToGame(TWON, {"player": color === "white" ? "black": "white", "type": "resign"}, game);
 			clearInterval(game.timer);
+			games = games.filter((x) => x !== ws.game); // Remove game if still present
 		}
 		else if (message.type === TSABOTAGE)
 		{
@@ -150,7 +151,10 @@ wss.on("connection", (ws, req) =>
 
 	ws.on("close", (event) =>
 		{
-		//	sendMessageToGame(TQUIT, null, ws.game);    // Make sure all clients close the connection
+			if (ws.game.check_game_over()) {return;}
+			
+			sendMessageToGame(TWON, {"player": color === "white" ? "black": "white", "type": "resign"}, game);
+			clearInterval(game.timer);
 			games = games.filter((x) => x !== ws.game); // Remove game if still present
 		}
 	)
