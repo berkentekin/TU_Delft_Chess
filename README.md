@@ -4,7 +4,7 @@
 
 * About our game
   Chess of Technical Difficulties is the result of many days of hard work by two students. We have done our best to create a modern visually satisfying website
-  with a bug-free, intuitive and smooth gameplay. Our game is basically chess with a ``Sabotage'' feature that can be used twice by each player which forces
+  with a bug-free, intuitive and smooth gameplay. Our game is basically chess with a "Sabotage" feature that can be used twice by each player which forces
   them to switch sides.
 ** Features
    - Visually satisfying, state-of-the-art interface
