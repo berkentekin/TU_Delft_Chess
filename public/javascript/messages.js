@@ -24,6 +24,7 @@ const TCHAT = "CHAT"; // For sending chat message (contains html to be displayed
 const TSABOTAGE = "SABOTAGE"; // For sabotaging the game;
 const TINFO = "INFO"; // Get valid squares for a piece to play, returns an array of positions as data
 const THIGHLIGHT = "HIGHLIGHT"; // Show valid squares for a piece on board
+const TDRAW = "DRAW" // Sent to server for draw offers
 
 if (typeof exports !== "undefined") {
     exports.send_message = send_message
@@ -34,5 +35,5 @@ if (typeof exports !== "undefined") {
     module.exports = Object.assign({}, exports, {TMOVE: TMOVE, TRESPONSE: TRESPONSE, TQUIT: TQUIT,
                                           TUPDATE: TUPDATE, TPLAYERT: TPLAYERT, TGAMESTART: TGAMESTART,
                                           TTURN: TTURN, TWON: TWON, TTABLE: TTABLE, TINVALID: TINVALID, TTIME: TTIME,
-                                          TCHAT: TCHAT, TCHECK: TCHECK, TSABOTAGE:TSABOTAGE, TINFO: TINFO, THIGHLIGHT: THIGHLIGHT});
+                                          TCHAT: TCHAT, TCHECK: TCHECK, TSABOTAGE:TSABOTAGE, TINFO: TINFO, THIGHLIGHT: THIGHLIGHT, TDRAW: TDRAW});
 };

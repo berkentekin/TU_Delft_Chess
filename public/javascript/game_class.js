@@ -6,7 +6,9 @@ class Game
     {
         this.chess = new Chess();
         this.players = {};
-        this.times = {}; 
+        this.wantsDraw = {};
+        this.wantsDraw.length = 0;
+        this.times = {};
         this.sabotages = {};
         this.numPlayers = 0;
         this.turn = "white";
@@ -18,6 +20,19 @@ class Game
     get_fen()
     {
         return this.chess.fen();
+    }
+
+    addDrawOffer(color)
+    {
+        if (!(color in this.wantsDraw)) {
+            this.wantsDraw[color] = true;
+            this.wantsDraw.length++;
+        }
+        else {
+            this.wantsDraw = {};
+            this.wantsDraw.length = 0;
+        }
+        return this.wantsDraw.length;
     }
 
     accepted_moves(square, wsID) // square and wsID are optional parameters
@@ -37,6 +52,7 @@ class Game
     make_move(data, wsID)
     {
         let attemptedPiece = this.chess.get(data["from"]);
+        let drawCancelled = false;
         if (attemptedPiece !== null)
         {
             let pieceColor = attemptedPiece["color"] === 'w' ? "white" : "black";
@@ -46,6 +62,11 @@ class Game
             }
             else {
                 let move = this.chess.move({ "from": data["from"], "to": data["to"], "promotion": data["promotion"] });
+                if (this.wantsDraw.length === 1 && !(this.get_active_turn(wsID) in this.wantsDraw)) { // Draw offer is cancelled when an opponent makes a move
+                    this.wantsDraw = {};
+                    this.wantsDraw.length = 0;
+                    drawCancelled = true;
+                }
                 if (this.chess.turn() === "w") {
                     this.no_turns++;
                 }
@@ -53,7 +74,7 @@ class Game
                     this.times[this.turn] += 5;
                 return {
                     "moveInfo": move, "allMoves": allMoves, "piece": data["piece"], "pieceFrom": data["from"],
-                    "pieceTo": data["to"], "time": this.times[this.turn], "color": this.turn
+                    "pieceTo": data["to"], "time": this.times[this.turn], "color": this.turn, "drawCancelled": drawCancelled
                 };
             }
         }

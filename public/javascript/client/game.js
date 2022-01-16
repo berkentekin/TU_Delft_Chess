@@ -1,4 +1,3 @@
-
 let player_type;
 const slider = document.getElementById("sizeSlider");
 const gameStatus = document.getElementById("gameStatus");
@@ -20,6 +19,13 @@ function closerules()
     prankRules.style.width = "0";
 }
 
+function offer_draw()
+{
+    if (gameStarted)
+    {
+        send_message(TDRAW, player_type, ws);
+    }
+}
 function resign() 
 {
     if (gameStarted)
@@ -208,6 +214,10 @@ function connect()
                 let winType
                 console.log(message.data);
                 if (message.data === "draw")
+                {
+                    winType = "It's a draw!";
+                }
+                else if (message.data["type"] === "stalemate")
                 {
                     winType = "It's a stalemate!";
                 }

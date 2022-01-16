@@ -3,7 +3,7 @@ const {send_message, decode_message,
       TMOVE, TRESPONSE, TQUIT, TUPDATE,
       TPLAYERT, TGAMESTART, TTURN, TWON, 
 	  TBOARD, TTABLE, TINVALID, TTIME, TCHAT,
-	  TCHECK, TSABOTAGE, TINFO, THIGHLIGHT} = require("./public/javascript/messages");
+	  TCHECK, TSABOTAGE, TINFO, THIGHLIGHT, TDRAW} = require("./public/javascript/messages");
 const Game = require("./public/javascript/game_class");
 const {WebSocketServer} = require("ws");
 const { send } = require("express/lib/response");
@@ -93,6 +93,20 @@ wss.on("connection", (ws, req) =>
 			send_message(TINFO, {"available_moves": available_moves, "piece": message.data["piece"], 
 								"pieceFrom": message.data["from"], "pieceTo": message.data["to"]}, ws);
 		}
+		else if (message.type === TDRAW) {
+			switch (game.addDrawOffer(message.data)) {
+				case 0:
+					sendMessageToGame(TCHAT, `<span style='color:red'>[Server]: The draw offer has been cancelled! </span>`, game);
+					break;
+				case 1:
+					sendMessageToGame(TCHAT, `<span style='color:red'>[Server]: A draw offer has been made by the ${message.data} player! </span>`, game);
+					break;
+				case 2:
+					sendMessageToGame(TCHAT, `<span style='color:red'>[Server]: Both players have agreed on a draw! </span>`, game);
+					sendMessageToGame(TWON, "draw", game);
+					break;
+            }
+        }
 		else if (message.type === TMOVE) {
 			let accepted_moves = game.accepted_moves();
 			let response = game.make_move(message.data, ws.id);
@@ -101,6 +115,9 @@ wss.on("connection", (ws, req) =>
 				//if (!accepted_moves.includes(move.san)) { response["moveInfo"] = null };
 
 			if (move !== null && accepted_moves.includes(move.san)) {
+				if (response["drawCancelled"] === true) {
+					sendMessageToGame(TCHAT, `<span style='color:red'>[Server]: The draw offer has been cancelled! </span>`, game);
+				}
 				sendMessageToGame(TUPDATE, {"response": response}, game);
 				sendMessageToGame(TTURN, { "move": move.san, "turn": game.show_turn() }, game);
 				sendMessageToGame(TTABLE, { "move": move.san, "turn": game.show_turn() }, game);
@@ -124,7 +141,7 @@ wss.on("connection", (ws, req) =>
 						}
 					}
 					else if (game.check_draw()) {
-						sendMessageToGame(TWON, "draw", game);
+						sendMessageToGame(TWON, "stalemate", game);
 	
 					}
 					clearInterval(game.timer);

@@ -363,6 +363,7 @@ table.no-spacing
     border: none;
     width: 45%;
     border-radius: 0.2rem;
+    cursor: pointer;
 }
 
 #rules:focus
@@ -371,13 +372,13 @@ table.no-spacing
     color: white;
 }
 
-#sabotage
-{
+#sabotage {
     background: lightsalmon;
     color: white;
     border: none;
     width: 45%;
     border-radius: 0.2rem;
+    cursor: pointer;
 }
 
 #sabotage:focus
@@ -392,15 +393,16 @@ table.no-spacing
     display: inline;
     width: 45%;
     border-radius: 0.2rem;
+    cursor: pointer;
 }
 
-#resign
-{
+#resign {
     background: rgb(0, 180, 180);
     color: white;
     border: none;
     width: 45%;
     border-radius: 0.2rem;
+    cursor: pointer;
 }
 
 #resign:focus
