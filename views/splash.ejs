@@ -11,7 +11,9 @@
         <p> Ongoing games: <span style="color:orange"><%= ongoingGames %></span></p>
         <p> White win percentage: <span style="color:orange"><%= whiteWinPercentage %></span></p>
         <p> Number of players: <span style="color:orange"><%= numOfPlayers %></span></p>
-        <button> Join a game...</button>
+        <form action="/play" method="get">
+          <button type="submit">Join a game...</button>
+        </form>
       </section>
 
       <section id="images">
