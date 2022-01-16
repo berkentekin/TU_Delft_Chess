@@ -385,6 +385,15 @@ table.no-spacing
     background: red;
 }
 
+#offer-draw {
+    background: brown;
+    color: white;
+    border: none;
+    display: inline;
+    width: 45%;
+    border-radius: 0.2rem;
+}
+
 #resign
 {
     background: rgb(0, 180, 180);
@@ -683,6 +692,12 @@ table.no-spacing
     }
 
     #sabotage
+    {
+        border-radius: 0.5vh;
+    }
+
+    
+    #offer-draw 
     {
         border-radius: 0.5vh;
     }
