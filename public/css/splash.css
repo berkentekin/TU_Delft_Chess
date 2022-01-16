@@ -1,0 +1,38 @@
+@font-face {
+    font-family: 'ocr-aregular';
+    src: url('../fonts/ocr-a_regular-webfont.woff2') format('woff2'),
+         url('../fonts/ocr-a_regular-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+:root
+{
+    --light-theme: #ADD8E6;
+}
+
+h1
+{
+    color: white;
+    width: 75%;
+    font-size: 5vw;
+    margin: 2vw;
+}
+
+html
+{
+    box-sizing: border-box;
+    background-color: var(--light-theme);
+    font-family: "ocr-aregular";
+}
+
+*, *::before, *::after{
+    box-sizing: inherit;
+}
+
+img
+{
+    height: 10%;
+    width: 10%;
+    border: 2px solid black;
+}
