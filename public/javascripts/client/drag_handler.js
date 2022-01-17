@@ -65,7 +65,6 @@ const mouseDownF = (event) =>
 const touchDownF = (event) =>
 {
     let lastMove = event;
-    console.log("using touch");
     if (!gameStarted) {return;} 
     const piece = event.target;
     const pieceFrom = decodePos(piece.parentNode.getAttribute("data-pos"));

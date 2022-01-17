@@ -159,7 +159,6 @@ function connect()
                 // Remove highlights once the piece is moved
                 removeHighlight(message);
                 break;
-
             case TCHECK:
                 playSound("check");
                 break;
@@ -174,7 +173,6 @@ function connect()
                 var squares = fetchSquares(message.data);
                 toggle_highlight(squares, '#ffa07a', '#ffc3aa');
                 break;
-
             case TINVALID:  // Player has commited a nono
                 piece = message.data["response"]["piece"];
                 console.log(message.data["sameSquare"]);
@@ -213,7 +211,6 @@ function connect()
                 }
                 game_over(winType);
                 break;
-
             case TTIME:
                 var remainingSeconds = message.data["time"];
                 var minutes = remainingSeconds / 60 | 0; // Get the integer part
@@ -228,13 +225,12 @@ function connect()
             case TSABOTAGE:
                 player_type = player_type === "white" ? "black" : "white";
                 switchBoard(message.data["layout"]);
+                setGameStatusText();    
 
-                setGameStatusText();
-                
                 // Switch around timers
                 var whiteTimer = document.getElementById("timer-white");
                 var blackTimer = document.getElementById("timer-black");
-
+                
                 let tempID = whiteTimer.id;
                 let tempText = whiteTimer.innerText;
                 whiteTimer.id = blackTimer.id;
