@@ -175,7 +175,6 @@ function connect()
                 break;
             case TINVALID:  // Player has commited a nono
                 piece = message.data["response"]["piece"];
-                console.log(message.data["sameSquare"]);
                 if (!message.data["sameSquare"])
                     invalidMove(getPiece(getSquare(piece["pos"])));
                 else
@@ -230,7 +229,7 @@ function connect()
                 // Switch around timers
                 var whiteTimer = document.getElementById("timer-white");
                 var blackTimer = document.getElementById("timer-black");
-                
+
                 let tempID = whiteTimer.id;
                 let tempText = whiteTimer.innerText;
                 whiteTimer.id = blackTimer.id;

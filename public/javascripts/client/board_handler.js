@@ -232,7 +232,6 @@ function movePieceTo(piece, pieceFrom, square)
 {
     let pieceTo = decodePos(square.getAttribute("data-pos"));
     let pieceData = piece.getAttribute("piece-data");
-    console.log(piece, pieceTo);
     if ((pieceData === "wp" && pieceFrom.charAt(1) === '7' && pieceTo.charAt(1) === '8') || (pieceData === "bp" && pieceFrom.charAt(1) === '2' && pieceTo.charAt(1) === '1')) {
         console.log(pieceTo);
         send_message(TINFO, {"piece": piece, "from": pieceFrom, "to": pieceTo}, ws);
