@@ -103,6 +103,7 @@ wss.on("connection", (ws, req) =>
 					break;
 				case 2:
 					sendMessageToGame(TCHAT, `<span style='color:red'>[Server]: Both players have agreed on a draw! </span>`, game);
+					clearInterval(game.timer);
 					sendMessageToGame(TWON, "draw", game);
 					break;
             }
