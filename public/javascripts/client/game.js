@@ -136,7 +136,6 @@ function connect()
                 piece = getPiece(getSquare(message.data["response"]["piece"]["pos"]));  // HTML element info gets lost in translation so we retrieve it
                 finalizeMove(piece, getSquare(encodePos(message.data["response"]["pieceTo"])), player_type);
                 let flag = message.data["response"]["moveInfo"]["flags"];
-
                 if (flag.includes('p'))
                 {
                     promotePawn(piece, message.data["response"]["moveInfo"]["color"], message.data["response"]["moveInfo"]["promotion"]);
@@ -170,8 +169,12 @@ function connect()
                     message.data["piece"], message.data["pieceFrom"], message.data["pieceTo"]);
                 break;
             case THIGHLIGHT:
-                var squares = fetchSquares(message.data);
-                toggle_highlight(squares, '#ffa07a', '#ffc3aa');
+                let squares = fetchSquares(message.data["moveInfo"]);
+                if ((message.data["opponent_only"] === true && message.data["opponent_color"] !== message.data["player_color"])
+                    || (message.data["opponent_only"] === false))
+                {          
+                    toggle_highlight(squares);
+                }
                 break;
             case TINVALID:  // Player has commited a nono
                 piece = message.data["response"]["piece"];
