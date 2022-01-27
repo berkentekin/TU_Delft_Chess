@@ -1,3 +1,4 @@
+
 const board = document.getElementById("chessboard");
 const captured = document.getElementById("captured-zone");
 const keyboardInput = document.getElementById("keyboard-input");
@@ -233,7 +234,6 @@ function movePieceTo(piece, pieceFrom, square)
     let pieceTo = decodePos(square.getAttribute("data-pos"));
     let pieceData = piece.getAttribute("piece-data");
     if ((pieceData === "wp" && pieceFrom.charAt(1) === '7' && pieceTo.charAt(1) === '8') || (pieceData === "bp" && pieceFrom.charAt(1) === '2' && pieceTo.charAt(1) === '1')) {
-        console.log(pieceTo);
         send_message(TINFO, {"piece": piece, "from": pieceFrom, "to": pieceTo}, ws);
         return;
     }
@@ -258,10 +258,10 @@ function invalidMove(piece)
 function finalizeMove(piece, square, color) 
 {
     let animate;
-
+    let pieceFrom = decodePos(piece.parentNode.getAttribute("data-pos"));
+    let pieceTo = decodePos(square.getAttribute("data-pos"));
     if (!wasMovedManually) {animate = animateParentChange1(piece);}
     else                   {animate = false;}
-
     wasMovedManually = false; // Reset. This whole thing is kinda hacky, but oh well
 
     let cpiece = getPiece(square);
@@ -278,7 +278,8 @@ function finalizeMove(piece, square, color)
         }
         else {playSound("move-self");}   
     }
-
+    send_message(THIGHLIGHT, {"from": pieceFrom, "to": pieceTo, "opponent": true, 
+                              "color": piece.getAttribute("piece-data")[0] === 'w' ? "white" : "black"}, ws)
     if (animate) {animateParentChange2(piece, finishAction);}
     else {finishAction();} 
 }

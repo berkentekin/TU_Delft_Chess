@@ -8,8 +8,8 @@ const mouseDownF = (event) =>
     if (!gameStarted) {return;} 
     const piece = event.target;
     const pieceFrom = decodePos(piece.parentNode.getAttribute("data-pos"));
-    
-    send_message(THIGHLIGHT, {"from": pieceFrom}, ws);
+    reset_highlight();
+    send_message(THIGHLIGHT, {"from": pieceFrom, "opponent": false}, ws);
 
     // Position needs to be absolute so we can drag it around outside square
     piece.className = "dragging-piece";
@@ -68,8 +68,7 @@ const touchDownF = (event) =>
     if (!gameStarted) {return;} 
     const piece = event.target;
     const pieceFrom = decodePos(piece.parentNode.getAttribute("data-pos"));
-
-    send_message(THIGHLIGHT, {"from": pieceFrom}, ws);
+    send_message(THIGHLIGHT, {"from": pieceFrom, "opponent": false}, ws);
 
     // Position needs to be absolute so we can drag it around outside square
     piece.className = "dragging-piece";

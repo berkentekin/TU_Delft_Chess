@@ -18,6 +18,11 @@ function fetchSquares(decodedPositions) {
     return square_set;
 }
 
+function add_highlight(squares) {
+    squares.forEach((square) => {
+        square.classList.add("highlight");       
+    });
+} 
 
 function toggle_highlight(squares, darkcolor, lightcolor) {
     squares.forEach((square) => {
@@ -30,6 +35,10 @@ function remove_highlight(squares) {
         square.classList.remove("highlight");       
     });
 } 
+
+function reset_highlight() {
+    document.querySelectorAll('.highlight').forEach((s) => s.classList.remove('highlight'));
+}
 
 function decodeFEN(FENStr)
 {

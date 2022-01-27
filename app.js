@@ -82,10 +82,18 @@ wss.on("connection", (ws, req) =>
 	{
 		let message = decode_message(data);
 		if (message.type === THIGHLIGHT) {
-			let available_moves = game.accepted_moves(message.data["from"], ws.id);
-			if (typeof available_moves !== "undefined") {
-				available_moves.push(message.data["from"]);
-				send_message(THIGHLIGHT, available_moves, ws);
+			if (message.data["opponent"] === true) {
+				send_message(THIGHLIGHT, {"moveInfo": [message.data["from"], message.data["to"]], "player_color": message.data["color"], "opponent_only": true,
+										  "opponent_color": game.get_active_turn(ws.id)},
+				 ws);
+			}
+			else 
+			{
+				let available_moves = game.accepted_moves(message.data["from"], ws.id);
+				if (typeof available_moves !== "undefined") {
+					available_moves.push(message.data["from"]);
+					send_message(THIGHLIGHT, {"moveInfo": available_moves, "opponent_only": false}, ws);
+				}
 			}
 		}
 		else if (message.type === TINFO) {
