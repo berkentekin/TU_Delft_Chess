@@ -21,35 +21,13 @@ function fetchSquares(decodedPositions) {
 
 function toggle_highlight(squares, darkcolor, lightcolor) {
     squares.forEach((square) => {
-        var square_class = square.getAttribute("class").split(" ")[0];
-        var square_color = square_class.split("-")[0];
-        if (["white", "black"].includes(square_class)) {
-            square.setAttribute("class", `${square_color}-highlight chess-cell force-overlap`);
-            if (square_color === "black")
-                square.style.backgroundColor = darkcolor; // default: #ffa07a
-            else if (square_color === "white")
-                square.style.backgroundColor = lightcolor; // default: #ffc3aa
-        }
-        else if (["white-highlight" ,"black-highlight"].includes(square_class)) {
-            square.setAttribute("class", `${square_color} chess-cell force-overlap`);
-            if (square_color === "black")
-                square.style.backgroundColor = '#2448a3';
-            else if (square_color === "white")
-                square.style.backgroundColor = "white";
-        } 
+        square.classList.toggle("highlight");
     });
 }
 
 function remove_highlight(squares) {
     squares.forEach((square) => {
-        var square_class = square.getAttribute("class").split(" ")[0];
-        var square_color = square_class.split("-")[0];
-        square.setAttribute("class", `${square_color} chess-cell force-overlap`);
-        if (square_color === "black")
-            square.style.backgroundColor = 'var(--dark-theme)';
-        else if (square_color === "white")
-            square.style.backgroundColor = "white";
-        
+        square.classList.remove("highlight");       
     });
 } 
 

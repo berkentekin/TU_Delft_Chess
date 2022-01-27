@@ -26,6 +26,8 @@ body
     --squares-animation-time: 400ms;
     --dark-theme: #2448a3;
     --light-theme: #ADD8E6;
+    --dark-square-highlight: #ffa07a;
+    --light-square-highlight: #ffc3aa;
 }
 
 @keyframes drop-in-animation {
@@ -90,10 +92,20 @@ footer
     color: black;
 }
 
+.white.highlight
+{
+    background-color: var(--light-square-highlight);
+}
+
 .black
 {
     background-color: var(--dark-theme);
     color: white;
+}
+
+.black.highlight
+{
+    background-color: var(--dark-square-highlight);
 }
 
 .no-pad-mar
