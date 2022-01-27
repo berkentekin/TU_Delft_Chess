@@ -10,6 +10,7 @@ const { send } = require("express/lib/response");
 const app = express();
 const port = 3000;
 const indexRouter = require("./routes/index");
+const { v4: uuidv4 } = require('uuid');
 let stats = require("./statTracker");
 
 app.use(express.static("public"));
@@ -17,7 +18,6 @@ app.use(express.static("public"));
 let num_players = 0;
 let players = [];
 let numConnectionIDs = 0;
-
 
 app.set("view engine", "ejs");
 app.get("/", indexRouter);
@@ -61,7 +61,7 @@ let games = []
 
 wss.on("connection", (ws, req) => 
 { 
-	ws.id = numConnectionIDs++;
+	ws.id = uuidv4();
 	stats.numOfPlayers += 1;
 
 	function setCountdown(color) {
@@ -200,7 +200,7 @@ wss.on("connection", (ws, req) =>
 		}
 	)
 
-	console.log(`Websocket connection opened for ${numConnectionIDs}`);
+	console.log(`Websocket connection opened for player ${++numConnectionIDs}`);
 
 	let game = games[games.length -1];
 
